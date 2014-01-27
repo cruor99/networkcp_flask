@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{{ error }}
+    <h1>Hello!</h1>
+    <form action="/server" method="post">
+        <input type="radio" value="STOP">Stop</input></br>
+        <input type="radio" value="START">Start</input></br>
+        <button value="{{ serverstart }}">Server Action GO!</button>
+    </form>
+{% endblock %}
