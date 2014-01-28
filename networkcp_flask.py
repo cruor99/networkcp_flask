@@ -2,7 +2,7 @@ from flask import *
 from flask import request
 import deployserv
 app = Flask(__name__)
-serverstart = 'START'
+app.secret_key='minecraft'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -16,8 +16,19 @@ def login():
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error ='Invalid login credentials'
         else:
-            return redirect(url_for('index'))
+            session['logged_in'] = True
+            return redirect(url_for('welcome'))
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash("You were logged out.")
+    return redirect (url_for('login'))
+
+@app.route('/welcome')
+def welcome():
+    return render_template('welcome.html')
 
 
 @app.route('/server', methods=['GET', 'POST'])
@@ -27,11 +38,11 @@ def servermonitor():
     #NOT COMPLETE, ONLY TEST FOR NOW
     serv = deployserv.Server()
 
-    if request.method=='GET':
+    if request.method =='GET':
         serv.serverStart()
 
 
-    if request.method=='POST':
+    if request.method =='POST':
         serv.serverStart()
 
     else:

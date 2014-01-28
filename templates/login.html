@@ -7,10 +7,15 @@
     <form action="" method="post">
         <dl>
             <dt>Username: </dt>
-            <dd><input type="text name=username value="{{ request.form.username }}"></dd>
+            <dd><input type="text" name=username value="{{ request.form.username }}">
             <dt>Password:</dt>
-            <dd><input type="password" name="password"></inpput></dd>
+            <dd><input type="password" name="password"></input>
         </dl>
         <p><input type="submit" value="Login"></p>
     </form>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">
+        {{ message }}
+        </div>
+    {% endfor %}
 {% endblock %}
