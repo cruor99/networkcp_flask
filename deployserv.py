@@ -22,6 +22,9 @@ class Server(object):
         os.chdir("/home/cruor/mcServer")
         subprocess.Popen("./start.sh", close_fds=True, stdout=subprocess.PIPE)
 
+    def serverRead(self):
+        os.chdir("/home/cruor/mcServer")
+        subprocess.Popen("./read.sh")
 
     def serverStop(self):
         if self.process:
