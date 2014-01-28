@@ -6,15 +6,6 @@ app = Flask(__name__)
 app.secret_key='minecraft'
 
 
-#def login_required(test):
-#    @wraps(test)
-#    def wrap(*args, **kwargs):
-#        if 'logged_in' in session:
-#            return test(*args, **kwargs)
-#        else:
-#            flash('You need to log in first.')
-#            return redirect(url_for(login))
-#    return wrap
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -33,11 +24,24 @@ def login():
             return redirect(url_for('welcome'))
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash("You were logged out.")
     return redirect(url_for('login'))
+
+
+
+def login_required(test):
+    @wraps(test)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return test(*args, **kwargs)
+        else:
+            flash('You need to log in first.')
+            return redirect(url_for('login'))
+    return wrap
 
 
 @app.route('/welcome')
