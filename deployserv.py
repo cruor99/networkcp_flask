@@ -20,11 +20,11 @@ class Server(object):
         folder = "/home/cruor/mcServer"
     def serverStart(self):
         os.chdir("/home/cruor/mcServer")
-        subprocess.Popen("./start.sh", close_fds=True, stdout=subprocess.PIPE)
+        self.process =subprocess.Popen("./start.sh", close_fds=True, stdout=subprocess.PIPE)
 
     def serverRead(self):
         os.chdir("/home/cruor/mcServer")
-        subprocess.Popen("./read.sh")
+        self.process.stdout.seek(2)
 
     def serverStop(self):
         if self.process:
