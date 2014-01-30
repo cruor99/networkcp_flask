@@ -18,13 +18,13 @@ class Server(object):
     def __init__(self):
         self.process = False
         folder = "/home/cruor/mcServer"
-    def serverStart(self):
-        os.chdir("/home/cruor/mcServer")
-        self.process =subprocess.Popen("./start.sh", close_fds=True, stdout=subprocess.PIPE)
+    def serverStart(self, user):
+        os.chdir("/home/cruor/"+user)
+        self.process =subprocess.Popen("./start.sh", close_fds=True)
 
     def serverRead(self):
-        os.chdir("/home/cruor/mcServer")
-        self.process.stdout.seek(2)
+        os.chdir("/home/cruor/"+user)
+       # self.process.stdout.seek(2)
 
     def serverStop(self):
         if self.process:
