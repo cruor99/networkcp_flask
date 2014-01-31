@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app.db" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_downgrade.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_migrate.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_upgrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -418,7 +422,11 @@
       <created>1391205233574</created>
       <updated>1391205233574</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Users and login sessioning&#10;">
+      <created>1391205245343</created>
+      <updated>1391205245343</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
