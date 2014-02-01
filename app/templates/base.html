@@ -1,17 +1,20 @@
 <html>
   <head>
     {% if title %}
-    <title>{{title}} - microblog</title>
+    <title>{{title}} - Net\work CP</title>
     {% else %}
-    <title>microblog</title>
+    <title>Net\work CP</title>
     {% endif %}
   </head>
   <body>
-    <div>Microblog:
+    <div>Net\work CP:
         <a href="{{ url_for('index') }}">Home</a>
         {% if g.user.is_authenticated() %}
         | <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        | <a href="{{ url_for('signup') }}">Signup</a>
         {% endif %}
+
     </div>
     <hr>
     {% with messages = get_flashed_messages() %}

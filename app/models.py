@@ -1,6 +1,7 @@
 __author__ = 'cruor'
 from app import db
-
+from werkzeug import generate_password_hash, check_password_hash
+from datetime import datetime
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
@@ -9,7 +10,16 @@ class User(db.Model):
     nickname = db.Column(db.String(64), unique = True)
     email = db.Column(db.String(120), unique = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
+    pwdhash = db.Column(db.String(120))
+    created = db.Column(db.DATETIME)
     posts = db.relationship('Post', backref = 'author', lazy = 'dynamic')
+
+    def __init__(self, username, password, email):
+        self.nickname = username
+        self.pwdhash = generate_password_hash(password)
+        self.email = email
+        self.role = ROLE_USER
+        self.created = datetime.utcnow()
 
     def is_authenticated(self):
         return True

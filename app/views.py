@@ -3,6 +3,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
 from forms import LoginForm
+from forms import signup_form
 from models import User, ROLE_USER, ROLE_ADMIN
 
 
@@ -26,7 +27,7 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-        user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
+        user = User(nickname, "123", email=resp.email,)
         db.session.add(user)
         db.session.commit()
     remember_me = False
@@ -71,6 +72,19 @@ def login():
         title = 'Sign In',
         form = form,
         providers = app.config['OPENID_PROVIDERS'])
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = signup_form(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User(form.username.data, form.password.data,
+                    form.email.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Thanks for registering')
+        return redirect(url_for('login'))
+    return render_template('signup.html', form=form)
 
 @app.route('/logout')
 def logout():
