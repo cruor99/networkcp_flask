@@ -21,6 +21,9 @@ class User(db.Model):
         self.role = ROLE_USER
         self.created = datetime.utcnow()
 
+    def check_password(self, password):
+        return check_password_hash(self.pwdhash, password)
+
     def is_authenticated(self):
         return True
 

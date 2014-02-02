@@ -9,7 +9,7 @@
   <body>
     <div>Net\work CP:
         <a href="{{ url_for('index') }}">Home</a>
-        {% if g.user.is_authenticated() %}
+        {% if 'logged_in' in session %}
         | <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
         | <a href="{{ url_for('signup') }}">Signup</a>

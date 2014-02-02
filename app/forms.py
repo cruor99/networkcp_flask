@@ -5,9 +5,14 @@ from wtforms import validators
 
 
 class LoginForm(Form):
-    openid = TextField('openid', validators = [validators.Required()])
+    #openid = TextField('openid', validators = [validators.Required()])
     remember_me = BooleanField('remember_me', default = False)
+    password = PasswordField('Password', validators=[validators.Required()])
+    email = TextField('eMail', validators=[validators.Required()])
 
+    def __init__(self, *args, **kwargs):
+        kwargs['csrf_enabled'] = False
+        super(LoginForm, self).__init__(*args, **kwargs)
 
 class signup_form(Form):
     username = TextField('Username', validators=[validators.Required()])
