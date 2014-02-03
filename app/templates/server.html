@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<form method=post action="/server">
+  <p><input type=submit value="Start Server">
+</form>
+<form method="post" action="/server"
+      <p><input type="submit" value="Stopp Server"</p>
+    {{ output }}
+{% endblock %}

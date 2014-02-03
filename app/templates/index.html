@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Hi!</h1>
-{% for post in posts %}
-<div><p>{{post.author.nickname}} says: <b>{{post.body}}</b></p></div>
-{% endfor %}
+<h1>Hi {{ user }}!</h1>
+<p>Welcome to the front page of Net\Work server hosting solutions (Temporary name?)</p>
 {% endblock %}

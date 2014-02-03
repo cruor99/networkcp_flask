@@ -7,6 +7,7 @@ from forms import LoginForm
 from forms import signup_form
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
+from server import Server
 
 
 def login_required(test):
@@ -56,22 +57,21 @@ def load_user(id):
 @app.route('/index')
 @login_required
 def index():
-    #user = g.user
-    posts = [
-        {
-            'author': { 'nickname': 'John' },
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
     return render_template('index.html',
         title = 'Home',
-#        user = user,
-        posts = posts)
+        user = session['username'])
 
+
+@app.route('/server', methods=['GET', 'POST'])
+def server():
+    user = session['email']
+    serv = Server()
+
+    if request.method == 'POST':
+        serv.serverstart(user)
+        output = serv.serverread(user)
+        return render_template('server.html', output=output)
+    return render_template('server.html')
 
 
 
@@ -85,10 +85,13 @@ def login():
     if form.validate_on_submit():
         print form.email.data
         print user.email
+        print user.nickname
         print user.check_password(form.password.data)
         if form.email.data == user.email and user.check_password(form.password.data):
             session['remember_me'] = form.remember_me.data
             session['logged_in'] = True
+            session['username'] = user.nickname
+            session['email'] = user.email
             return redirect(url_for('index'))
     else:
        flash('something went wrong')# return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
