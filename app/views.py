@@ -20,6 +20,15 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
 
+def premium_required(test):
+    @wraps(test)
+    def wrap(*args, **kwargs):
+        if 'premium' in session:
+            return test(*args, **kwargs)
+        else:
+            flash('You are not a premium user, sign up for a service before accessing this portion!')
+            return redirect(url_for('login'))
+    return wrap
 
 
 @lm.user_loader
@@ -27,30 +36,6 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-#@app.before_request
-#def before_request():
-#    g.user = current_user
-
-
-#@oid.after_login
-#def after_login(resp):
-#    if resp.email is None or resp.email == "":
-#        flash('Invalid login. Please try again.')
-#        return redirect(url_for('login'))
-#    user = User.query.filter_by(email = resp.email).first()
-#    if user is None:
-#        nickname = resp.nickname
-#        if nickname is None or nickname == "":
-#            nickname = resp.email.split('@')[0]
-#        user = User(nickname, "123", email=resp.email,)
-#        db.session.add(user)
-#        db.session.commit()
-#    remember_me = False
-#    if 'remember_me' in session:
-#        remember_me = session['remember_me']
-#        session.pop('remember_me', None)
-#    login_user(user, remember = remember_me)
-#    return redirect(request.args.get('next') or url_for('index'))
 
 
 @app.route('/')
@@ -63,12 +48,14 @@ def index():
 
 
 @app.route('/server', methods=['GET', 'POST'])
+@login_required
+@premium_required
 def server():
     user = session['email']
     serv = Server()
 
     if request.method == 'POST':
-        serv.serverstart(user)
+        serv.servercreate(user)
         output = serv.serverread(user)
         return render_template('server.html', output=output)
     return render_template('server.html')
@@ -86,13 +73,18 @@ def login():
         print form.email.data
         print user.email
         print user.nickname
+        print user.role
         print user.check_password(form.password.data)
         if form.email.data == user.email and user.check_password(form.password.data):
             session['remember_me'] = form.remember_me.data
             session['logged_in'] = True
             session['username'] = user.nickname
             session['email'] = user.email
+            if user.role == 2:
+                session['premium'] = user.role
             return redirect(url_for('index'))
+        else:
+            flash('Something went wrong, Email or Passworld might be wrong')
     else:
        flash('something went wrong')# return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
     return render_template('login.html',

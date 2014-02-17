@@ -4,6 +4,7 @@ from werkzeug import generate_password_hash, check_password_hash
 from datetime import datetime
 ROLE_USER = 0
 ROLE_ADMIN = 1
+ROLE_PREMIUM = 2
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
