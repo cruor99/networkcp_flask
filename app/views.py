@@ -55,8 +55,11 @@ def server():
     serv = Server()
 
     if request.method == 'POST':
-        serv.servercreate(user)
-        output = serv.serverread(user)
+        command = request.form([])
+        #if command == 'start':
+        print "command worked" + command.content
+        serv.serverstart(user)
+        #output = serv.serverread(user)
         return render_template('server.html', output=output)
     return render_template('server.html')
 
@@ -64,8 +67,6 @@ def server():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-   # if g.user is not None and g.user.is_authenticated():
-   #     return redirect(url_for('index'))
     form = LoginForm()
     email = form.email.data
     user = User.query.filter_by(email=email).first()
@@ -84,7 +85,7 @@ def login():
                 session['premium'] = user.role
             return redirect(url_for('index'))
         else:
-            flash('Something went wrong, Email or Passworld might be wrong')
+            flash('Something went wrong, Email or Password might be wrong')
     else:
        flash('something went wrong')# return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
     return render_template('login.html',
@@ -107,6 +108,12 @@ def signup():
             return render_template('signup.html', form=form)
     else:
         return render_template('signup.html', form=form)
+
+@app.route('/manage', methods =['GET', 'POST'])
+def manage():
+
+    return render_template('manage.html')
+
 
 @app.route('/logout')
 def logout():

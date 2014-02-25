@@ -10,11 +10,14 @@
     <div>Net\work CP:
         <a href="{{ url_for('index') }}">Home</a>
         {% if 'logged_in' in session %}
+            {% if 'premium' in session %}
         | <a href="{{ url_for('server') }}">Server Control</a>
         | <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
         {% else %}
         | <a href="{{ url_for('signup') }}">Signup</a>
         {% endif %}
+
 
     </div>
     <hr>

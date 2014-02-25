@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
-<form method=post action="/server">
+<form method=post action="/server" name="start">
   <p><input type=submit value="Start Server">
 </form>
 <form method="post" action="/server"

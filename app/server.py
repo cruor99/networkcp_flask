@@ -1,5 +1,6 @@
 __author__ = 'cruor'
 import subprocess
+import paramiko
 import os
 
 
@@ -10,9 +11,9 @@ class Server(object):
 
 #starts the server using subprocess.Popen, and using the minecraft.sh script with the 'start' argument
     def serverstart(self, user):
-        print user
-        self.process = subprocess.Popen(["/etc/init.d/minecraft_server", "start "+user], close_fds=True, stdout=subprocess.PIPE)
-   #     output = self.process.stdout.read()
+        ssh = paramiko.SSHCliet()
+        ssh.connect('84.49.16.80', username='steve', password='12Karen34')
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server start server5")
 
 #Stops the server using subprocess.Popen, using the minecraft.sh script with the 'stop' argument
     def serverstop(self, user):
