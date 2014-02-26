@@ -55,12 +55,12 @@ def server():
     serv = Server()
 
     if request.method == 'POST':
-        command = request.form([])
-        #if command == 'start':
-        print "command worked" + command.content
-        serv.serverstart(user)
-        #output = serv.serverread(user)
-        return render_template('server.html', output=output)
+        if request.form['submit'] == 'Start':
+            serv.serverstart(user)
+            #output = serv.serverread(user)
+            return render_template('server.html')
+        if request.form['submit'] == 'Stop':
+            serv.serverstop(user)
     return render_template('server.html')
 
 
@@ -111,6 +111,12 @@ def signup():
 
 @app.route('/manage', methods =['GET', 'POST'])
 def manage():
+    if request.method == 'POST':
+        server = request.form['server']
+        port = request.form['port']
+        serv = Server()
+        user = session['username']
+        serv.servercreate(server,user,port)
 
     return render_template('manage.html')
 

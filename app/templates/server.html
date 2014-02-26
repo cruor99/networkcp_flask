@@ -2,9 +2,11 @@
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 <form method=post action="/server" name="start">
-  <p><input type=submit value="Start Server">
+    <input type="submit" name="submit" value="Start">
+    <input type="submit" name="submit" value="Stop">
+    EXPERIMENTAL DO NOT USE IF YOU DON'T KNOW WHAT YOU'RE DOING, REMOVE FOR PRODUCTION
+    <input type="submit" name="submit" value="startall">
+    <input type="submit" name="submit" value="stopall"
 </form>
-<form method="post" action="/server"
-      <p><input type="submit" value="Stopp Server"</p>
     {{ output }}
 {% endblock %}
