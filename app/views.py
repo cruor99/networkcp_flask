@@ -51,7 +51,7 @@ def index():
 @login_required
 @premium_required
 def server():
-    user = session['email']
+    user = session['username']
     serv = Server()
 
     if request.method == 'POST':
@@ -61,6 +61,8 @@ def server():
             return render_template('server.html')
         if request.form['submit'] == 'Stop':
             serv.serverstop(user)
+        if request.form['submit'] == 'stopall':
+            serv.serverstop("")
     return render_template('server.html')
 
 
@@ -68,19 +70,19 @@ def server():
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
-    email = form.email.data
-    user = User.query.filter_by(email=email).first()
+    cust_mail = form.email.data
+    user = User.query.filter_by(cust_mail=cust_mail).first()
     if form.validate_on_submit():
         print form.email.data
-        print user.email
-        print user.nickname
+        print user.cust_mail
+        print user.cust_username
         print user.role
         print user.check_password(form.password.data)
-        if form.email.data == user.email and user.check_password(form.password.data):
+        if form.email.data == user.cust_mail and user.check_password(form.password.data):
             session['remember_me'] = form.remember_me.data
             session['logged_in'] = True
-            session['username'] = user.nickname
-            session['email'] = user.email
+            session['username'] = user.cust_username
+            session['email'] = user.cust_mail
             if user.role == 2:
                 session['premium'] = user.role
             return redirect(url_for('index'))
@@ -98,7 +100,7 @@ def signup():
     form = signup_form(request.form)
     if request.method == 'POST':
         if form.validate():
-            user = User(form.username.data, form.password.data, form.email.data)
+            user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data, form.phone.data)
             db.session.add(user)
             db.session.commit()
             flash('Thanks for registering')

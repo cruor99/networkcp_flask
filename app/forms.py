@@ -19,6 +19,9 @@ class signup_form(Form):
     password = PasswordField('Password', validators=[validators.Required()])
     confirm = PasswordField('Confirm Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
     email = TextField('eMail', validators=[validators.Required()])
+    fname = TextField('First Name', validators=[validators.Required()])
+    lname = TextField('Last Name', validators=[validators.Required()])
+    phone = TextField('Phone Number', validators=[validators.Required()])
     accept_tos = BooleanField('I accept the TOS', default = False, validators=[validators.Required()])
 
     #catches csrf_enabled for site security, and to prevent it from being sent for validation
