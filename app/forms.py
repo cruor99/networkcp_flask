@@ -1,7 +1,18 @@
 __author__ = 'cruor'
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, PasswordField
+from wtforms import TextField, BooleanField, PasswordField, SelectField
 from wtforms import validators
+from wtforms_alchemy import ModelForm
+from wtforms_alchemy import model_form_factory
+from models import User
+
+ModelForm = model_form_factory(Form)
+
+
+class UadminForm(ModelForm):
+    class Meta:
+        model = User
+
 
 
 class LoginForm(Form):

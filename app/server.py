@@ -30,6 +30,13 @@ class Server(object):
         ssh.connect('84.49.16.'+server, username='minecraft', password='minecraft')
         ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
 #Method for reading information from the server, currently not working and a redesign is planned
-    def serverread(self, user):
-        self.process = subprocess.Popen(["/etc/init.d/minecraft_server", "list", "enabled"], close_fds=True, stdout=subprocess.PIPE)
+    def serverstatus(self, user):
+        self.process = subprocess.Popen(["/etc/init.d/minecraft_server", "list", "running"], close_fds=True, stdout=subprocess.PIPE)
         return self.process.stdout.read()
+
+    def readconsole(self, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail /home/minecraft/worlds/"+user+"/console.out")
+        return ssh_stdin.readlines()

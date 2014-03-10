@@ -5,6 +5,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import app, db, lm, oid
 from forms import LoginForm
 from forms import signup_form
+from forms import UadminForm
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
 from server import Server
@@ -19,6 +20,16 @@ def login_required(test):
             flash('You need to log in first.')
             return redirect(url_for('login'))
     return wrap
+
+def admin_required(test):
+    @wraps(test)
+    def wrap(*args, **kwargs):
+        if 'admin' in session:
+            return test(*args, **kwargs)
+        else:
+            flash('You need to be an administrator to view this page.')
+            return redirect(url_for('index'))
+        return wrap
 
 def premium_required(test):
     @wraps(test)
@@ -53,7 +64,8 @@ def index():
 def server():
     user = session['username']
     serv = Server()
-
+    output = serv.readconsole(user)
+    print output
     if request.method == 'POST':
         if request.form['submit'] == 'Start':
             serv.serverstart(user)
@@ -62,10 +74,14 @@ def server():
         if request.form['submit'] == 'Stop':
             serv.serverstop(user)
         if request.form['submit'] == 'stopall':
-            serv.serverstop("")
-    return render_template('server.html')
+            serv.serverstop(" ")
+    return render_template('server.html', output=output)
 
-
+@app.route('/uadmin', methods=['GET','POST'])
+def uadmin():
+    form = UadminForm()
+    print form
+    return render_template('uadmin.html', form=form)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
