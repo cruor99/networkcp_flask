@@ -14,7 +14,7 @@ class Server(object):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+" /etc/init.d/minecraft_server start server5")
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+" /etc/init.d/minecraft_server start "+user)
         print ssh_stdout.readlines()
         #ssh_stdout.flush()
 #Stops the server using subprocess.Popen, using the minecraft.sh script with the 'stop' argument
@@ -22,7 +22,7 @@ class Server(object):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"st /etc/init.d/minecraft_server stop server5")
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"st /etc/init.d/minecraft_server stop "+user)
         print ssh_stdout.readlines()
     def servercreate(self,server, user, port):
         ssh = paramiko.SSHClient()

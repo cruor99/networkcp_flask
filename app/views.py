@@ -80,7 +80,7 @@ def server():
 @app.route('/uadmin', methods=['GET','POST'])
 def uadmin():
     form = UadminForm()
-    print form
+    print form.usersel
     return render_template('uadmin.html', form=form)
 
 @app.route('/login', methods = ['GET', 'POST'])

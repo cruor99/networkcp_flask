@@ -3,15 +3,15 @@ from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, PasswordField, SelectField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
-from wtforms_alchemy import model_form_factory
 from models import User
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
-ModelForm = model_form_factory(Form)
+def listallu():
+    return User.query
 
-
-class UadminForm(ModelForm):
-    class Meta:
-        model = User
+class UadminForm(Form):
+    role = SelectField('role', choices=['standard', 'admin', 'premium'])
+    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True)
 
 
 

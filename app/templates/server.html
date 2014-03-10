@@ -3,7 +3,10 @@
 {% from "_formhelpers.html" import render_field %}
 <form method=post action="/server" name="start">
     <input type="submit" name="submit" value="Start">
+    </form>
+<form method="post" action="/server" name="stop">
     <input type="submit" name="submit" value="Stop">
+    </form>
     EXPERIMENTAL DO NOT USE IF YOU DON'T KNOW WHAT YOU'RE DOING, REMOVE FOR PRODUCTION
     <input type="submit" name="submit" value="startall">
     <input type="submit" name="submit" value="stopall"

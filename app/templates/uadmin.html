@@ -2,6 +2,26 @@
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 {% from "_formhelpers.html" import form_field %}
-
-
+   {% for role in form %}
+    <tr>
+    {% if role.type == "BooleanField" %}
+        <td></td>
+        <td>{{ role }} {{ role.label }}</td>
+    {% else %}
+        <td>{{ role.label }}</td>
+        <td>{{ role }}</td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+     {% for usersel in form %}
+    <tr>
+    {% if usersel.type == "BooleanField" %}
+        <td></td>
+        <td>{{ usersel }} {{ usersel.label }}</td>
+    {% else %}
+        <td>{{ usersel.label }}</td>
+        <td>{{ usersel }}</td>
+    {% endif %}
+    </tr>
+    {% endfor %}
 {% endblock %}
