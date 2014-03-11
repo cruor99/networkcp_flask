@@ -11,5 +11,7 @@
     <input type="submit" name="submit" value="startall">
     <input type="submit" name="submit" value="stopall"
 </form>
-    {{ output }}
+    {% for line in output %}
+   <br>{{ line }}
+    {% endfor %}
 {% endblock %}

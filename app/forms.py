@@ -5,13 +5,30 @@ from wtforms import validators
 from wtforms_alchemy import ModelForm
 from models import User
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
+from sqlalchemy.orm import load_only
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import Table, MetaData
+
+
+# an Engine, which the Session will use for connection
+# resources
+some_engine = create_engine('mysql://steve:12Karen34@broadparkgames.no/servercp')
+
+# create a configured "Session" class
+Session = sessionmaker(bind=some_engine)
+
+# create a Session
+session = Session()
+
 
 def listallu():
     return User.query
 
+
 class UadminForm(Form):
-    role = SelectField('role', choices=['standard', 'admin', 'premium'])
-    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True)
+    role = SelectField('role', choices=[(1, 'standard'), (2, 'Admin'), (3, 'Premium')])
+    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
 
 
 
