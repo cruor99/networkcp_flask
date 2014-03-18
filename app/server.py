@@ -24,7 +24,7 @@ class Server(object):
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"st /etc/init.d/minecraft_server stop "+user)
         print ssh_stdout.readlines()
-    def servercreate(self,server, user, port):
+    def servercreate(self, server, user, port):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.'+server, username='minecraft', password='minecraft')
@@ -39,4 +39,19 @@ class Server(object):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail /home/minecraft/worlds/"+user+"/console.out")
+        return ssh_stdin.readlines()
+
+#Method for sending commands to server
+    def servercommand(self, user, command):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
+        ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server send "+user+" "+command)
+
+#Method for sending commands to server
+    def readproperties(self, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail /home/minecraft/worlds/"+user+"/server.properties")
         return ssh_stdin.readlines()
