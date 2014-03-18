@@ -84,9 +84,13 @@ def server():
         if request.form['submit'] == 'Stop':
             serv.serverstop(user)
         if request.form['submit'] == 'stopall':
-            serv.serverstop(" ")
+            serv.serverstop("")
+        if request.form['submit'] == 'startall':
+            serv.serverstart("")
+        if request.form['submit'] == 'Send':
+            command = request.form['command']
+            serv.servercommand(user,command)
     return render_template('server.html', output=output)
-
 
 @admin_required
 @app.route('/uadmin', methods=['GET','POST'])
@@ -152,14 +156,20 @@ def signup():
 
 @app.route('/manage', methods =['GET', 'POST'])
 def manage():
+    user = session['username']
+    serv = Server()
+    properties = serv.readproperties(user)
     if request.method == 'POST':
         server = request.form['server']
         port = request.form['port']
         serv = Server()
         user = session['username']
         serv.servercreate(server,user,port)
-
-    return render_template('manage.html')
+    return render_template('manage.html',
+        user = session['username'],
+        properties=properties,
+        #serv = Server()
+        email = session['email'])
 
 
 @app.route('/logout')
