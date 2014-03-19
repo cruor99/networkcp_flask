@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+{% for subfield in form %}
+    <tr>
+        <td>{{ subfield }}</td>
+    </tr>
+{% endfor %}
+{% endblock %}

@@ -3,13 +3,14 @@ from flask import *
 #from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm
-from forms import signup_form
-from forms import UadminForm
+from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
 from server import Server
+from werkzeug import generate_password_hash
 import threading
+import sys
+import time
 
 
 def login_required(test):
@@ -64,7 +65,18 @@ def index():
 
 def serveroutput(uname):
     serv = Server()
-    return serv.readconsole(uname)
+    returnvalue = serv.readconsole(uname)
+    threading.Timer(4, serveroutput(uname))
+    sys.stdout.flush()
+    return returnvalue
+
+@app.route('/subscribe', methods=['GET', 'POST'])
+@login_required
+def subscribe():
+    user = session['username']
+    form = SubscriptionForm()
+
+    return render_template('subscribe.html', form=form)
 
 @app.route('/server', methods=['GET', 'POST'])
 @login_required
@@ -72,10 +84,8 @@ def serveroutput(uname):
 def server():
     user = session['username']
     serv = Server()
-   # output = threading.Timer(3, serveroutput, args=user).start()
-    output = serv.readconsole(user)
-
-    print output
+    servoutput = serv.readconsole(user)
+    output = servoutput
     if request.method == 'POST':
         if request.form['submit'] == 'Start':
             serv.serverstart(user)
@@ -96,17 +106,24 @@ def server():
 @app.route('/uadmin', methods=['GET','POST'])
 def uadmin():
     form = UadminForm()
-    role = form.role.data
-    print role
-    usersel = form.usersel.data
-    print str(usersel)
+    form2 = PasswordForm()
     if request.method == 'POST':
-        role = form.role.data
-        user = form.usersel.data
-        User.query.filter_by(cust_username=user).update({'role': role})
-        db.session.commit()
-        flash('User updated')
-    return render_template('uadmin.html', form=form)
+        if request.form['rolechange'] == 'Submit Change':
+            role = form.role.data
+            user = form.usersel.data
+            User.query.filter_by(cust_username=user).update({'role': role})
+            db.session.commit()
+            flash('User updated')
+            return render_template('uadmin.html', form=form, form2=form2)
+        if request.form['pwdchange'] == 'Submit Password':
+            newpwd = form2.pwdfield.data
+            user = form2.usersel.data
+            pwdhashed = generate_password_hash(newpwd)
+            print pwdhashed
+            return render_template('uadmin.html', form=form, form2=form2)
+        else:
+            return render_template('uadmin.html', form=form, form2=form2)
+    return render_template('uadmin.html', form=form, form2=form2)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -114,11 +131,6 @@ def login():
     cust_mail = form.email.data
     user = User.query.filter_by(cust_mail=cust_mail).first()
     if form.validate_on_submit():
-        print form.email.data
-        print user.cust_mail
-        print user.cust_username
-        print user.role
-        print user.check_password(form.password.data)
         if form.email.data == user.cust_mail and user.check_password(form.password.data):
             session['remember_me'] = form.remember_me.data
             session['logged_in'] = True
@@ -155,6 +167,7 @@ def signup():
         return render_template('signup.html', form=form)
 
 @app.route('/manage', methods =['GET', 'POST'])
+@premium_required
 def manage():
     user = session['username']
     serv = Server()

@@ -1,5 +1,7 @@
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="static/main.css" />
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
     {% if title %}
     <title>{{title}} - Net\work CP</title>
     {% else %}
@@ -7,11 +9,12 @@
     {% endif %}
   </head>
   <body>
-    <div>Net\work CP:
+
+    <div id="navlist">Net\work CP:
         <a href="{{ url_for('index') }}">Home</a>
         {% if 'logged_in' in session %}
             {% if 'premium' in session %}
-        | <a href="{{ url_for('server') }}">Server Control</a>
+        |<div class="menu-tab"> <a href="{{ url_for('server') }}" class="menu-link">Server Control</a></div>
         | <a href="{{ url_for('manage') }}">Manage</a>
             {% endif %}
           {% if 'admin' in session %}
@@ -19,6 +22,7 @@
         | <a href="{{ url_for('manage') }}">Manage</a>
         | <a href="{{ url_for('uadmin') }}">User Administration</a>
            {% endif %}
+        | <a href="{{ url_for('subscribe') }}">Subscribe</a>
         | <a href="{{ url_for('logout') }}">Logout</a>
 
         {% else %}
@@ -28,6 +32,7 @@
 
 
     </div>
+
     <hr>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -38,6 +43,8 @@
     </ul>
     {% endif %}
     {% endwith %}
+  <div>
     {% block content %}{% endblock %}
+  </div>
   </body>
 </html>

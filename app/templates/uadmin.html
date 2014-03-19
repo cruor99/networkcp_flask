@@ -14,7 +14,16 @@
     {% endif %}
     </tr>
     {% endfor %}
-    <input type="submit" value="Submit Change">
+    <input type="submit" value="Submit Change" name="rolechange">
     </form>
+    <br><br>Change Password Here<br>
+    <form action="" method="post" name="pwdchange">
+    {% for field in form2 %}
+    <tr>
+        <td>{{ field }}</td>
+    </tr>
+    {% endfor %}
 
+    <input type="submit" value="Submit Password" name="pwdchange">
+    </form>
 {% endblock %}
