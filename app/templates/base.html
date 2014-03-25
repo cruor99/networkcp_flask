@@ -14,19 +14,19 @@
         <a href="{{ url_for('index') }}">Home</a>
         {% if 'logged_in' in session %}
             {% if 'premium' in session %}
-        |<div class="menu-tab"> <a href="{{ url_for('server') }}" class="menu-link">Server Control</a></div>
-        | <a href="{{ url_for('manage') }}">Manage</a>
+        <div class="menu-tab"> <a href="{{ url_for('server') }}" class="menu-link">Server Control</a></div>
+        <div class="menu-tab"> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></div>
             {% endif %}
           {% if 'admin' in session %}
-        | <a href="{{ url_for('server') }}">Server Control</a>
-        | <a href="{{ url_for('manage') }}">Manage</a>
-        | <a href="{{ url_for('uadmin') }}">User Administration</a>
+        <div class="menu-tab"> <a href="{{ url_for('server') }}" class="menu-link">Server Control</a></div>
+        <div class="menu-tab"> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></div>
+        <div class="menu-tab"> <a href="{{ url_for('uadmin') }}" class="menu-link">User Administration</a></div>
            {% endif %}
-        | <a href="{{ url_for('subscribe') }}">Subscribe</a>
-        | <a href="{{ url_for('logout') }}">Logout</a>
+        <div class="menu-tab"> <a href="{{ url_for('subscribe') }}" class="menu-link">Subscribe</a></div>
+        <div class="menu-tab"> <a href="{{ url_for('logout') }}" class="menu-link">Logout</a></div>
 
         {% else %}
-        | <a href="{{ url_for('signup') }}">Signup</a>
+        <div class="menu-tab"> <a href="{{ url_for('signup') }}" class="menu-link">Signup</a></div>
         {% endif %}
 
 
