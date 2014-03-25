@@ -10,7 +10,9 @@ from server import Server
 from werkzeug import generate_password_hash
 import threading
 import sys
-import time
+from payex.service import PayEx
+
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 def login_required(test):
