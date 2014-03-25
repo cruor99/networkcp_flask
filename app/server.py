@@ -38,7 +38,7 @@ class Server(object):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail /home/minecraft/worlds/"+user+"/console.out")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines 15 /home/minecraft/worlds/"+user+"/console.out")
         return ssh_stdin.readlines()
 
 #Method for sending commands to server
@@ -48,10 +48,18 @@ class Server(object):
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
         ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server send "+user+" "+command)
 
-#Method for sending commands to server
+#Method to get the server.properties file
     def readproperties(self, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail /home/minecraft/worlds/"+user+"/server.properties")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/minecraft/worlds/"+user+"/server.properties")
+        return ssh_stdin.readlines()
+
+#Method for editing server.properties
+    def readproperties(self, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/minecraft/worlds/"+user+"/server.properties")
         return ssh_stdin.readlines()

@@ -8,8 +8,8 @@
         <input type="submit" name="submit" value="test ">
     </form>
     <br>
-    <b>Server.properties file:</b>
+    <b>Server.properties file:</b><br>
     {% for line in properties %}
-    <br>{{ line }}
+    {{ line }}<br>
     {% endfor %}
 {% endblock %}

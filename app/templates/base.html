@@ -1,13 +1,13 @@
 <html>
   <head>
     {% if title %}
-    <title>{{title}} - Net\work CP</title>
+    <title>{{title}} - net/work CP</title>
     {% else %}
-    <title>Net\work CP</title>
+    <title>net/work CP</title>
     {% endif %}
   </head>
   <body>
-    <div>Net\work CP:
+    <div>net/work CP:
         <a href="{{ url_for('index') }}">Home</a>
         {% if 'logged_in' in session %}
             {% if 'premium' in session %}

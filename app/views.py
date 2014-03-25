@@ -165,12 +165,12 @@ def manage():
         serv = Server()
         user = session['username']
         serv.servercreate(server,user,port)
+        #if request.form['submit'] == 'Edit':
     return render_template('manage.html',
         user = session['username'],
         properties=properties,
         #serv = Server()
         email = session['email'])
-
 
 @app.route('/logout')
 def logout():
