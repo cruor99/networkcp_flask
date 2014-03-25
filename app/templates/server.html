@@ -1,3 +1,6 @@
+<header>
+<meta http-equiv="refresh" content="3">
+</header>
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
@@ -7,20 +10,7 @@
 <form method="post" action="/server" name="stop">
     <input type="submit" name="submit" value="Stop">
     </form>
-    EXPERIMENTAL DO NOT USE IF YOU DON'T KNOW WHAT YOU'RE DOING, REMOVE FOR PRODUCTION
-<form method="post" action="/server" name="stopstartall">
-    <input type="submit" name="submit" value="startall">
-    <br>
-    <input type="submit" name="submit" value="stopall">
-</form>
-    <br>
-    Here you can send commands to your server instances!
-    <form method=post action="/server" name="command">
-        <input type="text" name="command">
-        <input type="submit" name="submit" value="Send">
-    </form>
-    <br>
-    {% for line in output %}
-    {{ line }}<br>
+{% for line in output %}
+   <br>{{ line }}
     {% endfor %}
 {% endblock %}

@@ -1,6 +1,6 @@
 __author__ = 'cruor'
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, PasswordField, SelectField
+from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
 from models import User
@@ -30,7 +30,12 @@ class UadminForm(Form):
     role = SelectField('role', choices=[(1, 'standard'), (2, 'Admin'), (3, 'Premium')])
     usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
 
+class PasswordForm(Form):
+    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
+    pwdfield = PasswordField('Password')
 
+class SubscriptionForm(Form):
+    subsel = RadioField('Subscriptions', choices=[(1, '1-month'), (2, '3-month'), (3, '6-month'), (4, '12-month')])
 
 class LoginForm(Form):
     #openid = TextField('openid', validators = [validators.Required()])
