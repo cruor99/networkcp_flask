@@ -4,7 +4,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
-<form method=post action="/server" name="start">
+<div class="editArea"><div class="infoParagraph"><form method=post action="/server" name="start">
     <input type="submit" name="submit" value="Start">
     </form>
 <form method="post" action="/server" name="stop">
@@ -17,7 +17,11 @@
     <input type="submit" name="submit" value="Send">
 </form>
     <br>
+</div></div>
+    <div class="editArea">
+    <div class="infoParagraph">
 {% for line in output %}
    <br>{{ line }}
     {% endfor %}
+    </div></div>
 {% endblock %}

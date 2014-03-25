@@ -9,9 +9,10 @@
     {% endif %}
   </head>
   <body>
-
-    <div id="navlist">Net\work CP:
-        <a href="{{ url_for('index') }}">Home</a>
+   <div class="div-nav">
+   <nav>
+    <div class="menu-tab">Net\work CP:</div>
+        <div class="menu-tab"><a href="{{ url_for('index') }}" class="menu-link">Home</a></div>
         {% if 'logged_in' in session %}
             {% if 'premium' in session %}
         <div class="menu-tab"> <a href="{{ url_for('server') }}" class="menu-link">Server Control</a></div>
@@ -25,10 +26,12 @@
         <div class="menu-tab"> <a href="{{ url_for('subscribe') }}" class="menu-link">Subscribe</a></div>
         <div class="menu-tab"> <a href="{{ url_for('logout') }}" class="menu-link">Logout</a></div>
 
+
         {% else %}
         <div class="menu-tab"> <a href="{{ url_for('signup') }}" class="menu-link">Signup</a></div>
         {% endif %}
-
+   </nav>
+</div>
 
 
     </div>
@@ -43,7 +46,7 @@
     </ul>
     {% endif %}
     {% endwith %}
-  <div>
+  <div class="content-box">
     {% block content %}{% endblock %}
   </div>
   </body>
