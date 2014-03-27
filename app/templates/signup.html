@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
+<br>
+<div class="editArea"><div class="infoParagraph">
 <form method=post action="/signup">
   <dl>
     {{ render_field(form.username) }}
@@ -14,4 +16,5 @@
   </dl>
   <p><input type=submit value=submit>
 </form>
+</div></div>
 {% endblock %}

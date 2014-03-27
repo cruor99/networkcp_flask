@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
+<br>
+<div class="editArea"><div class="infoParagraph">
 {% for subfield in form %}
     <tr>
         <td>{{ subfield }}</td>
     </tr>
 {% endfor %}
+</div></div>
 {% endblock %}

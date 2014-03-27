@@ -1,17 +1,17 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="static/main.css" />
-  <link rel="stylesheet" type="text/css" href="static/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/style2.css" />
     {% if title %}
-    <title>{{title}} - Net\work CP</title>
+    <title>{{title}} - net/work CP</title>
     {% else %}
-    <title>Net\work CP</title>
+    <title>net/work CP</title>
     {% endif %}
   </head>
   <body>
-   <div class="div-nav">
-   <nav>
-    <div class="menu-tab">Net\work CP:</div>
+    <div class="div-nav">
+    <nav>
         <div class="menu-tab"><a href="{{ url_for('index') }}" class="menu-link">Home</a></div>
         {% if 'logged_in' in session %}
             {% if 'premium' in session %}
@@ -25,15 +25,11 @@
            {% endif %}
         <div class="menu-tab"> <a href="{{ url_for('subscribe') }}" class="menu-link">Subscribe</a></div>
         <div class="menu-tab"> <a href="{{ url_for('logout') }}" class="menu-link">Logout</a></div>
-
-
         {% else %}
         <div class="menu-tab"> <a href="{{ url_for('signup') }}" class="menu-link">Signup</a></div>
         {% endif %}
-   </nav>
-</div>
-
-
+    </nav>
+    </div>
     </div>
 
     <hr>

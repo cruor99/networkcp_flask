@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Hi {{ user }}!</h1>
+<br>
+<div class="editArea"><div class="infoParagraph">
 <p> Here you can manage your server instances, or order a new one!</p>
     <form method=post action="/manage" name="start">
         <input type="text" name="server">
         <input type="text" name="port">
         <input type="submit" name="submit" value="test ">
-    </form>
+    </form></div></div>
     <br>
+    <div class="editArea"><div class="infoParagraph">
     <b>Server.properties file:</b><br>
     {% for line in properties %}
     {{ line }}<br>
     {% endfor %}
+</div></div>
 {% endblock %}

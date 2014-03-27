@@ -2,6 +2,8 @@
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 {% from "_formhelpers.html" import form_field %}
+<br>
+<div class="editArea"><div class="infoParagraph">
   Select Role and User
     <form action="" method="post" name="rolechange">
    {% for role in form %}
@@ -26,4 +28,5 @@
 
     <input type="submit" value="Submit Password" name="pwdchange">
     </form>
+</div></div>
 {% endblock %}
