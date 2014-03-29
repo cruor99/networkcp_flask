@@ -186,7 +186,7 @@ def manage():
                                    properties=properties,
                                    email = session['email'],
                                    form = form)
-        if request.form['submit'] == 'propChange':
+        if request.form['submit'] == 'propchange':
             key = form.props.data
             value = form.value.data
             serv.editproperties(user, key, value)
