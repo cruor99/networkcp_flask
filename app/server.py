@@ -57,9 +57,9 @@ class Server(object):
         return ssh_stdin.readlines()
 
 #Method for editing server.properties
-    def readproperties(self, user):
+    def editproperties(self, user, key, value):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/minecraft/worlds/"+user+"/server.properties")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/minecraft/mcprop.py -w "+user+" -o "+key+" -v "+value)
         return ssh_stdin.readlines()

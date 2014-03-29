@@ -6,10 +6,25 @@
     <form method=post action="/manage" name="start">
         <input type="text" name="server">
         <input type="text" name="port">
-        <input type="submit" name="submit" value="test ">
+        <input type="submit" name="submit" value="servCreate">
     </form></div></div>
     <br>
     <div class="editArea"><div class="infoParagraph">
+    -----------------------------<br>
+    <form method="post" action="/manage" name="propset">
+    {% for role in form %}
+    <tr>
+    {% if role.type == "BooleanField" %}
+        <td></td>
+        <td>{{ role }} {{ role.label }}</td>
+    {% else %}
+        <td>{{ role }}</td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+    <input type="submit" name="submit" value="propchange">
+
+    </form>
     <b>Server.properties file:</b><br>
     {% for line in properties %}
     {{ line }}<br>

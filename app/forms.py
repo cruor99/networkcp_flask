@@ -9,22 +9,17 @@ from sqlalchemy.orm import load_only
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Table, MetaData
+from server import Server
 
-
-# an Engine, which the Session will use for connection
-# resources
-some_engine = create_engine('mysql://steve:12Karen34@broadparkgames.no/servercp')
-
-# create a configured "Session" class
-Session = sessionmaker(bind=some_engine)
-
-# create a Session
-session = Session()
 
 
 def listallu():
     return User.query
 
+class PropertiesForm(Form):
+    serv = Server()
+    props = SelectField('props', choices=[('server-port', 'server-port'), ('online-mode', 'online-mode')])
+    value = TextField('values')
 
 class UadminForm(Form):
     role = SelectField('role', choices=[(1, 'standard'), (2, 'Admin'), (3, 'Premium')])

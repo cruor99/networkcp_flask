@@ -1,9 +1,8 @@
 __author__ = 'cruor'
 from flask import *
-#from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm
+from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm, PropertiesForm
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
 from server import Server
@@ -174,18 +173,34 @@ def manage():
     user = session['username']
     serv = Server()
     properties = serv.readproperties(user)
+    form = PropertiesForm()
     if request.method == 'POST':
-        server = request.form['server']
-        port = request.form['port']
-        serv = Server()
-        user = session['username']
-        serv.servercreate(server,user,port)
-        #if request.form['submit'] == 'Edit':
+        if request.form['submit'] == 'servCreate':
+            server = request.form['server']
+            port = request.form['port']
+            serv = Server()
+            user = session['username']
+            serv.servercreate(server,user,port)
+            return render_template('manage.html',
+                                   user = session['username'],
+                                   properties=properties,
+                                   email = session['email'],
+                                   form = form)
+        if request.form['submit'] == 'propChange':
+            key = form.props.data
+            value = form.value.data
+            serv.editproperties(user, key, value)
+            return render_template('manage.html',
+                                   user = session['username'],
+                                   properties=properties,
+                                   email = session['email'],
+                                   form = form)
+
     return render_template('manage.html',
-        user = session['username'],
-        properties=properties,
-        #serv = Server()
-        email = session['email'])
+                           user = session['username'],
+                           properties=properties,
+                           email = session['email'],
+                           form = form)
 
 @app.route('/logout')
 def logout():
