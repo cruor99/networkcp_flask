@@ -11,7 +11,7 @@ import threading
 import sys
 from payex.service import PayEx
 
-service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
+service = PayEx(merchant_number='<merchant number>', encryption_key='<encryption key>', production=False)
 
 
 def login_required(test):
@@ -76,7 +76,23 @@ def serveroutput(uname):
 def subscribe():
     user = session['username']
     form = SubscriptionForm()
-
+    if request.method == 'POST':
+        response = service.initialize(
+            purchaseOperation='SALE',
+            price='100',
+            currency='NOK',
+            vat='2500',
+            orderID='test1',
+            productNumber='123',
+            description=u'This is a test.',
+            clientIPAddress='127.0.0.1',
+            clientIdentifier='USERAGENT=test&username=testuser',
+            additionalValues='PAYMENTMENU=TRUE',
+            returnUrl='http://networkcp-beta.herokuapps.com/manage/',
+            view='PX',
+            cancelUrl='http://networkcp-beta.herokuapps.com/subscribe/'
+        )
+        return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
 
 @app.route('/server', methods=['GET', 'POST'])
