@@ -5,7 +5,7 @@
 <br>
 <div class="editArea"><div class="infoParagraph">
   Select Role and User
-    <form action="" method="post" name="rolechange">
+    <form action="/uadmin" method="post" name="rolechange">
    {% for role in form %}
     <tr>
     {% if role.type == "BooleanField" %}
@@ -16,17 +16,17 @@
     {% endif %}
     </tr>
     {% endfor %}
-    <input type="submit" value="Submit Change" name="rolechange">
+    <input type="submit" value="rolechange" name="submit">
     </form>
     <br><br>Change Password Here<br>
-    <form action="" method="post" name="pwdchange">
+    <form action="/uadmin" method="post" name="pwdchange">
     {% for field in form2 %}
     <tr>
         <td>{{ field }}</td>
     </tr>
     {% endfor %}
 
-    <input type="submit" value="Submit Password" name="pwdchange">
+    <input type="submit" value="pwdchange" name="submit">
     </form>
 </div></div>
 {% endblock %}

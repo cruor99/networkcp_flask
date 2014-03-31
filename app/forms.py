@@ -12,25 +12,34 @@ from sqlalchemy import Table, MetaData
 from server import Server
 
 
-
 def listallu():
     return User.query
+
 
 class PropertiesForm(Form):
     serv = Server()
     props = TextField('props')
     value = TextField('values')
 
+
 class UadminForm(Form):
     role = SelectField('role', choices=[(1, 'standard'), (2, 'Admin'), (3, 'Premium')])
     usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
+
+
+class UserpasswordForm(Form):
+    pwdfield = PasswordField('Password')
+    confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('confirm', message='Passwords must match')])
+
 
 class PasswordForm(Form):
     usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
     pwdfield = PasswordField('Password')
 
+
 class SubscriptionForm(Form):
     subsel = RadioField('Subscriptions', choices=[(1, '1-month'), (2, '3-month'), (3, '6-month'), (4, '12-month')])
+
 
 class LoginForm(Form):
     #openid = TextField('openid', validators = [validators.Required()])
@@ -41,6 +50,7 @@ class LoginForm(Form):
     def __init__(self, *args, **kwargs):
         kwargs['csrf_enabled'] = False
         super(LoginForm, self).__init__(*args, **kwargs)
+
 
 class signup_form(Form):
     username = TextField('Username', validators=[validators.Required()])

@@ -2,7 +2,7 @@ __author__ = 'cruor'
 from flask import *
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm, PropertiesForm
+from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm, PropertiesForm, UserpasswordForm
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
 from server import Server
@@ -11,7 +11,7 @@ import threading
 import sys
 from payex.service import PayEx
 
-service = PayEx(merchant_number='<merchant number>', encryption_key='<encryption key>', production=False)
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 def login_required(test):
@@ -79,7 +79,7 @@ def subscribe():
     if request.method == 'POST':
         response = service.initialize(
             purchaseOperation='SALE',
-            price='100',
+            price='1000',
             currency='NOK',
             vat='2500',
             orderID='test1',
@@ -88,9 +88,9 @@ def subscribe():
             clientIPAddress='127.0.0.1',
             clientIdentifier='USERAGENT=test&username=testuser',
             additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://networkcp-beta.herokuapps.com/manage/',
+            returnUrl='http://networkcp-beta.herokuapp.com/manage/',
             view='PX',
-            cancelUrl='http://networkcp-beta.herokuapps.com/subscribe/'
+            cancelUrl='http://networkcp-beta.herokuapp.com/subscribe/'
         )
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
@@ -119,24 +119,40 @@ def server():
             serv.servercommand(user,command)
     return render_template('server.html', output=output)
 
+@app.route('/uuadmin', methods=['GET','POST'])
+@login_required
+def uuadmin():
+    form = UserpasswordForm()
+    if request.method == 'POST':
+        if request.form['submit'] == 'pwdchange':
+            newpwd = form.pwdfield.data
+            user = session['username']
+            pwdhashed = generate_password_hash(newpwd)
+            User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
+            flash('Password updated, please inform the user')
+            return render_template('uuadmin.html', form=form)
+    return render_template('uuadmin.html', form=form)
+
+
 @admin_required
 @app.route('/uadmin', methods=['GET','POST'])
 def uadmin():
     form = UadminForm()
     form2 = PasswordForm()
     if request.method == 'POST':
-        if request.form['rolechange'] == 'Submit Change':
+        if request.form['submit'] == 'rolechange':
             role = form.role.data
             user = form.usersel.data
             User.query.filter_by(cust_username=user).update({'role': role})
             db.session.commit()
             flash('User updated')
             return render_template('uadmin.html', form=form, form2=form2)
-        if request.form['pwdchange'] == 'Submit Password':
+        if request.form['submit'] == 'pwdchange':
             newpwd = form2.pwdfield.data
             user = form2.usersel.data
             pwdhashed = generate_password_hash(newpwd)
-            print pwdhashed
+            User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
+            flash('Password updated, please inform the user')
             return render_template('uadmin.html', form=form, form2=form2)
         else:
             return render_template('uadmin.html', form=form, form2=form2)

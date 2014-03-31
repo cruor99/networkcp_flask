@@ -1,6 +1,4 @@
-<header>
-<meta http-equiv="refresh" content="3">
-</header>
+
 {% extends "base.html" %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
@@ -22,6 +20,7 @@
     <br>
     <div class="editArea">
     <div class="infoParagraph">
+    <FRAME src="mcoutput.html">
 {% for line in output %}
    <br>{{ line }}
     {% endfor %}
