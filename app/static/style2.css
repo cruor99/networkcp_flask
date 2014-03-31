@@ -155,7 +155,7 @@ header{
 .div-nav{
 	background: url(images/bg-nav.png) center 0 no-repeat;
 	width:100%;
-	height:56px;
+	height:40px;
 	}
 /*********************************content*************************************/
 #content{
@@ -482,7 +482,7 @@ footer .grid_12 a:hover{color:#fff;}
 /*=======================superfish=========================*/
 nav{
 	display:block;
-	width:940px;
+	width:1500px;
 	margin:0 auto;
 	text-align:center;
 	}
@@ -502,6 +502,7 @@ ul.sf-menu>li{
   position:relative;
   text-transform:uppercase;
   border-right:1px solid #252527;
+  list-style-type:none;
   }
   ul.sf-menu>li:first-child{border-left:1px solid #252527;}
   
@@ -595,7 +596,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 .banner-list li{
 	font-size:16px;
 	line-height:20px;
-	background: url(../images/bg-list-banner.png) 0 10px no-repeat;
+	background: url(images/bg-list-banner.png) 0 10px no-repeat;
 	text-transform:uppercase;
 	padding:4px 0 4px 25px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -613,7 +614,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 	line-height:26px;
 	font-weight:800;
 	font-family: 'Orbitron', sans-serif;
-	background: url(../images/bg-banner-a.png) 0 0 repeat-x;
+	background: url(images/bg-banner-a.png) 0 0 repeat-x;
 	padding:7px 19px 8px 19px;
 	border-radius: 10px;
 	border-bottom:4px solid #0c0c0d;
@@ -645,7 +646,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 	height:11px; 
 	background: url(../images/pagination.png) 0 0 no-repeat;
 	}
-.pagination li.current a, .pagination li:hover a{background: url(../images/pagination.png) -19px 0 no-repeat;}
+.pagination li.current a, .pagination li:hover a{background: url(images/pagination.png) -19px 0 no-repeat;}
 
 /******************* carousel ***************/
 .carousel {
@@ -657,7 +658,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
     }
 .panel{
 	box-shadow:inset 0 0 51px rgba(0,0,0,0.6);
-	background: url(../images/bg-box.jpg) 0 0 repeat;
+	background: url(images/bg-box.jpg) 0 0 repeat;
 	text-align:center;
 	padding:22px 0 16px 0;
 	}
@@ -668,8 +669,8 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 	height:11px;
 	margin:0 13px;
 	}
-#next{background: url(../images/next.png) 0 0 no-repeat;}
-#prev{background: url(../images/prev.png) 0 0 no-repeat;} 
+#next{background: url(images/next.png) 0 0 no-repeat;}
+#prev{background: url(images/prev.png) 0 0 no-repeat;}
 
 #next:hover {background-position:0 bottom;}
 #prev:hover {background-position:0 bottom;}
@@ -695,7 +696,7 @@ table#cart_summary th {
 	 font-weight:bold;
 	text-transform:uppercase;
 	 text-shadow:0 1px 0 #666;
-	background:url(../img/bg_table_th.png) repeat-x 0 -15px #999
+	background:url(img/bg_table_th.png) repeat-x 0 -15px #999
 }
 table#cart_summary  th.cart_product {text-align:center}
 table#cart_summary  td {
@@ -827,7 +828,7 @@ table#cart_summary #total_price_container {
 	width:170px;/* 180 */
 	border:1px solid #ccc;
 	font-weight:normal;
-	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff
+	background:url(img/bg_discount_name.png) repeat-x 0 0 #fff
 }
 .cart_voucher .submit input.button {
 	margin-left:2px;
@@ -840,7 +841,7 @@ table#cart_summary #total_price_container {
 	color:#fff;
 	text-transform:uppercase;
 	text-shadow:0 -1px 0 #333;
-	background:url(../img/bg_cart_voucher_submit.png) repeat-x 0 0 #000
+	background:url(img/bg_cart_voucher_submit.png) repeat-x 0 0 #000
 }
 
 #cart_summary .price {
@@ -885,7 +886,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	color:#fff;
 	font-weight:bold;
 	text-transform:uppercase;
-	background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
+	background:url(img/bg_table_th.png) repeat-x 0 -10px #999
 }
 #order_carrier span {
 	display:block;
@@ -919,7 +920,7 @@ table#cart_summary .gift-icon {
 .cart_navigation .button,
 .cart_navigation .button_large {
 	border-color:#ccc;
-	background-image:url(../img/bg_bt_2.gif)
+	background-image:url(img/bg_bt_2.gif)
 }
 
 	/* CART steps *********************************************************************** */
@@ -936,22 +937,22 @@ ul.step li {
 	width:151px;
 	text-align:center;
 	text-transform:uppercase;
-	background:url(../images/step_standard.gif) no-repeat center bottom transparent
+	background:url(images/step_standard.gif) no-repeat center bottom transparent
 }
 ul.step li a, ul.step li.step_current span, ul.step li.step_current_end span {
 	display:inline-block;
 	padding:8px 10px 12px;
 	color:#000;
-	background:url(../images/step_current_span.gif) no-repeat center bottom transparent
+	background:url(images/step_current_span.gif) no-repeat center bottom transparent
 }
 ul.step li.step_current {
 	font-weight:bold;
-	background:url(../images/step_current.gif) no-repeat center bottom transparent
+	background:url(images/step_current.gif) no-repeat center bottom transparent
 }
 
 ul.step li.step_current_end {
 	font-weight:bold;
-	background:url(../images/step_end_current.gif) no-repeat center bottom transparent
+	background:url(images/step_end_current.gif) no-repeat center bottom transparent
 }
 ul.step li.step_todo span {
 	display:inline-block;
@@ -962,7 +963,7 @@ ul.step li.step_todo span {
 }
 ul.step li.step_done {
 	font-weight:bold;
-	background:url(../images/step_done.gif) no-repeat center bottom transparent
+	background:url(images/step_done.gif) no-repeat center bottom transparent
 }
 
 	.btn {
@@ -999,7 +1000,7 @@ ul.step li.step_done {
 		color: #323232;
 		font: 14px/14px Times New Roman;
 		font-family: 'Ubuntu', sans-serif;
-		background: url(../images/bg-5.png) right 5px no-repeat;
+		background: url(images/bg-5.png) right 5px no-repeat;
 		padding: 0px 11px 0px 0;
 		margin-top: 14px;
 }
@@ -1026,7 +1027,7 @@ ul.step li.step_done {
 		color: #83868a;
 		font-family: 'Ubuntu', sans-serif;
 		padding-left: 15px;
-		background: url(../images/bg-6.png) 0 15px no-repeat;
+		background: url(images/bg-6.png) 0 15px no-repeat;
 		margin-bottom: 14px;
 		margin-top: -9px;
 		padding-top: 11px;
@@ -1058,7 +1059,7 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large,
 	border-radius: 3px !important;
 	font-weight:bold;
 	color:#000;
-	background:url(../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
+	background:url(img/bg_bt.gif) repeat-x 0 0 #f4b61b;
 	cursor: pointer;
 }
 
