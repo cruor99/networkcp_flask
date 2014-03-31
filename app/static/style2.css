@@ -282,7 +282,8 @@ header{
 		border-radius: 8px;
         background-color:#ffffff;
         width:1200px;
-        min-height:90%;
+        height:85%;
+        overflow:auto;
         margin-left:auto;
         margin-right:auto;
 		}
@@ -290,9 +291,11 @@ header{
 		background: url(images/bg-title.png) 0 0 no-repeat;
 		padding:16px 0 16px 17px;
 		border-radius: 8px;
-        background-color:#ffffff;
+        background-color:#000000;
+        color:#ffffff;
+        overflow:scroll;
         width:100%px;
-        height:100px;
+        height:200px;
 		}
 .content-box-1{
 	box-shadow:inset 0 0 51px rgba(0,0,0,0.6);

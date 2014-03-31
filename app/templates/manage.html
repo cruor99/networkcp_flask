@@ -9,7 +9,7 @@
         <input type="submit" name="submit" value="servCreate">
     </form>
     <br>
-    -----------------------------<br>
+    <br>
     <form method="post" action="/manage" name="propset">
     {% for role in form %}
     <tr>
@@ -23,9 +23,10 @@
     {% endfor %}
     <input type="submit" name="submit" value="propchange">
     </form>
+    <div class="inner-box2"
     <b>Server.properties file:</b><br>
     {% for line in properties %}
     {{ line }}<br>
     {% endfor %}
-    </div></div>
+    </div></div></div>
 {% endblock %}
