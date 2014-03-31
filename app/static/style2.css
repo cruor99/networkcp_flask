@@ -482,7 +482,7 @@ footer .grid_12 a:hover{color:#fff;}
 /*=======================superfish=========================*/
 nav{
 	display:block;
-	width:9400px;
+	width:940px;
 	margin:0 auto;
 	text-align:center;
 	}
@@ -495,7 +495,7 @@ ul.sf-menu li li:hover ul,ul.sf-menu li li.sfHover ul {left:100%; top:0;z-index:
 ul.sf-menu>li{
   background: url(images/bg-li-transparent.png) 0 0 no-repeat;
   font-family: 'Orbitron', sans-serif;
-  font-size: 14px; 
+  font-size: 14px;
   line-height:20px;
   font-weight:800;
   float:left; 
@@ -511,13 +511,13 @@ ul.sf-menu>li>a{
 	padding:10px 19px 15px 19px;  
 	color:#fff ;
 	}
-ul.sf-menu>li.current , ul.sf-menu>li.sfHover , ul.sf-menu>li:hover {background: url(/images/bg-li.png) 0 0 repeat;}
+ul.sf-menu>li.current , ul.sf-menu>li.sfHover , ul.sf-menu>li:hover {background: url(images/bg-li.png) 0 0 repeat;}
 ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 
 .sf-menu>li>ul{
 	left:0px;
 	top:45px;
-	width: 1650px;
+	width: 165px;
 	padding:0 0 0 0; 
 	z-index:99;
 	background:#131314 ; 
