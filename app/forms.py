@@ -18,7 +18,7 @@ def listallu():
 
 class PropertiesForm(Form):
     serv = Server()
-    props = SelectField('props', choices=[('server-port', 'server-port'), ('online-mode', 'online-mode')])
+    props = TextField('props')
     value = TextField('values')
 
 class UadminForm(Form):
