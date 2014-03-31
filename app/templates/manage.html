@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="editArea"><div class="infoParagraph">
+<div class="content"><div class="inner-box">
 <p> Here you can manage your server instances, or order a new one!</p>
     <form method=post action="/manage" name="start">
         <input type="text" name="server">
         <input type="text" name="port">
         <input type="submit" name="submit" value="servCreate">
-    </form></div></div>
+    </form>
     <br>
-    <div class="editArea"><div class="infoParagraph">
     -----------------------------<br>
     <form method="post" action="/manage" name="propset">
     {% for role in form %}
@@ -29,5 +28,5 @@
     {% for line in properties %}
     {{ line }}<br>
     {% endfor %}
-</div></div>
+    </div></div>
 {% endblock %}

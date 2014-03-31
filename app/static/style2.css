@@ -9,7 +9,7 @@ mark, rp, rt, ruby, summary, time {display:inline;}
 html, body {width:100%; padding:0; margin:0; height:100%;}
 
 body {
-	font-family: Arial, Helvetica, sans-serif ; 	 
+	font-family: Arial, Helvetica, sans-serif;
 	font-size:12px; 
 	line-height:18px;
 	color:#797979;
@@ -104,6 +104,7 @@ h1{
 	float:left;
 	margin:0 0 0 344px;
 	overflow:hidden;
+    line-height:30px;
 	}
 	h1 span{
 		text-indent:-600px;
@@ -279,6 +280,10 @@ header{
 		background: url(images/bg-title.png) 0 0 no-repeat;
 		padding:16px 0 16px 17px;
 		border-radius: 8px;
+        background-color:#ffffff;
+        width:1200px;
+        margin-left: auto;
+        margin-right: auto;
 		}
 .content-box-1{
 	box-shadow:inset 0 0 51px rgba(0,0,0,0.6);
@@ -482,7 +487,7 @@ footer .grid_12 a:hover{color:#fff;}
 /*=======================superfish=========================*/
 nav{
 	display:block;
-	width:1500px;
+	width:1200px;
 	margin:0 auto;
 	text-align:center;
 	}
@@ -630,7 +635,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 	top:376px;
 	left:426px;
 	z-index:1000;
-	background: url(../images/bgpagination.png) 0 0 no-repeat;
+	background: url(images/bgpagination.png) 0 0 no-repeat;
 	width:68px; 
 	height:17px;
 	padding:10px 0 0 20px;
@@ -644,7 +649,7 @@ ul.sf-menu>li.current>a, ul.sf-menu>li.sfHover>a, ul.sf-menu>li>a:hover{}
 	display:block; 
 	width:10px; 
 	height:11px; 
-	background: url(../images/pagination.png) 0 0 no-repeat;
+	background: url(images/pagination.png) 0 0 no-repeat;
 	}
 .pagination li.current a, .pagination li:hover a{background: url(images/pagination.png) -19px 0 no-repeat;}
 
@@ -1064,7 +1069,7 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large,
 }
 
 .button2{
-background: url("http://prosjekt.uia.no/users/geirsf11/ventrilo/img/bg_bt.gif") 0px 0px repeat-x #F4B61B;
+background: url(img/bg_bt.gif) 0px 0px repeat-x #F4B61B;
 border: 1px solid #CC9900;
 border-radius: 3px !important;
 color: #000000;

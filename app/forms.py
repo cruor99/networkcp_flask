@@ -59,7 +59,7 @@ class signup_form(Form):
     email = TextField('eMail', validators=[validators.Required()])
     fname = TextField('First Name', validators=[validators.Required()])
     lname = TextField('Last Name', validators=[validators.Required()])
-    phone = TextField('Phone Number', validators=[validators.Required()])
+    phone = TextField('Phone Number')
     accept_tos = BooleanField('I accept the TOS', default = False, validators=[validators.Required()])
 
     #catches csrf_enabled for site security, and to prevent it from being sent for validation
