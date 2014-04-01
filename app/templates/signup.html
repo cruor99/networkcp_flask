@@ -4,17 +4,21 @@
 <br>
 <div class="content"><div class="inner-box">
 <form method=post action="/signup">
-  <dl>
-    {{ render_field(form.username) }}
-    {{ render_field(form.email) }}
-    {{ render_field(form.password) }}
-    {{ render_field(form.confirm) }}
-    {{ render_field(form.fname) }}
-    {{ render_field(form.lname) }}
-    {{ render_field(form.phone) }}
-    {{ render_field(form.accept_tos) }}
+  <dl class="list2">
+    <li>{{ render_field(form.username) }}</li>
+    <li>{{ render_field(form.email) }}</li>
+    <li>{{ render_field(form.password) }}</li>
+    <li>{{ render_field(form.confirm) }}</li>
+    <li>{{ render_field(form.fname) }}</li>
+    <li>{{ render_field(form.lname) }}</li>
+    <li>{{ render_field(form.phone) }}</li>
+    <li>{{ render_field(form.accept_tos) }}</li>
   </dl>
   <p><input type=submit value=submit>
 </form>
+    <div class="inner-box3">
+    Eksempel:<br>
+    <img src="../static/images/example.png" alt="Example form">
+    </div>
 </div></div>
 {% endblock %}
