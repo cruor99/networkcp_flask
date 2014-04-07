@@ -28,9 +28,14 @@ class UadminForm(Form):
 
 
 class UserpasswordForm(Form):
+    oldpwd = PasswordField('Current Password')
     pwdfield = PasswordField('Password')
     confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('pwdfield', message='Passwords must match')])
-
+    email = TextField('eMail')
+    fname = TextField('First Name')
+    lname = TextField('Last Name')
+    phone = TextField('Phone Number')
+    note = TextField('Note')
 
 class PasswordForm(Form):
     usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)

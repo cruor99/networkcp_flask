@@ -3,15 +3,15 @@
 {% from "_formhelpers.html" import render_field %}
 {% from "_formhelpers.html" import form_field %}
 <div class="content"><div class="inner-box">
-<br><br>Change Password Here<br>
-    <form action="/uuadmin" method="post" name="pwdchange">
-    {% for field in form %}
-    <tr>
-        <td>{{ field }}</td>
-    </tr>
-    {% endfor %}
-
-    <input type="submit" value="pwdchange" name="submit">
+<br><br>Change User info here
+    <form action="/uuadmin" method="post" name="changeinfo">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.pwdfield) }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.fname) }}
+        {{ render_field(form.lname) }}
+        {{ render_field(form.phone) }}
+    <p><input type="submit" value="changeinfo" name="submit"></p>
     </form>
 </div></div>
 {% endblock %}

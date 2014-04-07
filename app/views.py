@@ -125,15 +125,32 @@ def server():
 def uuadmin():
     form = UserpasswordForm()
     if request.method == 'POST':
-        if form.validate() and request.form['submit'] == 'pwdchange':
+        if request.form['submit'] == 'changeinfo':
             newpwd = form.pwdfield.data
+            newfname = form.fname.data
+            newlname = form.lname.data
+            newemail = form.email.data
+            newphone = form.phone.data
+            newnote = form.note.data
             user = session['username']
-            pwdhashed = generate_password_hash(newpwd)
-            User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
-            flash('Password updated, please inform the user')
+            if newpwd != "":
+                pwdhashed = generate_password_hash(newpwd)
+                User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
+                flash('Password updated, please inform the user')
+            if newfname != "":
+                User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
+                flash('First Name updated, please inform the user')
+            if newlname != "":
+                User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
+                flash('Last Name updated, please inform the user')
+            if newemail != "":
+                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                flash('Email updated, please inform the user')
+            if newphone != "":
+                User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
+                flash('Phone number updated, please inform the user')
             return render_template('uuadmin.html', form=form)
-        elif form.validate() == False:
-            flash('Passwords do not match')
+        else:
             return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form)
 
