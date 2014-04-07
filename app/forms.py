@@ -33,8 +33,14 @@ class UserpasswordForm(Form):
 
 
 class PasswordForm(Form):
-    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
+    usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
+    username = TextField('Username')
     pwdfield = PasswordField('Password')
+    email = TextField('eMail')
+    fname = TextField('First Name')
+    lname = TextField('Last Name')
+    phone = TextField('Phone Number')
+    note = TextField('Note')
 
 
 class SubscriptionForm(Form):

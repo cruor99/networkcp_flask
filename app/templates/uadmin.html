@@ -18,15 +18,18 @@
     {% endfor %}
     <input type="submit" value="rolechange" name="submit">
     </form>
-    <br><br>Change Password Here<br>
-    <form action="/uadmin" method="post" name="pwdchange">
-    {% for field in form2 %}
-    <tr>
-        <td>{{ field }}</td>
-    </tr>
-    {% endfor %}
-
-    <input type="submit" value="pwdchange" name="submit">
-    </form>
+    <br><br>Change User info here
+    <form action="/uadmin" method="post" name="changeinfo">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form2.usersel) }}
+        {{ render_field(form2.username) }}
+        {{ render_field(form2.pwdfield) }}
+        {{ render_field(form2.email) }}
+        {{ render_field(form2.fname) }}
+        {{ render_field(form2.lname) }}
+        {{ render_field(form2.phone) }}
+        {{ render_field(form2.note) }}
+    <p><input type="submit" value="changeinfo" name="submit"></p>
+</form>
 </div></div>
 {% endblock %}

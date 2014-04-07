@@ -151,12 +151,37 @@ def uadmin():
             db.session.commit()
             flash('User updated')
             return render_template('uadmin.html', form=form, form2=form2)
-        if request.form['submit'] == 'pwdchange':
+        if request.form['submit'] == 'changeinfo':
             newpwd = form2.pwdfield.data
+            newfname = form2.fname.data
+            newlname = form2.lname.data
+            newuname = form2.username.data
+            newemail = form2.email.data
+            newphone = form2.phone.data
+            newnote = form2.note.data
             user = form2.usersel.data
-            pwdhashed = generate_password_hash(newpwd)
-            User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
-            flash('Password updated, please inform the user')
+            if newpwd != "":
+                pwdhashed = generate_password_hash(newpwd)
+                User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
+                flash('Password updated, please inform the user')
+            if newuname != "":
+                User.query.filter_by(cust_username=user).update({'cust_username': newuname})
+                flash('Username updated, please inform the user')
+            if newfname != "":
+                User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
+                flash('First Name updated, please inform the user')
+            if newlname != "":
+                User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
+                flash('Last Name updated, please inform the user')
+            if newemail != "":
+                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                flash('Email updated, please inform the user')
+            if newphone != "":
+                User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
+                flash('Phone number updated, please inform the user')
+            if newnote != "":
+                User.query.filter_by(cust_username=user).update({'cust_notes': newnote})
+                flash('Note updated, please inform the user')
             return render_template('uadmin.html', form=form, form2=form2)
         else:
             return render_template('uadmin.html', form=form, form2=form2)
