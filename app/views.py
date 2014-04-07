@@ -82,19 +82,26 @@ def subscribe():
             price='1000',
             currency='NOK',
             vat='2500',
-            orderID='test1',
-            productNumber='123',
-            description=u'This is a test.',
+            orderID=user+'mc',
+            productNumber='Server Hosting',
+            description=u'Gameserver rental host',
             clientIPAddress='127.0.0.1',
             clientIdentifier='USERAGENT=test&username=testuser',
             additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://networkcp-beta.herokuapp.com/manage/',
+            returnUrl='http://127.0.0.1:5000/response',
             view='PX',
-            cancelUrl='http://networkcp-beta.herokuapp.com/subscribe/'
+            cancelUrl='http://127.0.0.1:5000/response'
         )
         print response
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
+
+@app.route('/response/', methods=['GET','POST'])
+@login_required
+def response():
+    receipt2 = request.args.get('orderRef')
+    return render_template('response.html', receipt=receipt2)
+
 
 @app.route('/server', methods=['GET', 'POST'])
 @login_required
@@ -256,8 +263,6 @@ def login():
                 return redirect(url_for('index'))
         else:
             flash('Something went wrong, Email or Password might be wrong')
-    else:
-       flash('something went wrong')# return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
     return render_template('login.html',
         title = 'Sign In',
         form = form)
