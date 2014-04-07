@@ -29,7 +29,7 @@ class UadminForm(Form):
 
 class UserpasswordForm(Form):
     pwdfield = PasswordField('Password')
-    confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('pwdfield', message='Passwords must match')])
 
 
 class PasswordForm(Form):

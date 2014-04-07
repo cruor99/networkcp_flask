@@ -1,13 +1,15 @@
 __author__ = 'cruor'
 import subprocess
 import paramiko
-import os
+import threading
 
 
 
 #Handles everything to do with remote server access, such as deploying servers to remote locations,
 #as well as starting, stopping and communicating with these servers.as
-class Server(object):
+class Server(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
 
 #starts the server using subprocess.Popen, and using the minecraft.sh script with the 'start' argument
     def serverstart(self, user):

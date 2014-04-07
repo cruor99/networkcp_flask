@@ -92,6 +92,7 @@ def subscribe():
             view='PX',
             cancelUrl='http://networkcp-beta.herokuapp.com/subscribe/'
         )
+        print response
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
 
@@ -124,12 +125,15 @@ def server():
 def uuadmin():
     form = UserpasswordForm()
     if request.method == 'POST':
-        if request.form['submit'] == 'pwdchange':
+        if form.validate() and request.form['submit'] == 'pwdchange':
             newpwd = form.pwdfield.data
             user = session['username']
             pwdhashed = generate_password_hash(newpwd)
             User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
             flash('Password updated, please inform the user')
+            return render_template('uuadmin.html', form=form)
+        elif form.validate() == False:
+            flash('Passwords do not match')
             return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form)
 
@@ -158,22 +162,56 @@ def uadmin():
             return render_template('uadmin.html', form=form, form2=form2)
     return render_template('uadmin.html', form=form, form2=form2)
 
+
+@app.route('/mcoutput')
+def mcoutput():
+    serv = Server()
+    user = session['username']
+    output = serv.readconsole(user)
+    return render_template('mcoutput.html', output=output)
+
+import forms
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
     cust_mail = form.email.data
-    user = User.query.filter_by(cust_mail=cust_mail).first()
+    user = User.query.filter_by(cust_username='Cruor').first()
+    #print user
+    #usermail = User.query.filter_by(cust_mail='kliknes@gmail.com').first()
+    if request.method == 'POST':
+        if 'kliknes@gmail.com' is not cust_mail:
+            usermail = User.query.filter_by(cust_mail=cust_mail).first()
+            #user = User.query.filter_by(cust_username=cust_mail).first()
+            #print user
+            #print usermail.cust_mail
+        if 'Cruor' is not cust_mail:
+            user = User.query.filter_by(cust_username=cust_mail).first()
+            #print user
     if form.validate_on_submit():
-        if form.email.data == user.cust_mail and user.check_password(form.password.data):
-            session['remember_me'] = form.remember_me.data
-            session['logged_in'] = True
-            session['username'] = user.cust_username
-            session['email'] = user.cust_mail
-            if user.role == 3:
-                session['premium'] = user.role
-            if user.role == 2:
-                session['admin'] = user.role
-            return redirect(url_for('index'))
+        if usermail is not None:
+            print usermail.cust_mail
+            if form.email.data == usermail.cust_mail and usermail.check_password(form.password.data):
+                session['remember_me'] = form.remember_me.data
+                session['logged_in'] = True
+                session['username'] = usermail.cust_username
+                session['email'] = usermail.cust_mail
+                if usermail.role == 3:
+                    session['premium'] = usermail.role
+                if usermail.role == 2:
+                    session['admin'] = usermail.role
+                return redirect(url_for('index'))
+        if user is not None:
+            print user.cust_username
+            if form.email.data == user.cust_username and user.check_password(form.password.data):
+                session['remember_me'] = form.remember_me.data
+                session['logged_in'] = True
+                session['username'] = user.cust_username
+                session['email'] = user.cust_mail
+                if user.role == 3:
+                    session['premium'] = user.role
+                if user.role == 2:
+                    session['admin'] = user.role
+                return redirect(url_for('index'))
         else:
             flash('Something went wrong, Email or Password might be wrong')
     else:
