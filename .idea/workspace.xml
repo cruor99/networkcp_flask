@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/index.html" afterPath="$PROJECT_DIR$/app/templates/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -15,7 +16,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1396951338332" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1396954760078" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -38,20 +39,25 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="6" selection-start="3998" selection-end="3998" vertical-scroll-proportion="0.5120275" vertical-offset="2263" max-vertical-offset="6714">
+            <state line="370" column="13" selection-start="14654" selection-end="14654" vertical-scroll-proportion="6.086705" vertical-offset="0" max-vertical-offset="2232">
               <folding>
                 <element signature="e#21#40#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="vcs:///home/cruor/PycharmProjects/networkcp_flask/app/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="154" column="0" selection-start="3923" selection-end="4779" vertical-scroll-proportion="0.0" vertical-offset="2581" max-vertical-offset="6534">
-              <folding>
-                <element signature="e#21#40#0" expanded="true" />
+                <element signature="e#968#1282#0" expanded="false" />
+                <element signature="e#1699#2066#0" expanded="false" />
+                <element signature="e#1751#2050#0" expanded="false" />
+                <element signature="e#2193#2289#0" expanded="false" />
+                <element signature="e#2425#2476#0" expanded="false" />
+                <element signature="e#2606#2645#0" expanded="false" />
+                <element signature="e#2814#3719#0" expanded="false" />
+                <element signature="e#3835#4157#0" expanded="false" />
+                <element signature="e#4302#5088#0" expanded="false" />
+                <element signature="e#5199#7111#0" expanded="false" />
+                <element signature="e#7238#10007#0" expanded="false" />
+                <element signature="e#10093#10234#0" expanded="false" />
+                <element signature="e#10329#12400#0" expanded="false" />
+                <element signature="e#12500#13067#0" expanded="false" />
+                <element signature="e#13199#14597#0" expanded="false" />
+                <element signature="e#14659#14776#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -62,63 +68,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state line="8" column="46" selection-start="311" selection-end="311" vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="288">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="subchoice.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/subchoice.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="26" selection-start="198" selection-end="198" vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="270">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="21" selection-start="228" selection-end="228" vertical-scroll-proportion="0.0" vertical-offset="162" max-vertical-offset="1638">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="response.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/response.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="39" selection-start="339" selection-end="339" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="342">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/login.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="20" selection-start="79" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="72" max-vertical-offset="396">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="44" selection-start="814" selection-end="814" vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="972">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="189" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="252">
-              <folding>
-                <marker date="1396872718571" expanded="true" signature="66:173" placeholder="..." />
-                <marker date="1396872718571" expanded="true" signature="89:167" placeholder="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -155,13 +104,13 @@
         <option value="$PROJECT_DIR$/app/templates/server.html" />
         <option value="$PROJECT_DIR$/app/templates/mcoutput.html" />
         <option value="$PROJECT_DIR$/networkcp_flask.py" />
-        <option value="$PROJECT_DIR$/app/templates/index.html" />
         <option value="$PROJECT_DIR$/app/templates/base.html" />
         <option value="$PROJECT_DIR$/app/templates/login.html" />
         <option value="$PROJECT_DIR$/app/templates/subchoice.html" />
         <option value="$PROJECT_DIR$/app/templates/mcsubopt.html" />
         <option value="$PROJECT_DIR$/app/templates/response.html" />
         <option value="$PROJECT_DIR$/app/models.py" />
+        <option value="$PROJECT_DIR$/app/templates/index.html" />
         <option value="$PROJECT_DIR$/app/views.py" />
       </list>
     </option>
@@ -645,7 +594,11 @@
       <created>1396953303674</created>
       <updated>1396953303674</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Changed exception handlings">
+      <created>1396953475865</created>
+      <updated>1396953475865</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -658,12 +611,12 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33070865" sideWeight="0.6705298" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33070865" sideWeight="0.6423841" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3529412" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3294702" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3576159" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294702" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -711,8 +664,13 @@
           <url>file://$PROJECT_DIR$/app/server.py</url>
           <line>24</line>
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/app/views.py</url>
+          <line>370</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -728,6 +686,22 @@
         <state line="163" column="0" selection-start="5587" selection-end="5587" vertical-scroll-proportion="0.0" vertical-offset="2934" max-vertical-offset="4716">
           <folding>
             <element signature="e#21#40#0" expanded="true" />
+            <element signature="e#968#1282#0" expanded="false" />
+            <element signature="e#1699#2066#0" expanded="false" />
+            <element signature="e#1751#2050#0" expanded="false" />
+            <element signature="e#2193#2289#0" expanded="false" />
+            <element signature="e#2425#2476#0" expanded="false" />
+            <element signature="e#2606#2645#0" expanded="false" />
+            <element signature="e#2814#3719#0" expanded="false" />
+            <element signature="e#3835#4157#0" expanded="false" />
+            <element signature="e#4302#5088#0" expanded="false" />
+            <element signature="e#5199#7111#0" expanded="false" />
+            <element signature="e#7238#10007#0" expanded="false" />
+            <element signature="e#10093#10234#0" expanded="false" />
+            <element signature="e#10329#12400#0" expanded="false" />
+            <element signature="e#12500#13067#0" expanded="false" />
+            <element signature="e#13199#14597#0" expanded="false" />
+            <element signature="e#14659#14776#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -771,16 +745,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="189" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="252">
-          <folding>
-            <marker date="1396872718571" expanded="true" signature="66:173" placeholder="..." />
-            <marker date="1396872718571" expanded="true" signature="89:167" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="4" column="20" selection-start="79" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="72" max-vertical-offset="396">
@@ -816,11 +780,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="28" selection-start="124" selection-end="124" vertical-scroll-proportion="-2.6666667" vertical-offset="0" max-vertical-offset="252">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="6" selection-start="3998" selection-end="3998" vertical-scroll-proportion="0.5120275" vertical-offset="2263" max-vertical-offset="6714">
+        <state line="370" column="13" selection-start="14654" selection-end="14654" vertical-scroll-proportion="6.086705" vertical-offset="0" max-vertical-offset="2232">
           <folding>
             <element signature="e#21#40#0" expanded="true" />
+            <element signature="e#968#1282#0" expanded="false" />
+            <element signature="e#1699#2066#0" expanded="false" />
+            <element signature="e#1751#2050#0" expanded="false" />
+            <element signature="e#2193#2289#0" expanded="false" />
+            <element signature="e#2425#2476#0" expanded="false" />
+            <element signature="e#2606#2645#0" expanded="false" />
+            <element signature="e#2814#3719#0" expanded="false" />
+            <element signature="e#3835#4157#0" expanded="false" />
+            <element signature="e#4302#5088#0" expanded="false" />
+            <element signature="e#5199#7111#0" expanded="false" />
+            <element signature="e#7238#10007#0" expanded="false" />
+            <element signature="e#10093#10234#0" expanded="false" />
+            <element signature="e#10329#12400#0" expanded="false" />
+            <element signature="e#12500#13067#0" expanded="false" />
+            <element signature="e#13199#14597#0" expanded="false" />
+            <element signature="e#14659#14776#0" expanded="false" />
           </folding>
         </state>
       </provider>

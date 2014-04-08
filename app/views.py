@@ -1,25 +1,28 @@
 __author__ = 'cruor'
 from flask import *
-from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app, db, lm, oid
+from flask.ext.login import logout_user, login_required
+from app import app, db
 from forms import LoginForm, signup_form, UadminForm, AdmininfoForm, SubscriptionForm, PropertiesForm, UserinfoForm, DeleteuserForm, CommandForm
-from models import User, ROLE_USER, ROLE_ADMIN
+from models import User
 from functools import wraps
 from server import Server
 from werkzeug import generate_password_hash
-import threading
-import sys
 import time
 from payex.service import PayEx
 import random
 
 service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
+
+#Catches internal server errors
+#redirects to index with original flash message intact
 @app.errorhandler(500)
 def internal_server(error):
     flash('You did something wrong')
-    return render_template('index.html')
+    return render_template('index.html', user=session['username'], errmes='You were sent here because something might have gone wrong, please check your flashed message')
 
+
+#Test for existence of login in session
 def login_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -32,6 +35,8 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
 
+
+#Test for existence of admin in session
 def admin_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -42,6 +47,8 @@ def admin_required(test):
             return redirect(url_for('index'))
         return wrap
 
+
+#Test for existence of premium in session
 def premium_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -55,13 +62,7 @@ def premium_required(test):
     return wrap
 
 
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-
-
-
+#Routes to front page, login_required during dev only
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -70,25 +71,22 @@ def index():
         title = 'Home',
         user = session['username'])
 
-def serveroutput(uname):
-    serv = Server()
-    returnvalue = serv.readconsole(uname)
-    threading.Timer(4, serveroutput(uname))
-    sys.stdout.flush()
-    return returnvalue
 
+#Routes to first step in subscription process
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
     return render_template('subchoice.html', form=form)
 
 
+#Routes to Minecraft Subscription Options
 @app.route('/mcsubopt', methods=['GET', 'POST'])
 @login_required
 def mcsubopt():
     return render_template('mcsubopt.html')
 
 
+#Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
 @login_required
 def mcsubscribe():
@@ -117,6 +115,7 @@ def mcsubscribe():
     return render_template('subscribe.html', form=form)
 
 
+#Response handler for PayEx
 @app.route('/response/', methods=['GET','POST'])
 @login_required
 def response():
@@ -129,6 +128,7 @@ def response():
     return render_template('response.html', receipt=receipt2)
 
 
+#Minecraft Server control panel module
 @app.route('/mcserver', methods=['GET', 'POST'])
 @login_required
 @premium_required
@@ -154,6 +154,8 @@ def mcserver():
             serv.servercommand(user,command)
     return render_template('server.html', form=form)
 
+
+#User self-administration
 @app.route('/uuadmin', methods=['GET','POST'])
 @login_required
 def uuadmin():
@@ -191,6 +193,7 @@ def uuadmin():
     return render_template('uuadmin.html', form=form)
 
 
+#Administrator page for user administration
 @admin_required
 @app.route('/uadmin', methods=['GET','POST'])
 def uadmin():
@@ -248,6 +251,7 @@ def uadmin():
     return render_template('uadmin.html', form=form, form2=form2, form3=form3)
 
 
+#Helper for the minecraft output frame
 @app.route('/mcoutput')
 def mcoutput():
     serv = Server()
@@ -255,7 +259,8 @@ def mcoutput():
     output = serv.readconsole(user)
     return render_template('mcoutput.html', output=output)
 
-import forms
+
+#Routes to login for users
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -304,6 +309,7 @@ def login():
         form = form)
 
 
+#Routes to signup for new users
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = signup_form(request.form)
@@ -320,6 +326,8 @@ def signup():
     else:
         return render_template('signup.html', form=form)
 
+
+#Routes to your server management control panel
 @app.route('/manage', methods =['GET', 'POST'])
 @premium_required
 def manage():
@@ -357,11 +365,11 @@ def manage():
                            email = session['email'],
                            form = form)
 
+
+#Logs the user out
 @app.route('/logout')
 def logout():
     logout_user()
     session.pop('logged_in', None)
     session.pop('admin', None)
     return redirect(url_for('index'))
-
-
