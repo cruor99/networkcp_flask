@@ -11,9 +11,14 @@ import threading
 import sys
 import time
 from payex.service import PayEx
+import random
 
 service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
+@app.errorhandler(500)
+def internal_server(error):
+    flash('You did something wrong')
+    return render_template('index.html')
 
 def login_required(test):
     @wraps(test)
@@ -75,15 +80,29 @@ def serveroutput(uname):
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
+    return render_template('subchoice.html', form=form)
+
+
+@app.route('/mcsubopt', methods=['GET', 'POST'])
+@login_required
+def mcsubopt():
+    return render_template('mcsubopt.html')
+
+
+@app.route('/mcsubscribe', methods=['GET', 'POST'])
+@login_required
+def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
+    subtype2 = request.args.get('subtype')
+    print subtype2
     if request.method == 'POST':
         response = service.initialize(
             purchaseOperation='SALE',
             price='1000',
             currency='NOK',
             vat='2500',
-            orderID=user+'mc',
+            orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting',
             description=u'Gameserver rental host',
             clientIPAddress='127.0.0.1',
@@ -97,10 +116,16 @@ def subscribe():
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
 
+
 @app.route('/response/', methods=['GET','POST'])
 @login_required
 def response():
     receipt2 = request.args.get('orderRef')
+    if receipt2 is not None:
+        return render_template('response.html', receipt=receipt2)
+    else:
+        cancmes = 'Your order has been terminated'
+        return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
 
