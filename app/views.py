@@ -129,10 +129,10 @@ def response():
     return render_template('response.html', receipt=receipt2)
 
 
-@app.route('/server', methods=['GET', 'POST'])
+@app.route('/mcserver', methods=['GET', 'POST'])
 @login_required
 @premium_required
-def server():
+def mcserver():
     form = CommandForm()
     user = session['username']
     serv = Server()
