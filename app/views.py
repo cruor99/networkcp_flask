@@ -10,8 +10,15 @@ from werkzeug import generate_password_hash
 import threading
 import sys
 from payex.service import PayEx
+import random
 
 service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
+
+
+@app.errorhandler(500)
+def internal_server(error):
+    flash('You did something wrong')
+    return render_template('index.html')
 
 
 def login_required(test):
@@ -60,6 +67,8 @@ def load_user(id):
 @app.route('/index')
 @login_required
 def index():
+    var1 = random.getrandbits(session['userid'])
+    print var1
     return render_template('index.html',
         title = 'Home',
         user = session['username'])
@@ -71,18 +80,30 @@ def serveroutput(uname):
     sys.stdout.flush()
     return returnvalue
 
+
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
+    return render_template('subchoice.html')
+
+@app.route('/mcsubopt', methods=['GET', 'POST'])
+@login_required
+def mcsubopt():
+    return render_template('mcsubopt.html')
+@app.route('/mcsubscribe', methods=['GET', 'POST'])
+@login_required
+def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
+    subtype2 = request.args.get('subtype')
+    print subtype2
     if request.method == 'POST':
         response = service.initialize(
             purchaseOperation='SALE',
             price='1000',
             currency='NOK',
             vat='2500',
-            orderID=user+'mc',
+            orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting',
             description=u'Gameserver rental host',
             clientIPAddress='127.0.0.1',
@@ -100,13 +121,18 @@ def subscribe():
 @login_required
 def response():
     receipt2 = request.args.get('orderRef')
+    if receipt2 is not None:
+        return render_template('response.html', receipt=receipt2)
+    else:
+        cancmes = 'Your order has been terminated'
+        return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
 
-@app.route('/server', methods=['GET', 'POST'])
+@app.route('/mcserver', methods=['GET', 'POST'])
 @login_required
 @premium_required
-def server():
+def mcserver():
     user = session['username']
     serv = Server()
     servoutput = serv.readconsole(user)
@@ -244,6 +270,7 @@ def login():
                 session['logged_in'] = True
                 session['username'] = usermail.cust_username
                 session['email'] = usermail.cust_mail
+                session['userid'] = usermail.cust_id
                 if usermail.role == 3:
                     session['premium'] = usermail.role
                 if usermail.role == 2:
@@ -256,6 +283,7 @@ def login():
                 session['logged_in'] = True
                 session['username'] = user.cust_username
                 session['email'] = user.cust_mail
+                session['userid'] = user.cust_id
                 if user.role == 3:
                     session['premium'] = user.role
                 if user.role == 2:

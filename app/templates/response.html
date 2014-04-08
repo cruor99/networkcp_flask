@@ -1,5 +1,14 @@
 <!-- extend base layout -->
 {% extends "base.html" %}
+<head>    <link rel="stylesheet" type="text/css" href="static/style2.css" />
+</head>
+<div class="content"><div class="inner-box">
+
 {% block content %}
-Your Order Reference with PayEx is: {{ receipt }}
+{% if receipt is not none %}
+Your Order Status or Order Reference is: {{ receipt }}
+{% else %}
+    Your order status is: {{ receipt }}
+    {% endif %}
+    </div>
 {% endblock %}
