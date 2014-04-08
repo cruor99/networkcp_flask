@@ -8,25 +8,18 @@
         <input type="text" name="port">
         <input type="submit" name="submit" value="servCreate">
     </form>
-    <br>
-    <br>
-    <form method="post" action="/manage" name="propset">
-    {% for role in form %}
-    <tr>
-    {% if role.type == "BooleanField" %}
-        <td></td>
-        <td>{{ role }} {{ role.label }}</td>
-    {% else %}
-        <td>{{ role }}</td>
-    {% endif %}
-    </tr>
-    {% endfor %}
-    <input type="submit" name="submit" value="propchange">
+    <br><br><b>Change Server Properties</b>
+    <form action="/manage" method="post" name="changeproperties">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.props) }}
+        {{ render_field(form.value) }}
+    <p><input type="submit" value="Change Properties" name="submit"></p>
     </form>
     <div class="inner-box2"
     <b>Server.properties file:</b><br>
     {% for line in properties %}
     {{ line }}<br>
     {% endfor %}
+    <iframe width="500" height="300" src="mcoutput"></iframe>
     </div></div></div>
 {% endblock %}

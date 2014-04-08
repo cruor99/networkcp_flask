@@ -18,16 +18,23 @@ def listallu():
 
 class PropertiesForm(Form):
     serv = Server()
-    props = TextField('props')
-    value = TextField('values')
+    props = TextField('Property')
+    value = TextField('Value')
+
+class CommandForm(Form):
+    command = TextField('Command')
 
 
 class UadminForm(Form):
-    role = SelectField('role', choices=[(1, 'standard'), (2, 'Admin'), (3, 'Premium')])
-    usersel = QuerySelectField('usersel', query_factory=listallu, allow_blank=True, get_label=str)
+    role = SelectField('Select Role', choices=[(1, 'Standard'), (2, 'Admin'), (3, 'Premium')])
+    usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
 
 
-class UserpasswordForm(Form):
+class DeleteuserForm(Form):
+    usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
+
+
+class UserinfoForm(Form):
     oldpwd = PasswordField('Current Password')
     pwdfield = PasswordField('Password')
     confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('pwdfield', message='Passwords must match')])
@@ -35,9 +42,8 @@ class UserpasswordForm(Form):
     fname = TextField('First Name')
     lname = TextField('Last Name')
     phone = TextField('Phone Number')
-    note = TextField('Note')
 
-class PasswordForm(Form):
+class AdmininfoForm(Form):
     usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
     username = TextField('Username')
     pwdfield = PasswordField('Password')

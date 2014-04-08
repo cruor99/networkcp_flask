@@ -10,12 +10,13 @@
 <form method="post" action="/server" name="stop">
     <input type="submit" name="submit" value="Stop">
     </form>
-    <br>
-    Here you can send commands to your server instances!
-<form method=post action="/server" name="command">
-    <input type="text" name="command">
-    <input type="submit" name="submit" value="Send">
-</form>
+    <br><br><b>Here you can send commands to your server instances!</b>
+    <form action="/server" method="post" name="sendcommand">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.command) }}
+    <input type="submit" value="Send Command" name="submit">
+    </form>
     <br>
     <iframe width="500" height="300" src="mcoutput"></iframe>
+    </div></div>
 {% endblock %}

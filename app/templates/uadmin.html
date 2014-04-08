@@ -4,21 +4,20 @@
 {% from "_formhelpers.html" import form_field %}
 <br>
 <div class="content"><div class="inner-box">
-  Select Role and User
-    <form action="/uadmin" method="post" name="rolechange">
-   {% for role in form %}
-    <tr>
-    {% if role.type == "BooleanField" %}
-        <td></td>
-        <td>{{ role }} {{ role.label }}</td>
-    {% else %}
-        <td>{{ role }}</td>
-    {% endif %}
-    </tr>
-    {% endfor %}
-    <input type="submit" value="rolechange" name="submit">
+    <br><br><b>Select User and Role</b>
+    <form action="/uadmin" method="post" name="changerole">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.usersel) }}
+        {{ render_field(form.role) }}
+    <p><input type="submit" value="Change Role" name="submit"></p>
     </form>
-    <br><br>Change User info here
+    <br><br><br><b>Delete User here</b>
+    <form action="/uadmin" method="post" name="deleteuser">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form3.usersel) }}
+    <p><input type="submit" value="Delete User" name="submit"></p>
+    </form>
+    <br><br><br><b>Change User info here</b>
     <form action="/uadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form2.usersel) }}
@@ -29,7 +28,7 @@
         {{ render_field(form2.lname) }}
         {{ render_field(form2.phone) }}
         {{ render_field(form2.note) }}
-    <p><input type="submit" value="changeinfo" name="submit"></p>
+    <p><input type="submit" value="Change Info" name="submit"></p>
     </form>
 </div></div>
 {% endblock %}

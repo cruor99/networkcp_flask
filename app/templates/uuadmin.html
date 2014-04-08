@@ -3,15 +3,17 @@
 {% from "_formhelpers.html" import render_field %}
 {% from "_formhelpers.html" import form_field %}
 <div class="content"><div class="inner-box">
-<br><br>Change User info here
+<br><br>Change User info here <b>(Current password required for any change!)</b><br><br>
     <form action="/uuadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.oldpwd) }}
         {{ render_field(form.pwdfield) }}
+        {{ render_field(form.confirm) }}
         {{ render_field(form.email) }}
         {{ render_field(form.fname) }}
         {{ render_field(form.lname) }}
         {{ render_field(form.phone) }}
-    <p><input type="submit" value="changeinfo" name="submit"></p>
+    <p><input type="submit" value="Change Info" name="submit"></p>
     </form>
 </div></div>
 {% endblock %}

@@ -2,23 +2,17 @@ __author__ = 'cruor'
 from flask import *
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm, signup_form, UadminForm, PasswordForm, SubscriptionForm, PropertiesForm, UserpasswordForm
+from forms import LoginForm, signup_form, UadminForm, AdmininfoForm, SubscriptionForm, PropertiesForm, UserinfoForm, DeleteuserForm, CommandForm
 from models import User, ROLE_USER, ROLE_ADMIN
 from functools import wraps
 from server import Server
 from werkzeug import generate_password_hash
 import threading
 import sys
+import time
 from payex.service import PayEx
-import random
 
 service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
-
-
-@app.errorhandler(500)
-def internal_server(error):
-    flash('You did something wrong')
-    return render_template('index.html')
 
 
 def login_required(test):
@@ -67,8 +61,6 @@ def load_user(id):
 @app.route('/index')
 @login_required
 def index():
-    var1 = random.getrandbits(session['userid'])
-    print var1
     return render_template('index.html',
         title = 'Home',
         user = session['username'])
@@ -80,30 +72,18 @@ def serveroutput(uname):
     sys.stdout.flush()
     return returnvalue
 
-
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
-    return render_template('subchoice.html')
-
-@app.route('/mcsubopt', methods=['GET', 'POST'])
-@login_required
-def mcsubopt():
-    return render_template('mcsubopt.html')
-@app.route('/mcsubscribe', methods=['GET', 'POST'])
-@login_required
-def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
-    subtype2 = request.args.get('subtype')
-    print subtype2
     if request.method == 'POST':
         response = service.initialize(
             purchaseOperation='SALE',
             price='1000',
             currency='NOK',
             vat='2500',
-            orderID=session['userid']+random.getrandbits(session['userid']),
+            orderID=user+'mc',
             productNumber='Server Hosting',
             description=u'Gameserver rental host',
             clientIPAddress='127.0.0.1',
@@ -121,18 +101,14 @@ def mcsubscribe():
 @login_required
 def response():
     receipt2 = request.args.get('orderRef')
-    if receipt2 is not None:
-        return render_template('response.html', receipt=receipt2)
-    else:
-        cancmes = 'Your order has been terminated'
-        return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
 
-@app.route('/mcserver', methods=['GET', 'POST'])
+@app.route('/server', methods=['GET', 'POST'])
 @login_required
 @premium_required
-def mcserver():
+def server():
+    form = CommandForm()
     user = session['username']
     serv = Server()
     servoutput = serv.readconsole(user)
@@ -148,38 +124,40 @@ def mcserver():
             serv.serverstop("")
         if request.form['submit'] == 'startall':
             serv.serverstart("")
-        if request.form['submit'] == 'Send':
-            command = request.form['command']
+        if request.form['submit'] == 'Send Command':
+            command = form.command.form['Command']
             serv.servercommand(user,command)
-    return render_template('server.html', output=output)
+    return render_template('server.html', form=form)
 
 @app.route('/uuadmin', methods=['GET','POST'])
 @login_required
 def uuadmin():
-    form = UserpasswordForm()
+    form = UserinfoForm()
     if request.method == 'POST':
-        if request.form['submit'] == 'changeinfo':
+        if request.form['submit'] == 'Change Info':
+            oldpwd = form.oldpwd.data
             newpwd = form.pwdfield.data
+            confirm = form.confirm.data
             newfname = form.fname.data
             newlname = form.lname.data
             newemail = form.email.data
             newphone = form.phone.data
-            newnote = form.note.data
-            user = session['username']
-            if newpwd != "":
+            username = session['username']
+            user = User.query.filter_by(cust_username=username).first()
+            if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
                 pwdhashed = generate_password_hash(newpwd)
                 User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
                 flash('Password updated, please inform the user')
-            if newfname != "":
+            if newfname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
                 flash('First Name updated, please inform the user')
-            if newlname != "":
+            if newlname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
                 flash('Last Name updated, please inform the user')
-            if newemail != "":
+            if newemail != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
                 flash('Email updated, please inform the user')
-            if newphone != "":
+            if newphone != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 flash('Phone number updated, please inform the user')
             return render_template('uuadmin.html', form=form)
@@ -192,16 +170,23 @@ def uuadmin():
 @app.route('/uadmin', methods=['GET','POST'])
 def uadmin():
     form = UadminForm()
-    form2 = PasswordForm()
+    form2 = AdmininfoForm()
+    form3 = DeleteuserForm()
     if request.method == 'POST':
-        if request.form['submit'] == 'rolechange':
+        if request.form['submit'] == 'Change Role':
             role = form.role.data
             user = form.usersel.data
             User.query.filter_by(cust_username=user).update({'role': role})
             db.session.commit()
             flash('User updated')
-            return render_template('uadmin.html', form=form, form2=form2)
-        if request.form['submit'] == 'changeinfo':
+            return render_template('uadmin.html', form=form, form2=form2, form3=form3)
+        if request.form['submit'] == 'Delete User':
+            user = form3.usersel.data
+            User.query.filter_by(cust_username=user).delete()
+            db.session.commit()
+            flash('User deleted')
+            return render_template('uadmin.html', form=form, form2=form2, form3=form3)
+        if request.form['submit'] == 'Change Info':
             newpwd = form2.pwdfield.data
             newfname = form2.fname.data
             newlname = form2.lname.data
@@ -232,10 +217,10 @@ def uadmin():
             if newnote != "":
                 User.query.filter_by(cust_username=user).update({'cust_notes': newnote})
                 flash('Note updated, please inform the user')
-            return render_template('uadmin.html', form=form, form2=form2)
+            return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         else:
-            return render_template('uadmin.html', form=form, form2=form2)
-    return render_template('uadmin.html', form=form, form2=form2)
+            return render_template('uadmin.html', form=form, form2=form2, form3=form3)
+    return render_template('uadmin.html', form=form, form2=form2, form3=form3)
 
 
 @app.route('/mcoutput')
@@ -270,7 +255,6 @@ def login():
                 session['logged_in'] = True
                 session['username'] = usermail.cust_username
                 session['email'] = usermail.cust_mail
-                session['userid'] = usermail.cust_id
                 if usermail.role == 3:
                     session['premium'] = usermail.role
                 if usermail.role == 2:
@@ -283,7 +267,6 @@ def login():
                 session['logged_in'] = True
                 session['username'] = user.cust_username
                 session['email'] = user.cust_mail
-                session['userid'] = user.cust_id
                 if user.role == 3:
                     session['premium'] = user.role
                 if user.role == 2:
@@ -319,6 +302,7 @@ def manage():
     serv = Server()
     properties = serv.readproperties(user)
     form = PropertiesForm()
+    time.sleep(2)
     if request.method == 'POST':
         if request.form['submit'] == 'servCreate':
             server = request.form['server']
@@ -331,10 +315,11 @@ def manage():
                                    properties=properties,
                                    email = session['email'],
                                    form = form)
-        if request.form['submit'] == 'propchange':
+        if request.form['submit'] == 'Change Properties':
             key = form.props.data
             value = form.value.data
             serv.editproperties(user, key, value)
+
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
