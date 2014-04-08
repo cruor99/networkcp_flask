@@ -76,7 +76,7 @@ def index():
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
-    return render_template('subchoice.html', form=form)
+    return render_template('subchoice.html')
 
 
 #Routes to Minecraft Subscription Options
