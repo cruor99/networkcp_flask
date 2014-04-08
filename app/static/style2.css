@@ -292,7 +292,7 @@ header{
         margin-left:auto;
         margin-right:auto;
 		}
-    .inner-box2{
+    .inner-box2{ /*Denne er ikke i bruk*/
 		background: url(images/bg-title.png) 0 0 no-repeat;
 		padding:16px 0 16px 17px;
 		border-radius: 8px;

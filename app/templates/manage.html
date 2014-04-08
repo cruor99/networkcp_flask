@@ -15,11 +15,7 @@
         {{ render_field(form.value) }}
     <p><input type="submit" value="Change Properties" name="submit"></p>
     </form>
-    <div class="inner-box2"
     <b>Server.properties file:</b><br>
-    {% for line in properties %}
-    {{ line }}<br>
-    {% endfor %}
-    <iframe width="500" height="300" src="mcoutput"></iframe>
-    </div></div></div>
+    <iframe width="500" src="servpropout"></iframe>
+    </div></div>
 {% endblock %}

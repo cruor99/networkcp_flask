@@ -136,21 +136,17 @@ def mcserver():
     form = CommandForm()
     user = session['username']
     serv = Server()
-    servoutput = serv.readconsole(user)
-    output = servoutput
     if request.method == 'POST':
-        if request.form['submit'] == 'Start':
+        if request.form['submit'] == 'Start Server':
             serv.serverstart(user)
-            #output = serv.serverread(user)
-            return render_template('server.html')
-        if request.form['submit'] == 'Stop':
+        if request.form['submit'] == 'Stop Server':
             serv.serverstop(user)
         if request.form['submit'] == 'stopall':
             serv.serverstop("")
         if request.form['submit'] == 'startall':
             serv.serverstart("")
         if request.form['submit'] == 'Send Command':
-            command = form.command.form['Command']
+            command = form.command.data
             serv.servercommand(user,command)
     return render_template('server.html', form=form)
 
@@ -261,6 +257,14 @@ def mcoutput():
 
 
 #Routes to login for users
+@app.route('/servpropout')
+def servpropout():
+    serv = Server()
+    user = session['username']
+    output = serv.readproperties(user)
+    time.sleep(1)
+    return render_template('servpropout.html', output=output)
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -335,7 +339,6 @@ def manage():
     serv = Server()
     properties = serv.readproperties(user)
     form = PropertiesForm()
-    time.sleep(2)
     if request.method == 'POST':
         if request.form['submit'] == 'servCreate':
             server = request.form['server']
@@ -373,3 +376,5 @@ def logout():
     session.pop('logged_in', None)
     session.pop('admin', None)
     return redirect(url_for('index'))
+
+
