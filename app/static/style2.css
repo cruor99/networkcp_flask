@@ -121,13 +121,14 @@ h2{ font-size:16px;
 .head{
 	width:100%;  
 	position:relative; 
-	background: url(static/images/bg-head.png) center 0 no-repeat;
+	background: url(images/logobg.png) center 0 repeat-x;
 	z-index:2;
 	}
 header{
-	width: 940px; 
+	width: 1229px;
 	margin: 0 auto;
 	position:relative;
+	background: url(images/bg-head.png) center 0 no-repeat;
 	}
 .logo-phone{
 	overflow:hidden;
