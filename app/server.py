@@ -69,11 +69,13 @@ class Server(threading.Thread):
         sftp.close()
         ssh.close()
 
-    def unzip(self, user):
+    def unzip(self, user,filename):
+        homedir = "/home/minecraft/worlds/"+user+"/"
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.80', username='steve', password='12Karen34')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("unzip /home/minecraft/")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("unzip "+homedir+filename+" -d "+homedir)
+
         return ssh_stdin.readlines()
 
     #Method for editing server.properties
