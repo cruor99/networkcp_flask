@@ -121,6 +121,7 @@ def mcsubscribe():
 def response():
     receipt2 = request.args.get('orderRef')
     if receipt2 is not None:
+        print "This is a test"
         return render_template('response.html', receipt=receipt2)
     else:
         cancmes = 'Your order has been terminated'

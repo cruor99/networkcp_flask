@@ -1,0 +1,7 @@
+*+html{overflow:auto;}
+{behavior:url(js/PIE.htc); position:relative;}
+.button, .block, .title-box, .block-2, .button-banner, .box, .box-1, .content-box-1, #form1 input, #form1 textarea, .main-border{behavior:url(js/PIE.htc); position:relative;}
+.inner-box, .inner-1{behavior:url(js/PIE.htc); position:relative;}
+.button-banner{padding:7px 19px 7px 19px;}
+.pagination li.current a, .pagination li:hover a{background: url(../images/pagination.png) -19px 0 no-repeat;}
+.title-box{box-shadow:none}
