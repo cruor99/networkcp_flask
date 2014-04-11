@@ -289,6 +289,7 @@ def login():
                 session['logged_in'] = True
                 session['username'] = usermail.cust_username
                 session['email'] = usermail.cust_mail
+                session['userid'] = usermail.cust_id
                 if usermail.role == 3:
                     session['premium'] = usermail.role
                 if usermail.role == 2:
@@ -301,6 +302,7 @@ def login():
                 session['logged_in'] = True
                 session['username'] = user.cust_username
                 session['email'] = user.cust_mail
+                session['userid'] = user.cust_id
                 if user.role == 3:
                     session['premium'] = user.role
                 if user.role == 2:
