@@ -16,6 +16,7 @@ def listallu():
     return User.query
 
 
+
 class PropertiesForm(Form):
     serv = Server()
     props = TextField('Property')

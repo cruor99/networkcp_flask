@@ -14,6 +14,9 @@ OPENID_PROVIDERS = [
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_DIR = os.path.join(basedir, 'tmp')
+ALLOWED_EXTENSIONS = set(['zip'])
+
 
 #SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_DATABASE_URI = 'mysql://steve:12Karen34@broadparkgames.no/servercp'

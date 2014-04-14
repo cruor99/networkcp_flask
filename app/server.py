@@ -2,6 +2,10 @@ __author__ = 'cruor'
 import subprocess
 import paramiko
 import threading
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+upload_dir = os.path.join(basedir, 'tmp')
 
 
 #Handles everything to do with remote server access, such as deploying servers to remote locations,
@@ -58,24 +62,23 @@ class Server(threading.Thread):
         return ssh_stdin.readlines()
 
     #Method for sending files
-    def sendfile(self,server,tmpdir,user):
+    def sendfile(self,server,filename,user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.'+server, username='minecraft', password='minecraft')
         sftp = ssh.open_sftp()
-        localpath = tmpdir
-        remotepath = '/home/minecraft/worlds/'+user+'/'
+        localpath = upload_dir+'/' + filename
+        remotepath = '/home/minecraft/worlds/'+user+'/'+filename
         sftp.put(localpath, remotepath)
         sftp.close()
         ssh.close()
 
-    def unzip(self, user,filename):
+    def unzip(self, user, filename):
         homedir = "/home/minecraft/worlds/"+user+"/"
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect('84.49.16.80', username='steve', password='12Karen34')
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("unzip "+homedir+filename+" -d "+homedir)
-
         return ssh_stdin.readlines()
 
     #Method for editing server.properties

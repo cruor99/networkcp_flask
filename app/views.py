@@ -10,6 +10,13 @@ from werkzeug import generate_password_hash
 import time
 from payex.service import PayEx
 import random
+import os
+from werkzeug.utils import secure_filename
+basedir = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_DIR = os.path.join(basedir, 'tmp')
+app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+ALLOWED_EXTENSIONS = set(['zip'])
+
 
 service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
@@ -334,8 +341,23 @@ def signup():
         return render_template('signup.html', form=form)
 
 
+#checks for allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+#handles file uploading to the temporary directory
+def upload_file(rfile):
+    zipfile = rfile
+    if zipfile and allowed_file(zipfile.filename):
+        filename = secure_filename(zipfile.filename)
+        zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('File Uploaded Successfully')
+
+
 #Routes to your server management control panel
-@app.route('/manage', methods =['GET', 'POST'])
+@app.route('/manage', methods=['GET', 'POST'])
 @premium_required
 def manage():
     user = session['username']
@@ -348,7 +370,7 @@ def manage():
             port = request.form['port']
             serv = Server()
             user = session['username']
-            serv.servercreate(server,user,port)
+            serv.servercreate(server, user, port)
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
@@ -364,7 +386,19 @@ def manage():
                                    properties=properties,
                                    email = session['email'],
                                    form = form)
+        if request.form['submit'] == 'Upload Zip':
+            zipfile = request.files['file']
+            upload_file(zipfile)
 
+            serv.sendfile('80', zipfile.filename, user)
+
+            serv.unzip(user, zipfile.filename)
+            flash('You did it!')
+            return render_template('manage.html',
+                           user = session['username'],
+                           properties=properties,
+                           email = session['email'],
+                           form = form)
     return render_template('manage.html',
                            user = session['username'],
                            properties=properties,
