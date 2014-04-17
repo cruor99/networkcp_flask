@@ -88,3 +88,10 @@ class Server(threading.Thread):
         ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/minecraft/mcprop.py -w "+user+" -o "+key+" -v "+value)
         return ssh_stdin.readlines()
+
+    def deleteserv(self, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.80', username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user+"/*")
+        return ssh_stdin.readlines()

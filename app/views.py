@@ -386,13 +386,25 @@ def manage():
                                    properties=properties,
                                    email = session['email'],
                                    form = form)
+        if request.form['submit'] == 'Delete Server Content':
+            serv.deleteserv(user)
+            return render_template('manage.html',
+                                   user = session['username'],
+                                   properties=properties,
+                                   email = session['email'],
+                                   form = form)
         if request.form['submit'] == 'Upload Zip':
             zipfile = request.files['file']
             upload_file(zipfile)
-
+            filenameplaceholder = zipfile.filename
+            filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+            servername = filenamestripped
             serv.sendfile('80', zipfile.filename, user)
 
             serv.unzip(user, zipfile.filename)
+            serv.editproperties(user, 'mscs-server-jar', servername)
+            serv.editproperties(user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
+            os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
             flash('You did it!')
             return render_template('manage.html',
                            user = session['username'],
