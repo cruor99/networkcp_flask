@@ -3,12 +3,10 @@
 {% from "_formhelpers.html" import render_field %}
 <br>
 <div class="content"><div class="inner-box">
-{% for subfield in form %}
-    <tr>
-        <td>{{ subfield }}</td>
-    </tr>
-{% endfor %}
 <form method="post">
+{{ render_field(form.subsel) }}
+<br>
+
     <input type="submit">
 </form>
 </div></div>

@@ -83,14 +83,14 @@ def index():
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
-    return render_template('subchoice.html')
+    return render_template('subchoice.html', user=session['username'])
 
 
 #Routes to Minecraft Subscription Options
 @app.route('/mcsubopt', methods=['GET', 'POST'])
 @login_required
 def mcsubopt():
-    return render_template('mcsubopt.html')
+    return render_template('mcsubopt.html', user=session['username'])
 
 
 #Routes to Minecraft Subscription settings regarding time periods and cost
@@ -100,16 +100,21 @@ def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
     subtype2 = request.args.get('subtype')
-    print subtype2
+    if subtype2 == "1":
+        form.subsel.choices = [(10000, '1-Month'), (20000, '3-Month'), (30000, '6-Month')]
+    if subtype2 == "2":
+        form.subsel.choices = [(15000, '1-Month'), (25000, '3-Month'), (35000, '6-Month')]
+
     if request.method == 'POST':
+        subprice = form.subsel.data
         response = service.initialize(
             purchaseOperation='SALE',
-            price='1000',
+            price=subprice,
             currency='NOK',
             vat='2500',
             orderID=session['userid']+random.getrandbits(session['userid']),
-            productNumber='Server Hosting',
-            description=u'Gameserver rental host',
+            productNumber='Server Hosting of type: '+subtype2,
+            description=u'Gameserver rental host for: '+user,
             clientIPAddress='127.0.0.1',
             clientIdentifier='USERAGENT=test&username=testuser',
             additionalValues='PAYMENTMENU=TRUE',

@@ -56,11 +56,10 @@ class AdmininfoForm(Form):
 
 
 class SubscriptionForm(Form):
-    subsel = RadioField('Subscriptions', choices=[(1, '1-month'), (2, '3-month'), (3, '6-month'), (4, '12-month')])
+    subsel = RadioField('Select Subscription')
 
 
 class LoginForm(Form):
-    #openid = TextField('openid', validators = [validators.Required()])
     remember_me = BooleanField('remember_me', default = False)
     password = PasswordField('Password', validators=[validators.Required()])
     email = TextField('eMail', validators=[validators.Required()])
