@@ -517,9 +517,10 @@ footer .grid_12 a:hover{color:#fff;}
 /*=======================superfish=========================*/
 nav{
 	display:block;
-	width:1200px;
+	width:100%;
 	margin:0 auto;
 	text-align:center;
+    min-width: 1360px;
 	}
 .sf-menu{display: inline-block;}
 .sf-menu ul {position:absolute; top:-999px; display:none; z-index:999;}

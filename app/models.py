@@ -47,25 +47,44 @@ class User(db.Model):
     def __repr__(self):
         return '%s' % (self.cust_username)
 
+
 class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True)
     cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'), primary_key=True)
 
-class Server(db.Model):
+
+class Serverreserve(db.Model):
     server_id = db.Column(db.Integer, primary_key=True)
     server_name = db.Column(db.String(30))
     server_ip = db.Column(db.String(30))
 
+    def __init__(self, server_name, server_ip):
+        self.server_name = server_name
+        self.server_ip = server_ip
+
+    def __repr__(self):
+        return '%s' % (self.server_name)
+
 
 class Port(db.Model):
     port_id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, ForeignKey('server.server_id'))
+    server_id = db.Column(db.Integer, ForeignKey('serverreserve.server_id'))
     port_no = db.Column(db.Integer)
-    port_used = db.Column(db.Boolean)
+    port_used = db.Column(db.Integer)
+
+    def __init__(self, server_id, port_no, port_used):
+        self.server_id = server_id
+        self.port_no = port_no
+        self.port_used = port_used
+
+    def __repr__(self):
+        return '%s, %i' % (self.port_no, self.server_id)
+
+
 
 class Subscription(db.Model):
     sub_id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, ForeignKey('server.server_id'))
+    server_id = db.Column(db.Integer, ForeignKey('serverreserve.server_id'))
     sub_name = db.Column(db.String(100))
     sub_description = db.Column(db.Text)
     sub_type = db.Column(db.String(50))
@@ -77,6 +96,7 @@ class Subscription(db.Model):
     sub_active = db.Column(db.Boolean)
     sub_sms_payment = db.Column(db.Boolean)
 
+
 class Orderline(db.Model):
     orderl_id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
@@ -84,3 +104,11 @@ class Orderline(db.Model):
     order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
     orderl_create = db.Column(db.Date)
     orderl_expire = db.Column(db.Date)
+
+
+class Giftcard(db.Model):
+    giftcard_id = db.Column(db.Integer, primary_key=True)
+    sub_id = db.Column(db.Integer, ForeignKey('subscription.sub_id'))
+    gift_code = db.Column(db.String(100))
+    expiration = db.Column(db.Date)
+    in_use = db.Column(db.Boolean)

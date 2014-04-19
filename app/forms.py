@@ -3,18 +3,32 @@ from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
-from models import User
+from models import User, Serverreserve
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from sqlalchemy.orm import load_only
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy import Table, MetaData
 from server import Server
 
 
 def listallu():
     return User.query
 
+def listserv():
+    return Serverreserve.query
+
+
+class ServerForm(Form):
+    servername = TextField('Server Name')
+    serverip = TextField('Server IP')
+
+
+class PortForm(Form):
+    server = QuerySelectMultipleField('Select Servers', query_factory=listserv)
+    portno = TextField('Port Number')
+    portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
+
+class UpdatePortForm(Form):
+    server = QuerySelectField('Select Servers', query_factory=listserv)
+    portno = TextField('Port Number')
+    portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
 
 
 class PropertiesForm(Form):

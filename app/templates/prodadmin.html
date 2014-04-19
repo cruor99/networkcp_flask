@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content"><div class="inner-box">
+<br>
+<h1>Hi {{ user }}! {{ errmes }}</h1>
+<br><br>
+<p>{% from "_formhelpers.html" import render_field %}
+    <form method="post" action="/servadmin">
+        {{ render_field(form.servername) }}
+        {{ render_field(form.serverip) }}</p>
+        <input type="submit" value="Add Server" name="submit">
+    </form>
+    <p> These are all the ports that are currently in use and the servers they are on:
+        {% for portno in ports %}
+            ||{{ portno }}
+        {% endfor %}
+    </p>
+    <form method="post" action="/servadmin">
+        {{ render_field(form2.server) }}
+        {{ render_field(form2.portno) }}
+        {{ render_field(form2.portused) }}
+        <input type="submit" value="Add Port" name="submit">
+    </form><br>
+    <form method="post" action="/servadmin">
+        {{ render_field(form3.server) }}
+        {{ render_field(form.portno) }}
+        {{ render_field(form3.portused) }}
+        <input type="submit" value="Update Port" name="submit">
+    </form>
+</div></div>
+{% endblock %}

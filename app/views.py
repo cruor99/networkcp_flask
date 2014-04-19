@@ -2,8 +2,8 @@ __author__ = 'cruor'
 from flask import *
 from flask.ext.login import logout_user, login_required
 from app import app, db
-from forms import LoginForm, signup_form, UadminForm, AdmininfoForm, SubscriptionForm, PropertiesForm, UserinfoForm, DeleteuserForm, CommandForm
-from models import User
+from forms import *
+from models import *
 from functools import wraps
 from server import Server
 from werkzeug import generate_password_hash
@@ -128,7 +128,7 @@ def mcsubscribe():
 
 
 #Response handler for PayEx
-@app.route('/response/', methods=['GET','POST'])
+@app.route('/response', methods=['GET','POST'])
 @login_required
 def response():
     receipt2 = request.args.get('orderRef')
@@ -164,8 +164,43 @@ def mcserver():
     return render_template('server.html', form=form)
 
 
+@admin_required
+@app.route('/servadmin', methods=['POST', 'GET'])
+def servadmin():
+    user = session['username']
+    form = ServerForm()
+    form2 = PortForm()
+    form3 = UpdatePortForm()
+    portusequer = Port.query.filter_by(port_used=1).all()
+    print portusequer
+    ports = portusequer
+    if request.method == 'POST' and request.form['submit'] == "Add Server":
+        servquer = Serverreserve(form.servername.data, form.serverip.data)
+        db.session.add(servquer)
+        db.session.commit()
+        flash('Server Added')
+        return render_template('prodadmin.html', form=form, form2=form2, user=user, ports=ports)
+    if request.method == 'POST' and request.form['submit'] == "Add Port":
+        for form2data in form2.server.data:
+            serverid = Serverreserve.query.filter_by(server_name=form2data).first()
+            portquer = Port(serverid.server_id, form2.portno.data, form2.portused.data)
+            db.session.add(portquer)
+            db.session.commit()
+        flash('Port Added')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
+    if request.method == 'POST' and request.form['submit'] == "Update Port":
+        serverid = Serverreserve.query.filter_by(server_name=form3.data).first()
+        upportquer = Port(serverid.server_id, form3.portno.data, form2.portused.data)
+        db.session.add(upportquer)
+        db.session.commit()
+        flash('Port Updated')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
+
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
+
+
 #User self-administration
-@app.route('/uuadmin', methods=['GET','POST'])
+@app.route('/uuadmin', methods=['GET', 'POST'])
 @login_required
 def uuadmin():
     form = UserinfoForm()
@@ -381,11 +416,18 @@ def manage():
                                    properties=properties,
                                    email = session['email'],
                                    form = form)
-        if request.form['submit'] == 'Change Properties':
+        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port':
             key = form.props.data
             value = form.value.data
             serv.editproperties(user, key, value)
 
+            return render_template('manage.html',
+                                   user = session['username'],
+                                   properties=properties,
+                                   email = session['email'],
+                                   form = form)
+        elif request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
+            flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
