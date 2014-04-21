@@ -76,7 +76,7 @@ class SubscriptionForm(Form):
 class LoginForm(Form):
     remember_me = BooleanField('remember_me', default = False)
     password = PasswordField('Password', validators=[validators.Required()])
-    email = TextField('eMail', validators=[validators.Required()])
+    email = TextField('Username or eMail', validators=[validators.Required()])
 
     def __init__(self, *args, **kwargs):
         kwargs['csrf_enabled'] = False
