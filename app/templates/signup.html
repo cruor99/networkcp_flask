@@ -3,6 +3,7 @@
 {% from "_formhelpers.html" import render_field %}
 <br>
 <div class="content"><div class="inner-box">
+<div class="inner-box3" style="float: left;">
 <form method=post action="/signup">
   <dl class="list2">
     <li>{{ render_field(form.username) }}</li>
@@ -16,6 +17,7 @@
   </dl>
   <p><input type=submit value=submit>
 </form>
+</div>
     <div class="inner-box3">
     Eksempel:<br>
     <img src="../static/images/example.png" alt="Example form">

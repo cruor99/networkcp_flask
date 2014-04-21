@@ -288,32 +288,27 @@ header{
 		border-radius: 8px;
         background-color:#ffffff;
         width:1200px;
+        min-height: 500px;
+        overflow:auto;
+        margin-left:auto;
+        margin-right:auto;
+		}
+    .inner-box2{
+		padding:16px 0 16px 17px;
+		border-radius: 8px;
+        width:1200px;
         height:85%;
         overflow:auto;
         margin-left:auto;
         margin-right:auto;
 		}
-    .inner-box2{ /*Denne er ikke i bruk*/
-		background: url(images/bg-title.png) 0 0 no-repeat;
-		padding:16px 0 16px 17px;
-		border-radius: 8px;
-        background-color:#000000;
-        color:#ffffff;
-        overflow:scroll;
-        width:100%px;
-        height:200px;
-        margin-right:15px;
-		}
     .inner-box3{
-		background: url(images/bg-title.png) 0 0 no-repeat;
 		padding:0px 0 16px 17px;
 		border-radius: 8px;
         background-color:#ffffff;
         overflow:auto;
-        width:100%px;
-        position:fixed;
-        margin-left:220px;
-        top:78px;
+        width:220px;
+        float: left;
 		}
 .content-box-1{
 	box-shadow:inset 0 0 51px rgba(0,0,0,0.6);

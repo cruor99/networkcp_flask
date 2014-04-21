@@ -9,13 +9,13 @@
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.usersel) }}
         {{ render_field(form.role) }}
-    <p><input type="submit" value="Change Role" name="submit"></p>
+    <p><input type="submit" value="Change Role" name="submit" onclick="return confirm('Are you sure?')"></p>
     </form>
     <br><br><br><b>Delete User here</b>
     <form action="/uadmin" method="post" name="deleteuser">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form3.usersel) }}
-    <p><input type="submit" value="Delete User" name="submit"></p>
+    <p><input type="submit" value="Delete User" name="submit" onclick="return confirm('Are you sure?')"></p>
     </form>
     <br><br><br><b>Change User info here</b>
     <form action="/uadmin" method="post" name="changeinfo">
@@ -28,7 +28,7 @@
         {{ render_field(form2.lname) }}
         {{ render_field(form2.phone) }}
         {{ render_field(form2.note) }}
-    <p><input type="submit" value="Change Info" name="submit"></p>
+    <p><input type="submit" value="Change Info" name="submit" onclick="return confirm('Are you sure?')"></p>
     </form>
 </div></div>
 {% endblock %}
