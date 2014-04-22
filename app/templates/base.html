@@ -8,11 +8,11 @@
     {% endif %}
   </head>
   <body>
-    <div id="header" class="head"><img src="../static/bg-head.png" style="display: block; margin-left: auto; margin-right: auto"></div>
+    <div id="header" class="head"><img src="../static/bg-head.png" style="display: block; margin-left: auto; margin-right: auto;"></div>
     <div class="div-nav">
         <nav>
             <ul class="sf-menu">
-                <li class="current"><a href="{{ url_for('index') }}" class="menu-link">Home</a></li>
+                <li><a href="{{ url_for('index') }}" class="menu-link">Home</a></li>
                 {% if 'logged_in' in session %}
                     {% if 'premium' in session %}
                 <li> <a href="{{ url_for('mcserver') }}" class="menu-link">Server Control</a></li>

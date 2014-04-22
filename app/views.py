@@ -215,22 +215,29 @@ def uuadmin():
             newphone = form.phone.data
             username = session['username']
             user = User.query.filter_by(cust_username=username).first()
+            if oldpwd == "":
+                flash('Enter current password')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
                 pwdhashed = generate_password_hash(newpwd)
                 User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
-                flash('Password updated, please inform the user')
+                db.session.commit()
+                flash('Password updated')
             if newfname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
-                flash('First Name updated, please inform the user')
+                db.session.commit()
+                flash('First Name updated')
             if newlname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
-                flash('Last Name updated, please inform the user')
+                db.session.commit()
+                flash('Last Name updated')
             if newemail != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
-                flash('Email updated, please inform the user')
+                db.session.commit()
+                flash('Email updated')
             if newphone != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
-                flash('Phone number updated, please inform the user')
+                db.session.commit()
+                flash('Phone number updated')
             return render_template('uuadmin.html', form=form)
         else:
             return render_template('uuadmin.html', form=form)
@@ -270,24 +277,31 @@ def uadmin():
             if newpwd != "":
                 pwdhashed = generate_password_hash(newpwd)
                 User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
+                db.session.commit()
                 flash('Password updated, please inform the user')
             if newuname != "":
                 User.query.filter_by(cust_username=user).update({'cust_username': newuname})
+                db.session.commit()
                 flash('Username updated, please inform the user')
             if newfname != "":
                 User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
+                db.session.commit()
                 flash('First Name updated, please inform the user')
             if newlname != "":
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
+                db.session.commit()
                 flash('Last Name updated, please inform the user')
             if newemail != "":
                 User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                db.session.commit()
                 flash('Email updated, please inform the user')
             if newphone != "":
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
+                db.session.commit()
                 flash('Phone number updated, please inform the user')
             if newnote != "":
                 User.query.filter_by(cust_username=user).update({'cust_notes': newnote})
+                db.session.commit()
                 flash('Note updated, please inform the user')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         else:
@@ -358,9 +372,7 @@ def login():
                 return redirect(url_for('index'))
         else:
             flash('Something went wrong, Email or Password might be wrong')
-    return render_template('login.html',
-        title = 'Sign In',
-        form = form)
+    return render_template('login.html', title = 'Sign In', form = form)
 
 
 #Routes to signup for new users
@@ -368,7 +380,7 @@ def login():
 def signup():
     form = signup_form(request.form)
     if request.method == 'POST':
-        if form.validate():
+        if form.validate() and form.phone.data.isdigit():
             user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data, form.phone.data)
             db.session.add(user)
             db.session.commit()

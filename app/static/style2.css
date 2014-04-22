@@ -158,6 +158,7 @@ header{
 	background: url(images/bg-nav.png) center 0 no-repeat;
 	width:100%;
 	height:40px;
+    min-width:1360px;
 	}
 /*********************************content*************************************/
 #content{
@@ -217,7 +218,7 @@ header{
 .list li a:hover{color:#fff;}
 .list2 li{
     list-style-type:none;
-    width:180px;
+    width:185px;
     position:relative;
 }
 /**********************************index***********************************/

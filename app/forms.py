@@ -21,12 +21,12 @@ class ServerForm(Form):
 
 
 class PortForm(Form):
-    server = QuerySelectMultipleField('Select Servers', query_factory=listserv)
+    server = QuerySelectMultipleField('Select Server (Hold CTRL to select several servers)', query_factory=listserv)
     portno = TextField('Port Number')
     portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
 
 class UpdatePortForm(Form):
-    server = QuerySelectField('Select Servers', query_factory=listserv)
+    server = QuerySelectField('Select Server', query_factory=listserv)
     portno = TextField('Port Number')
     portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
 
@@ -84,14 +84,14 @@ class LoginForm(Form):
 
 
 class signup_form(Form):
-    username = TextField('Username', validators=[validators.Required()])
-    password = PasswordField('Password', validators=[validators.Required()])
-    confirm = PasswordField('Confirm Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
-    email = TextField('eMail', validators=[validators.Required()])
-    fname = TextField('First Name', validators=[validators.Required()])
-    lname = TextField('Last Name', validators=[validators.Required()])
-    phone = TextField('Phone Number')
-    accept_tos = BooleanField('I accept the TOS', default = False, validators=[validators.Required()])
+    username = TextField('Username*', validators=[validators.Required()])
+    password = PasswordField('Password*', validators=[validators.Required()])
+    confirm = PasswordField('Confirm Password*', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
+    email = TextField('eMail*', validators=[validators.Required()])
+    fname = TextField('First Name*', validators=[validators.Required()])
+    lname = TextField('Last Name*', validators=[validators.Required()])
+    phone = TextField('Phone Number (numbers only)')
+    accept_tos = BooleanField('I accept the TOS*', default = False, validators=[validators.Required()])
 
     #catches csrf_enabled for site security, and to prevent it from being sent for validation
     #this would force forms.validate() in views.py def signup() to always return False

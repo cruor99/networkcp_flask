@@ -6,6 +6,7 @@
 <div class="inner-box3" style="float: left;">
 <form method=post action="/signup">
   <dl class="list2">
+    <li>Required fields are marked with *</li>
     <li>{{ render_field(form.username) }}</li>
     <li>{{ render_field(form.email) }}</li>
     <li>{{ render_field(form.password) }}</li>
@@ -15,11 +16,11 @@
     <li>{{ render_field(form.phone) }}</li>
     <li>{{ render_field(form.accept_tos) }}</li>
   </dl>
-  <p><input type=submit value=submit>
+  <input type=submit value=Submit>
 </form>
 </div>
     <div class="inner-box3">
-    Eksempel:<br>
+    Example:<br>
     <img src="../static/images/example.png" alt="Example form">
     </div>
 </div></div>
