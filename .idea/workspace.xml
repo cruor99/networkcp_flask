@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="Usability improvements">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/vtserver.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/base.html" afterPath="$PROJECT_DIR$/app/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/forms.py" afterPath="$PROJECT_DIR$/app/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/networkcp_flask.iml" afterPath="$PROJECT_DIR$/.idea/networkcp_flask.iml" />
+    <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/server.py" afterPath="$PROJECT_DIR$/app/server.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/style2.css" afterPath="$PROJECT_DIR$/app/static/style2.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/vtserver.html" afterPath="$PROJECT_DIR$/app/templates/vtserver.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -22,7 +17,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398198275993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398199378519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -45,25 +40,7 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="173" column="24" selection-start="5854" selection-end="5854" vertical-scroll-proportion="0.0" vertical-offset="3114" max-vertical-offset="9342">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="16" selection-start="1010" selection-end="1010" vertical-scroll-proportion="-5.3333335" vertical-offset="252" max-vertical-offset="1044">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="style2.css" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/static/style2.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="160" column="18" selection-start="4165" selection-end="4165" vertical-scroll-proportion="0.33333334" vertical-offset="2791" max-vertical-offset="20862">
+            <state line="177" column="15" selection-start="6025" selection-end="6025" vertical-scroll-proportion="0.0" vertical-offset="2844" max-vertical-offset="9414">
               <folding />
             </state>
           </provider>
@@ -72,16 +49,16 @@
       <file leaf-file-name="vtserver.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/templates/vtserver.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="58" selection-start="389" selection-end="389" vertical-scroll-proportion="0.0" vertical-offset="54" max-vertical-offset="630">
+            <state line="22" column="45" selection-start="971" selection-end="971" vertical-scroll-proportion="-6.6666665" vertical-offset="216" max-vertical-offset="630">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="server.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="108" column="89" selection-start="5512" selection-end="5512" vertical-scroll-proportion="0.0" vertical-offset="1732" max-vertical-offset="2772">
+            <state line="124" column="24" selection-start="6352" selection-end="6352" vertical-scroll-proportion="0.830721" vertical-offset="1895" max-vertical-offset="2700">
               <folding />
             </state>
           </provider>
@@ -150,12 +127,12 @@
         <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/app/templates/prodadmin.html" />
         <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/app/templates/vtserver.html" />
-        <option value="$PROJECT_DIR$/app/server.py" />
-        <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/app/forms.py" />
         <option value="$PROJECT_DIR$/app/templates/base.html" />
         <option value="$PROJECT_DIR$/app/static/style2.css" />
+        <option value="$PROJECT_DIR$/app/views.py" />
+        <option value="$PROJECT_DIR$/app/templates/vtserver.html" />
+        <option value="$PROJECT_DIR$/app/server.py" />
       </list>
     </option>
   </component>
@@ -734,29 +711,33 @@
       <created>1397877816512</created>
       <updated>1397877816512</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Ventrilo Implementations&#10;">
+      <created>1398198579855</created>
+      <updated>1398198579855</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1346" height="684" extended-state="0" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2488189" sideWeight="0.6423841" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.44384617" sideWeight="0.63492066" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.44384617" sideWeight="0.63893807" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36507937" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36106196" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294702" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -774,7 +755,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Server output reading WIP" />
     <MESSAGE value="login stuff and restructuring" />
     <MESSAGE value="Users and login sessioning&#10;" />
     <MESSAGE value="User registration: DONE&#10;" />
@@ -799,7 +779,8 @@
     <MESSAGE value="Mod Handling and cleanup complete" />
     <MESSAGE value="Subscription cleanup" />
     <MESSAGE value="Usability improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Usability improvements" />
+    <MESSAGE value="Ventrilo Implementations&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ventrilo Implementations&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -879,30 +860,9 @@
         <state line="0" column="0" selection-start="0" selection-end="809" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="468" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/server.py">
+    <entry file="file://$PROJECT_DIR$/app/static/style2.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="108" column="89" selection-start="5512" selection-end="5512" vertical-scroll-proportion="0.0" vertical-offset="1732" max-vertical-offset="2772">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/vtserver.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="58" selection-start="389" selection-end="389" vertical-scroll-proportion="0.0" vertical-offset="54" max-vertical-offset="630">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="644" selection-start="3453" selection-end="3453" vertical-scroll-proportion="0.0" vertical-offset="1270" max-vertical-offset="1836">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="173" column="24" selection-start="5854" selection-end="5854" vertical-scroll-proportion="0.0" vertical-offset="2785" max-vertical-offset="9144">
+        <state line="160" column="18" selection-start="4165" selection-end="4165" vertical-scroll-proportion="0.33584905" vertical-offset="2791" max-vertical-offset="20862">
           <folding />
         </state>
       </provider>
@@ -914,9 +874,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/style2.css">
+    <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="160" column="18" selection-start="4165" selection-end="4165" vertical-scroll-proportion="0.33333334" vertical-offset="2791" max-vertical-offset="20862">
+        <state line="177" column="15" selection-start="6025" selection-end="6025" vertical-scroll-proportion="0.0" vertical-offset="2844" max-vertical-offset="9414">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="644" selection-start="3453" selection-end="3453" vertical-scroll-proportion="0.0" vertical-offset="1270" max-vertical-offset="1836">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/vtserver.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="45" selection-start="971" selection-end="971" vertical-scroll-proportion="-6.6666665" vertical-offset="216" max-vertical-offset="630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="24" selection-start="6352" selection-end="6352" vertical-scroll-proportion="0.830721" vertical-offset="1895" max-vertical-offset="2700">
           <folding />
         </state>
       </provider>

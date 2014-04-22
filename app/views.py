@@ -175,6 +175,10 @@ def vtserver():
             serv.startvent('80', user)
             flash('Server Restarting')
             return render_template('vtserver.html', form=form, props=props)
+        if request.form['submit'] == 'Edit Property':
+            print form.key.data
+            print form.value.data
+            serv.editventprops('80', user, form.key.data, form.value.data)
     return render_template('vtserver.html', form=form, props=props)
 
 
