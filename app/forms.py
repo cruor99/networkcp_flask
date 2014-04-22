@@ -70,7 +70,7 @@ class AdmininfoForm(Form):
 
 
 class SubscriptionForm(Form):
-    subsel = RadioField('Select Subscription')
+    subsel = SelectField('Select Subscription')
 
 
 class LoginForm(Form):
@@ -82,6 +82,9 @@ class LoginForm(Form):
         kwargs['csrf_enabled'] = False
         super(LoginForm, self).__init__(*args, **kwargs)
 
+class VtEditForm(Form):
+    key = SelectField('.Ini Key', choices=[('name','name'),('phonetic','phonetic'),('auth','auth'),('duplicates','duplicates'),('adminpassword','adminpassword'), ('password','password'),('sendbuffer','sendbuffer'),('recvbuffer','recvbuffer'),('diag','diag'),('logontimeout','logontimeout'),('closestd','closestd'),('timestamp','timestamp'),('pingrate','pingrate'),('extrabuffer','extrabuffer'),('chanwidth','chanwidth'),('chandepth','chandepth'),('chanclients','chanclients'),('disablequit','diasablequit'),('voicecodec','voicecodec'),('voiceformat','voiceformat'),('silentlobby','silentlobby'),('autokick','autokick'),('codexmaxbw','codexmaxbw')])
+    value = TextField('New Value')
 
 class signup_form(Form):
     username = TextField('Username*', validators=[validators.Required()])

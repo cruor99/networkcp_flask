@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="content"><div class="inner-box">
+{% from "_formhelpers.html" import render_field %}
+    <form method=post action="/vtserver" name="start">
+    <input type="submit" name="submit" value="Generate Vent">
+    </form>
+<form method="post" action="/vtserver" name="restart">
+    <input type="submit" name="submit" value="Restart Server">
+    </form>
+<form method="post" action="" name="restart">
+    <input type="submit" name="submit" value="Start Server">
+    </form>
+<form method="post" action="/vtserver" name="restart">
+    <input type="submit" name="submit" value="Stop Server">
+    </form>
+    <br><br><b>Here you can edit the .ini file of your ventrilo server!</b>
+    <form action="/mcserver" method="post" name="sendcommand">
+        {% from "_formhelpers.html" import render_field %}
+        {{ render_field(form.key) }}
+        {{ render_field(form.value) }}
+    <input type="submit" value="Send Command" name="submit">
+    </form>
+    <br>
+    {% for line in props %}
+    <br>{{ line }}
+    {% endfor %}
+    </div></div>
+{% endblock %}

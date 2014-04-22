@@ -3,6 +3,8 @@ import subprocess
 import paramiko
 import threading
 import os
+import time
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 upload_dir = os.path.join(basedir, 'tmp')
@@ -33,7 +35,23 @@ class Server(threading.Thread):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.'+server, username='minecraft', password='minecraft')
-        ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
+        return ssh_stdout.readlines()
+    def startvent(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        time.sleep(3)
+        ssh.exec_command("cd /home/steve/ventriloservers/"+user+"; ./ventrilo_srv-Linux -d -r/home/steve/misc/key")
+
+
+    def stopvent(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        ssh.exec_command("/home/steve/stoptest.sh /home/steve/ventriloservers/"+user+"/ventrilo_srv.pid")
+
+
     #Method for reading information from the server, currently not working and a redesign is planned
     def serverstatus(self, user):
         self.process = subprocess.Popen(["/etc/init.d/minecraft_server", "list", "running"], close_fds=True, stdout=subprocess.PIPE)
@@ -62,7 +80,7 @@ class Server(threading.Thread):
         return ssh_stdin.readlines()
 
     #Method for sending files
-    def sendfile(self,server,filename,user):
+    def sendfile(self, server, filename, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect('84.49.16.'+server, username='minecraft', password='minecraft')
@@ -71,6 +89,40 @@ class Server(threading.Thread):
         remotepath = '/home/minecraft/worlds/'+user+'/'+filename
         sftp.put(localpath, remotepath)
         sftp.close()
+        ssh.close()
+
+    def sendvent(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("mkdir /home/steve/ventriloservers/"+user)
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("cp -r /home/steve/misc/ventpro.zip /home/steve/ventriloservers/"+user)
+        return ssh_stdin.readlines()
+
+    def deployvent(self, user, filename, server):
+        homedir = "/home/steve/ventriloservers/"+user+"/"
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        ssh.exec_command("unzip "+homedir+filename+" -d "+homedir+"; chmod 777 "+homedir+"ventrilo_srv-Linux")
+        time.sleep(1)
+        ssh.exec_command("python /home/steve/editinit.py -w "+user+" -o intf -v 84.49.16."+server+" -c Intf")
+
+
+    def readventprops(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/steve/ventriloservers/"+user+"/ventrilo_srv.ini")
+        return ssh_stdin.readlines()
+        ssh.close()
+
+    def editventprops(self, server, user, key, value):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect('84.49.16.'+server, username='steve', password='12Karen34')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/steve/ventriloservers/"+user+"/ventrilo_srv.ini")
+        return ssh_stdin.readlines()
         ssh.close()
 
     def unzip(self, user, filename):

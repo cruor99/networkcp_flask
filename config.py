@@ -19,5 +19,5 @@ ALLOWED_EXTENSIONS = set(['zip'])
 
 
 #SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
-SQLALCHEMY_DATABASE_URI = 'mysql://steve:12Karen34@broadparkgames.no/servercp'
+SQLALCHEMY_DATABASE_URI = 'mysql://steve:12Karen34@84.49.16.101/servercp'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')

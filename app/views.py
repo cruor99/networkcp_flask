@@ -104,7 +104,8 @@ def mcsubscribe():
         form.subsel.choices = [(10000, '1-Month'), (20000, '3-Month'), (30000, '6-Month')]
     if subtype2 == "2":
         form.subsel.choices = [(15000, '1-Month'), (25000, '3-Month'), (35000, '6-Month')]
-
+    if subtype2 == "vent1":
+        form.subsel.choices = [(3300, '10 slots')]
     if request.method == 'POST':
         subprice = form.subsel.data
         response = service.initialize(
@@ -139,6 +140,42 @@ def response():
         cancmes = 'Your order has been terminated'
         return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
+
+def deployvent():
+    user = session['username']
+    serv=Server()
+    serv.sendvent('80', user)
+    serv.deployvent(user, 'ventpro.zip')
+
+@app.route('/vtserver', methods=['GET', 'POST'])
+@login_required
+@premium_required
+def vtserver():
+    form = VtEditForm()
+    user = session['username']
+    serv=Server()
+    props = serv.readventprops('80', user)
+    if request.method == 'POST':
+        if request.form['submit'] == 'Generate Vent':
+            serv.sendvent('80', user)
+            serv.deployvent(user, 'ventpro.zip', '80')
+            flash('Server Deployed')
+            return render_template('vtserver.html', form=form, props=props)
+        if request.form['submit'] == 'Start Server':
+            serv.startvent('80', user)
+            flash('Server Started')
+            return render_template('vtserver.html', form=form, props=props)
+        if request.form['submit'] == 'Stop Server':
+            serv.stopvent('80', user)
+            flash('Server Stopped')
+            return render_template('vtserver.html', form=form, props=props)
+        if request.form['submit'] == 'Restart Server':
+            serv.stopvent('80', user)
+            time.sleep(2)
+            serv.startvent('80', user)
+            flash('Server Restarting')
+            return render_template('vtserver.html', form=form, props=props)
+    return render_template('vtserver.html', form=form, props=props)
 
 
 #Minecraft Server control panel module
