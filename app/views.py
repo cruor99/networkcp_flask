@@ -219,7 +219,8 @@ def controllers():
 @admin_required
 @app.route('/subadmin', methods=['POST', 'GET'])
 def subadmin():
-    pass
+    form = SubManageForm()
+    return render_template('subadmin.html', form=form)
 
 @admin_required
 @app.route('/servadmin', methods=['POST', 'GET'])
@@ -246,7 +247,7 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
-            serverid = form3.server.data
+            serverid = form2.server.data
             portquer = Port(serverid.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
