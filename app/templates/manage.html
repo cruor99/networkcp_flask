@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="content"><div class="inner-box">
-Here you can manage your server instances, or order a new one!
+<div class="content"><div class="inner-box4">
+    <div class="box2" style="margin-right: 17px">
+    <b>Server.Properties creator</b>
     <form method=post action="/manage" name="start">
         <input type="text" name="server">
         <input type="text" name="port">
         <input type="submit" name="submit" value="servCreate">
     </form>
-     <br><br>
-    <h3>Upload your custom minecraft server with modifications here:</h3>
+    </div>
+    <div class="box2" style="margin-right: 17px">
+    <b>Upload your custom minecraft server with modifications here:</b>
     <p>For a guide on how to proceed, look here!</p>
     <p><b>Important!</b> For simple deployment, make sure to name your zip file the same as your server .jar file!</p>
     <form action="" method="post" enctype="multipart/form-data">
@@ -17,9 +19,11 @@ Here you can manage your server instances, or order a new one!
          <input type="submit" value="Upload Zip" name="submit">
     </form>
     <br><form action="/manage" method="post" name="deletecontent">
-        <input type="submit" value="Delete Server Content" name="submit">
+        <input type="submit" value="Delete Server Content" name="submit" onclick="return confirm('Are you sure?')">
     </form>
-    <br><br><b>Change Server Properties</b>
+    </div>
+    <div class="box2">
+    <b>Change Server Properties</b>
     <form action="/manage" method="post" name="changeproperties">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.props) }}
@@ -27,6 +31,6 @@ Here you can manage your server instances, or order a new one!
     <p><input type="submit" value="Change Properties" name="submit"></p>
     </form>
     <b>Server.properties file:</b><br>
-    <iframe width="500" src="servpropout"></iframe>
-    </div></div>
+    <iframe width="370" src="servpropout"></iframe>
+    </div></div></div>
 {% endblock %}
