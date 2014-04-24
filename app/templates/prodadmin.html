@@ -1,31 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content"><div class="inner-box">
 <br>
-<h1>Hi {{ user }}! {{ errmes }}</h1>
-<br><br>
-<p>{% from "_formhelpers.html" import render_field %}
+<div class="content"><div class="inner-box4">
+    <div class="box2" style="margin-right: 17px">
+    <b>Add a Minecraft Server</b>
+    {% from "_formhelpers.html" import render_field %}
     <form method="post" action="/servadmin">
         {{ render_field(form.servername) }}
-        {{ render_field(form.serverip) }}</p>
-        <input type="submit" value="Add Server" name="submit">
+        {{ render_field(form.serverip) }}
+        <br><input type="submit" value="Add Server" name="submit">
     </form>
-    <p> These are all the ports that are currently in use and the servers they are on:
+        <b>Ports on servers that are currently in use: (port, server)<br>
         {% for portno in ports %}
             ||{{ portno }}
-        {% endfor %}
-    </p>
+        {% endfor %}</b>
+        <br><br><b>Delete Server</b>
+    <form method="post" action="/servadmin">
+        {{ render_field(form4.serversel) }}
+        <input type="submit" value="Delete Server" name="submit" onclick="return confirm('Are you sure?')">
+    </form>
+    </div>
+    <div class="box2" style="margin-right: 17px">
+    <b>Add port on server</b>
     <form method="post" action="/servadmin">
         {{ render_field(form2.server) }}
         {{ render_field(form2.portno) }}
         {{ render_field(form2.portused) }}
         <input type="submit" value="Add Port" name="submit">
-    </form><br>
+    </form>
+    </div>
+    <div class="box2">
+    <b>Activate / deactivate port</b>
     <form method="post" action="/servadmin">
         {{ render_field(form3.server) }}
         {{ render_field(form3.portno) }}
         {{ render_field(form3.portused) }}
         <input type="submit" value="Update Port" name="submit">
     </form>
-</div></div>
+</div></div></div>
 {% endblock %}

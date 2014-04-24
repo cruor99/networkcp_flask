@@ -16,8 +16,8 @@ def listserv():
 
 
 class ServerForm(Form):
-    servername = TextField('Server Name')
-    serverip = TextField('Server IP')
+    servername = TextField('Server Name', validators=[validators.Required()])
+    serverip = TextField('Server IP', validators=[validators.Required()])
 
 
 class PortForm(Form):
@@ -29,6 +29,9 @@ class UpdatePortForm(Form):
     server = QuerySelectField('Select Server', query_factory=listserv)
     portno = TextField('Port Number')
     portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
+
+class DeleteserverForm(Form):
+    serversel = QuerySelectField('Select Server', query_factory=listserv)
 
 
 class PropertiesForm(Form):
@@ -83,7 +86,7 @@ class LoginForm(Form):
         super(LoginForm, self).__init__(*args, **kwargs)
 
 class VtEditForm(Form):
-    key = SelectField('.Ini Key', choices=[('name','name'),('phonetic','phonetic'),('auth','auth'),('duplicates','duplicates'),('adminpassword','adminpassword'), ('password','password'),('sendbuffer','sendbuffer'),('recvbuffer','recvbuffer'),('diag','diag'),('logontimeout','logontimeout'),('closestd','closestd'),('timestamp','timestamp'),('pingrate','pingrate'),('extrabuffer','extrabuffer'),('chanwidth','chanwidth'),('chandepth','chandepth'),('chanclients','chanclients'),('disablequit','diasablequit'),('voicecodec','voicecodec'),('voiceformat','voiceformat'),('silentlobby','silentlobby'),('autokick','autokick'),('codexmaxbw','codexmaxbw')])
+    key = SelectField('.Ini Key', choices=[('name', 'name'), ('phonetic', 'phonetic'), ('auth', 'auth'), ('duplicates', 'duplicates'), ('adminpassword', 'adminpassword'), ('password', 'password'), ('sendbuffer', 'sendbuffer'), ('recvbuffer', 'recvbuffer'), ('diag', 'diag'), ('logontimeout', 'logontimeout'), ('closestd', 'closestd'), ('timestamp', 'timestamp'), ('pingrate', 'pingrate'), ('extrabuffer', 'extrabuffer'), ('chanwidth', 'chanwidth'), ('chandepth', 'chandepth'), ('chanclients', 'chanclients'), ('disablequit', 'diasablequit'), ('voicecodec', 'voicecodec'), ('voiceformat', 'voiceformat'), ('silentlobby', 'silentlobby'), ('autokick', 'autokick'), ('codexmaxbw', 'codexmaxbw')])
     value = TextField('New Value')
 
 class signup_form(Form):

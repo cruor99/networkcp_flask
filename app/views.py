@@ -212,15 +212,26 @@ def servadmin():
     form = ServerForm()
     form2 = PortForm()
     form3 = UpdatePortForm()
+    form4 = DeleteserverForm()
     portusequer = Port.query.filter_by(port_used=1).all()
-    print portusequer
     ports = portusequer
     if request.method == 'POST' and request.form['submit'] == "Add Server":
-        servquer = Serverreserve(form.servername.data, form.serverip.data)
-        db.session.add(servquer)
-        db.session.commit()
-        flash('Server Added')
-        return render_template('prodadmin.html', form=form, form2=form2, user=user, ports=ports)
+        servname = form.servername.data
+        servip = form.serverip.data
+        if servname != "" and servip != "":
+            servquer = Serverreserve(servname, servip)
+            db.session.add(servquer)
+            db.session.commit()
+            flash('Server Added')
+        else:
+            flash('Info missing')
+
+            #if newfname != "" and user.check_password(form.oldpwd.data):
+                #User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
+                #db.session.commit()
+                #flash('First Name updated')
+
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             serverid = Serverreserve.query.filter_by(server_name=form2data).first()
@@ -228,16 +239,21 @@ def servadmin():
             db.session.add(portquer)
             db.session.commit()
         flash('Port Added')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         serverid = Serverreserve.query.filter_by(server_name=form3.data).first()
         upportquer = Port(serverid.server_id, form3.portno.data, form2.portused.data)
         db.session.add(upportquer)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
-
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+    if request.method == 'POST' and request.form['submit'] == "Delete Server":
+        server = form4.serversel.data
+        Serverreserve.query.filter_by(server_name=server).delete()
+        db.session.commit()
+        flash('Server deleted')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
 
 
 #User self-administration
@@ -473,7 +489,6 @@ def manage():
             key = form.props.data
             value = form.value.data
             serv.editproperties(user, key, value)
-
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
@@ -497,15 +512,17 @@ def manage():
             zipfile = request.files['file']
             upload_file(zipfile)
             filenameplaceholder = zipfile.filename
-            filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
-            servername = filenamestripped
-            serv.sendfile('80', zipfile.filename, user)
-
-            serv.unzip(user, zipfile.filename)
-            serv.editproperties(user, 'mscs-server-jar', servername)
-            serv.editproperties(user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
-            os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
-            flash('You did it!')
+            if filenameplaceholder != "":
+                filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+                servername = filenamestripped
+                serv.sendfile('80', zipfile.filename, user)
+                serv.unzip(user, zipfile.filename)
+                serv.editproperties(user, 'mscs-server-jar', servername)
+                serv.editproperties(user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
+                os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
+                flash('You did it!')
+            else:
+                flash('Select a file!')
             return render_template('manage.html',
                            user = session['username'],
                            properties=properties,
