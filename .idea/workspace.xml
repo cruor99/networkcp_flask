@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="Fixes">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/adminchoice.html" afterPath="$PROJECT_DIR$/app/templates/adminchoice.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/subadmin.html" afterPath="$PROJECT_DIR$/app/templates/subadmin.html" />
+    <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -17,7 +15,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398344643960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398346430267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -40,7 +38,7 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="249" column="28" selection-start="8420" selection-end="8420" vertical-scroll-proportion="0.5209003" vertical-offset="4104" max-vertical-offset="10044">
+            <state line="249" column="47" selection-start="8439" selection-end="8439" vertical-scroll-proportion="0.57877815" vertical-offset="4086" max-vertical-offset="10026">
               <folding />
             </state>
           </provider>
@@ -653,7 +651,11 @@
       <created>1398344938397</created>
       <updated>1398344938398</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Fixes">
+      <created>1398346099030</created>
+      <updated>1398346099030</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -693,7 +695,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="enabled testing version" />
     <MESSAGE value="set up venv" />
     <MESSAGE value="DB refactoring done to webserv mysql" />
     <MESSAGE value="useradmin WIP" />
@@ -718,7 +719,8 @@
     <MESSAGE value="Ventrilo Implementations&#10;Propertyhandling fix" />
     <MESSAGE value="Cosmetics and organizing" />
     <MESSAGE value="Form organizing with DB stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Form organizing with DB stuff" />
+    <MESSAGE value="Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -832,7 +834,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="249" column="28" selection-start="8420" selection-end="8420" vertical-scroll-proportion="0.5209003" vertical-offset="4104" max-vertical-offset="10044">
+        <state line="249" column="47" selection-start="8439" selection-end="8439" vertical-scroll-proportion="0.57877815" vertical-offset="4086" max-vertical-offset="10026">
           <folding />
         </state>
       </provider>

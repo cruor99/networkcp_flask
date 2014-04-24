@@ -247,8 +247,7 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
-            serverid = form2.server.data
-            portquer = Port(serverid.server_id, form2.portno.data, form2.portused.data)
+            portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
         flash('Port Added')
