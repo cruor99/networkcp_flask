@@ -453,8 +453,8 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = signup_form(request.form)
-    if request.method == 'POST':
-        if form.validate() and form.phone.data.isdigit():
+    if request.method == 'POST' and form.validate():
+        if form.phone.data == "" or form.phone.data.isdigit():
             user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data, form.phone.data)
             db.session.add(user)
             db.session.commit()
