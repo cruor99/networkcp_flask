@@ -217,6 +217,11 @@ def controllers():
     return render_template('controllers.html')
 
 @admin_required
+@app.route('/subadmin', methods=['POST', 'GET'])
+def subadmin():
+    pass
+
+@admin_required
 @app.route('/servadmin', methods=['POST', 'GET'])
 def servadmin():
     user = session['username']
@@ -241,16 +246,18 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
-            serverid = Serverreserve.query.filter_by(server_name=form2.server.data).first()
+            serverid = form3.server.data
             portquer = Port(serverid.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
         flash('Port Added')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
-        serverid = Serverreserve.query.filter_by(server_name=form3.server.data).first()
-        upportquer = Port(serverid.server_id, form3.portno.data, form2.portused.data)
-        db.session.add(upportquer)
+        servertest = form3.server.data
+        serverparseid = servertest.server_id
+        stmt = update(Port).where(Port.server_id == serverparseid and Port.port_no == form3.portno.data).\
+        values(port_used=form3.portused.data)
+        db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)

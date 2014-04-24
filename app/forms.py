@@ -34,6 +34,19 @@ class DeleteserverForm(Form):
     serversel = QuerySelectField('Select Server', query_factory=listserv)
 
 
+class SubManageForm(Form):
+    server_id = TextField('Server ID')
+    sub_name = TextField('Subscription Name')
+    sub_description = TextField('Subscription Description')
+    sub_type = TextField('Subscription Type')
+    sub_days = TextField('Subscription Days')
+    sub_hours = TextField('Subscription Hours')
+    sub_mnd = TextField('Subscription Months')
+    sub_limit = TextField('Subscription Limit')
+    sub_pris = TextField('Subscription Price')
+    sub_active = BooleanField('Subscription Active')
+    sub_sms_payment = BooleanField('SMS Payment')
+
 class PropertiesForm(Form):
     serv = Server()
     props = TextField('Property')
