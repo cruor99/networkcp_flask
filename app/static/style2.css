@@ -158,7 +158,7 @@ header{
 	background: url(images/bg-nav.png) center 0 no-repeat;
 	width:100%;
 	height:40px;
-    min-width:1600px;
+    min-width:100%;
 	}
 /*********************************content*************************************/
 #content{

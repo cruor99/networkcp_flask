@@ -15,16 +15,14 @@
                 <li><a href="{{ url_for('index') }}" class="menu-link">Home</a></li>
                 {% if 'logged_in' in session %}
                     {% if 'premium' in session %}
-                <li> <a href="{{ url_for('vtserver') }}" class="menu-link">Ventrilo Control</a></li>
-                <li> <a href="{{ url_for('mcserver') }}" class="menu-link">Server Control</a></li>
+                <li> <a href="{{ url_for('controllers') }}" class="menu-link">Control Panels</a></li>
                 <li> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></li>
                     {% endif %}
                   {% if 'admin' in session %}
-                <li> <a href="{{ url_for('vtserver') }}" class="menu-link">Ventrilo Control</a></li>
-                <li> <a href="{{ url_for('mcserver') }}" class="menu-link">Server Control</a></li>
+                <li> <a href="{{ url_for('controllers') }}" class="menu-link">Control Panels</a></li>
                 <li> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></li>
-                <li> <a href="{{ url_for('uadmin') }}" class="menu-link">User Administration</a></li>
-                <li> <a href="{{ url_for('servadmin') }}" class="menu-link">Service Administration</a></li>
+                <li> <a href="{{ url_for('administrate') }}" class="menu-link">Administration</a></li>
+
                    {% endif %}
                 <li> <a href="{{ url_for('subscribe') }}" class="menu-link">Subscribe</a></li>
                 <li> <a href="{{ url_for('uuadmin') }}" class="menu-link">User Control</a></li>
