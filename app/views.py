@@ -215,6 +215,8 @@ def servadmin():
     form4 = DeleteserverForm()
     portusequer = Port.query.filter_by(port_used=1).all()
     ports = portusequer
+    servusequer = Serverreserve.query.all()
+    servq = servusequer
     if request.method == 'POST' and request.form['submit'] == "Add Server":
         servname = form.servername.data
         servip = form.serverip.data
@@ -225,13 +227,7 @@ def servadmin():
             flash('Server Added')
         else:
             flash('Info missing')
-
-            #if newfname != "" and user.check_password(form.oldpwd.data):
-                #User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
-                #db.session.commit()
-                #flash('First Name updated')
-
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             serverid = Serverreserve.query.filter_by(server_name=form2data).first()
@@ -239,21 +235,24 @@ def servadmin():
             db.session.add(portquer)
             db.session.commit()
         flash('Port Added')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         serverid = Serverreserve.query.filter_by(server_name=form3.data).first()
         upportquer = Port(serverid.server_id, form3.portno.data, form2.portused.data)
         db.session.add(upportquer)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         server = form4.serversel.data
+        servername = Serverreserve.query.filter_by(server_name=server).first()
+        serverid = servername.server_id
+        Port.query.filter_by(server_id=serverid).delete()
         Serverreserve.query.filter_by(server_name=server).delete()
         db.session.commit()
         flash('Server deleted')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
 
 
 #User self-administration

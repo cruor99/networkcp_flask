@@ -102,7 +102,7 @@ ul {
 h1{
 	display: inline-block;
 	float:left;
-	margin:0 0 0 344px;
+	margin:0 0 0 0px;
 	overflow:hidden;
     line-height:30px;
 	}

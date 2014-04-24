@@ -63,7 +63,7 @@ class Serverreserve(db.Model):
         self.server_ip = server_ip
 
     def __repr__(self):
-        return '%s' % (self.server_name)
+        return '%i, %s, %s' % (self.server_id, self.server_name, self.server_ip)
 
 
 class Port(db.Model):
