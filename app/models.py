@@ -55,7 +55,7 @@ class Order(db.Model):
 
 class Serverreserve(db.Model):
     server_id = db.Column(db.Integer, primary_key=True)
-    server_name = db.Column(db.String(30))
+    server_name = db.Column(db.String(30), unique=True)
     server_ip = db.Column(db.String(30))
 
     def __init__(self, server_name, server_ip):
@@ -96,6 +96,18 @@ class Subscription(db.Model):
     sub_active = db.Column(db.Boolean)
     sub_sms_payment = db.Column(db.Boolean)
 
+    def __init__(self, server_id, sub_name, sub_description, sub_type, sub_days, sub_hours, sub_mnd, sub_limit, sub_pris, sub_active, sub_sms_payment):
+        self.server_id = server_id
+        self.sub_name = sub_name
+        self.sub_description = sub_description
+        self.sub_type = sub_type
+        self.sub_days = sub_days
+        self.sub_hours = sub_hours
+        self.sub_mnd = sub_mnd
+        self.sub_limit = sub_limit
+        self.sub_pris = sub_pris
+        self.sub_active = sub_active
+        self.sub_sms_payment = sub_sms_payment
 
 class Orderline(db.Model):
     orderl_id = db.Column(db.Integer, primary_key=True)
@@ -105,6 +117,13 @@ class Orderline(db.Model):
     orderl_create = db.Column(db.Date)
     orderl_expire = db.Column(db.Date)
 
+    def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire):
+        self.port_id = port_id
+        self.sub_id = sub_id
+        self.order_id = order_id
+        self.orderl_create = orderl_create
+        self.orderl_expire = orderl_expire
+
 
 class Giftcard(db.Model):
     giftcard_id = db.Column(db.Integer, primary_key=True)
@@ -112,3 +131,9 @@ class Giftcard(db.Model):
     gift_code = db.Column(db.String(100))
     expiration = db.Column(db.Date)
     in_use = db.Column(db.Boolean)
+
+    def __init__(self, sub_id, gift_code, expiration, in_use):
+        self.sub_id = sub_id
+        self.gift_code = gift_code
+        self.expiration = expiration
+        self.in_use = in_use

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content"><div class="inner-box2">
+<div class="inner-box" style="width: 1150px; height: 150px; margin-bottom: 10px" >
+<br>
+<h1>Hi {{ user }}! {{ errmes }}</h1>
+<br><br>
+<p>Please chose what you want to control:
+   <br> <a href="{{ url_for('vtserver') }}" class="menu-link">Ventrilo Control</a>
+   <br> <a href="{{ url_for('mcserver') }}" class="menu-link">Minecraft Control</a>
+</p>
+</div>
+</div>
+
+{% endblock %}

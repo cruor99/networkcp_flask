@@ -26,7 +26,7 @@ service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv
 @app.errorhandler(500)
 def internal_server(error):
     flash('You did something wrong')
-    return render_template('index.html', user=session['username'], errmes='You were sent here because something might have gone wrong, please check your flashed message')
+    return render_template('index.html', user=session['username'], errmes=error)
 
 
 #Test for existence of login in session
@@ -206,6 +206,17 @@ def mcserver():
 
 
 @admin_required
+@app.route('/administrate')
+def administrate():
+    return render_template('adminchoice.html')
+
+@login_required
+@premium_required
+@app.route('/controllers')
+def controllers():
+    return render_template('controllers.html')
+
+@admin_required
 @app.route('/servadmin', methods=['POST', 'GET'])
 def servadmin():
     user = session['username']
@@ -230,14 +241,14 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
-            serverid = Serverreserve.query.filter_by(server_name=form2data).first()
+            serverid = Serverreserve.query.filter_by(server_name=form2.server.data).first()
             portquer = Port(serverid.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
         flash('Port Added')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
-        serverid = Serverreserve.query.filter_by(server_name=form3.data).first()
+        serverid = Serverreserve.query.filter_by(server_name=form3.server.data).first()
         upportquer = Port(serverid.server_id, form3.portno.data, form2.portused.data)
         db.session.add(upportquer)
         db.session.commit()
