@@ -5,17 +5,15 @@
     <div class="inner-box">
         <h1>Subscription Administration   </h1> <br><br>
         {% from "_formhelpers.html" import render_field %}
-<form action="" method="post">        {{ render_field(form.server_id) }}
+<form action="" method="post">
         {{ render_field(form.sub_name) }}
         {{ render_field(form.sub_description) }}
-{{ render_field(form.sub_type) }}
-{{ render_field(form.sub_days) }}
-{{ render_field(form.sub_hours) }}
-{{ render_field(form.sub_mnd) }}
-{{ render_field(form.sub_limit) }}
-{{ render_field(form.sub_pris) }}
-{{ render_field(form.sub_active) }}
-{{ render_field(form.sub_sms_payment) }}<br>
+        {{ render_field(form.sub_type) }}
+        {{ render_field(form.sub_days) }}
+        {{ render_field(form.sub_hours) }}
+        {{ render_field(form.sub_mnd) }}
+        {{ render_field(form.sub_limit) }}
+        {{ render_field(form.sub_pris) }}<br>
     <input type="submit" value="Add Subscription" name="submit">
     </form>
     </div</div>

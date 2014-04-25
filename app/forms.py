@@ -35,17 +35,21 @@ class DeleteserverForm(Form):
 
 
 class SubManageForm(Form):
-    server_id = TextField('Server ID')
-    sub_name = TextField('Subscription Name')
-    sub_description = TextField('Subscription Description')
-    sub_type = TextField('Subscription Type')
+    server_id = TextField('Server ID', validators=[validators.Required()])
+    sub_name = TextField('Subscription Name', validators=[validators.Required()])
+    sub_description = TextField('Subscription Description', validators=[validators.Required()])
+    sub_type = TextField('Subscription Type', validators=[validators.Required()])
     sub_days = TextField('Subscription Days')
     sub_hours = TextField('Subscription Hours')
     sub_mnd = TextField('Subscription Months')
-    sub_limit = TextField('Subscription Limit')
-    sub_pris = TextField('Subscription Price')
+    sub_limit = TextField('Subscription Limit', validators=[validators.Required()])
+    sub_pris = TextField('Subscription Price', validators=[validators.Required()])
     sub_active = BooleanField('Subscription Active')
     sub_sms_payment = BooleanField('SMS Payment')
+
+
+
+
 
 class PropertiesForm(Form):
     serv = Server()

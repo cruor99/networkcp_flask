@@ -51,7 +51,10 @@ class User(db.Model):
 class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True)
     cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'), primary_key=True)
-
+    orderident = db.Column(db.String(30))
+    def __init__(self, cust_id, orderident):
+        self.cust_id = cust_id
+        self.orderident = orderident
 
 class Serverreserve(db.Model):
     server_id = db.Column(db.Integer, primary_key=True)
@@ -84,7 +87,6 @@ class Port(db.Model):
 
 class Subscription(db.Model):
     sub_id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, ForeignKey('serverreserve.server_id'))
     sub_name = db.Column(db.String(100))
     sub_description = db.Column(db.Text)
     sub_type = db.Column(db.String(50))
@@ -93,11 +95,9 @@ class Subscription(db.Model):
     sub_mnd = db.Column(db.Integer)
     sub_limit = db.Column(db.Integer)
     sub_pris = db.Column(db.Float)
-    sub_active = db.Column(db.Boolean)
-    sub_sms_payment = db.Column(db.Boolean)
 
-    def __init__(self, server_id, sub_name, sub_description, sub_type, sub_days, sub_hours, sub_mnd, sub_limit, sub_pris, sub_active, sub_sms_payment):
-        self.server_id = server_id
+    def __init__(self, sub_name, sub_description, sub_type, sub_days, sub_hours, sub_mnd,\
+                 sub_limit, sub_pris):
         self.sub_name = sub_name
         self.sub_description = sub_description
         self.sub_type = sub_type
@@ -106,16 +106,14 @@ class Subscription(db.Model):
         self.sub_mnd = sub_mnd
         self.sub_limit = sub_limit
         self.sub_pris = sub_pris
-        self.sub_active = sub_active
-        self.sub_sms_payment = sub_sms_payment
 
 class Orderline(db.Model):
     orderl_id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
     sub_id = db.Column(db.Integer, ForeignKey('subscription.sub_id'))
     order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
-    orderl_create = db.Column(db.Date)
-    orderl_expire = db.Column(db.Date)
+    orderl_create = db.Column(db.String)
+    orderl_expire = db.Column(db.String)
 
     def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire):
         self.port_id = port_id

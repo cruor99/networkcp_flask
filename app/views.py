@@ -11,6 +11,8 @@ import time
 from payex.service import PayEx
 import random
 import os
+import datetime
+import dateutils
 from werkzeug.utils import secure_filename
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
@@ -92,6 +94,12 @@ def subscribe():
 def mcsubopt():
     return render_template('mcsubopt.html', user=session['username'])
 
+def genorder():
+    orderident = session['username']+str(random.randint(1, 2000))
+    session['ordertmpholder'] = orderident
+    ordquer = Order(session['userid'], orderident)
+    db.session.add(ordquer)
+    db.session.commit()
 
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
@@ -100,12 +108,14 @@ def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
     subtype2 = request.args.get('subtype')
-    if subtype2 == "1":
-        form.subsel.choices = [(10000, '1-Month'), (20000, '3-Month'), (30000, '6-Month')]
-    if subtype2 == "2":
-        form.subsel.choices = [(15000, '1-Month'), (25000, '3-Month'), (35000, '6-Month')]
-    if subtype2 == "vent1":
-        form.subsel.choices = [(3300, '10 slots')]
+    if subtype2 == "Small":
+        form.subsel.choices = [(12000, '120NOK - 1-Month'), (36000, '360NOK - 3-Month'), (72000, '720NOK - 6-Month')]
+    if subtype2 == "Medium":
+        form.subsel.choices = [(22000, '220NOK - 1-Month'), (66000, '660NOK - 3-Month'), (132000, '1320NOK - 6-Month')]
+    if subtype2 == "Large":
+        form.subsel.choices = [(29000, '290NOK - 1-Month'), (87000, '870NOK - 3-Month'), (174000, '1740NOK - 6-Month')]
+    if subtype2 == "Ventrilo":
+        form.subsel.choices = [(3300, '33NOK - 10 slots'), (5800, '58NOK - 20 slots'), (8300, '83NOK - 30 slots')]
     if request.method == 'POST':
         subprice = form.subsel.data
         response = service.initialize(
@@ -118,12 +128,25 @@ def mcsubscribe():
             description=u'Gameserver rental host for: '+user,
             clientIPAddress='127.0.0.1',
             clientIdentifier='USERAGENT=test&username=testuser',
-            additionalValues='PAYMENTMENU=TRUE',
+            #additionalValues='PAYMENTMENU=TRUE',
             returnUrl='http://127.0.0.1:5000/response',
-            view='PX',
+            view='CREDITCARD',
             cancelUrl='http://127.0.0.1:5000/response'
         )
-        print response
+        dbprice = subprice[:-2]
+        sub = Subscription.query.filter_by(sub_pris=dbprice).first()
+        dbsubid = sub.sub_id
+        avport = Port.query.filter_by(port_used=2).first()
+        genorder()
+        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+        orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
+        db.session.add(orderlinequer)
+        db.session.commit()
+        session['premium'] = 2
+        stmt = update(User).where(User.cust_id==session['userid']).\
+        values(role=2)
+        db.session.execute(stmt)
+        db.session.commit()
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
 
@@ -134,18 +157,17 @@ def mcsubscribe():
 def response():
     receipt2 = request.args.get('orderRef')
     if receipt2 is not None:
-        print "This is a test"
-        return render_template('response.html', receipt=receipt2)
+        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+        order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+        subid = order.sub_id
+        ordid = order.order_id
+        ordexp = order.orderl_expire
+        return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
         cancmes = 'Your order has been terminated'
         return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
-def deployvent():
-    user = session['username']
-    serv=Server()
-    serv.sendvent('80', user)
-    serv.deployvent(user, 'ventpro.zip')
 
 @app.route('/vtserver', methods=['GET', 'POST'])
 @login_required
@@ -154,31 +176,37 @@ def vtserver():
     form = VtEditForm()
     user = session['username']
     serv=Server()
-    props = serv.readventprops('80', user)
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
+    props = serv.readventprops(serverip, user)
     if request.method == 'POST':
         if request.form['submit'] == 'Generate Vent':
-            serv.sendvent('80', user)
-            serv.deployvent(user, 'ventpro.zip', '80')
+            serv.sendvent(serverip, user)
+            serv.deployvent(user, 'ventpro.zip', serverip)
             flash('Server Deployed')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Start Server':
-            serv.startvent('80', user)
+            serv.startvent(serverip, user)
             flash('Server Started')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Stop Server':
-            serv.stopvent('80', user)
+            serv.stopvent(serverip, user)
             flash('Server Stopped')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Restart Server':
-            serv.stopvent('80', user)
+            serv.stopvent(serverip, user)
             time.sleep(2)
-            serv.startvent('80', user)
+            serv.startvent(serverip, user)
             flash('Server Restarting')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Edit Property':
             print form.key.data
             print form.value.data
-            serv.editventprops('80', user, form.key.data, form.value.data)
+            serv.editventprops(serverip, user, form.key.data, form.value.data)
     return render_template('vtserver.html', form=form, props=props)
 
 
@@ -190,18 +218,20 @@ def mcserver():
     form = CommandForm()
     user = session['username']
     serv = Server()
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
     if request.method == 'POST':
         if request.form['submit'] == 'Start Server':
-            serv.serverstart(user)
+            serv.serverstart(serverip, user)
         if request.form['submit'] == 'Stop Server':
-            serv.serverstop(user)
-        if request.form['submit'] == 'stopall':
-            serv.serverstop("")
-        if request.form['submit'] == 'startall':
-            serv.serverstart("")
+            serv.serverstop(str(serverip), user)
         if request.form['submit'] == 'Send Command':
             command = form.command.data
-            serv.servercommand(user,command)
+            serv.servercommand(str(serverip), user, command)
     return render_template('server.html', form=form)
 
 
@@ -220,8 +250,18 @@ def controllers():
 @app.route('/subadmin', methods=['POST', 'GET'])
 def subadmin():
     form = SubManageForm()
+    if request.method == 'POST' and request.form['submit'] == 'Add Subscription':
+        subquer = Subscription(form.sub_name.data, form.sub_description.data,
+                               form.sub_type.data, form.sub_days.data, form.sub_hours.data, form.sub_mnd.data,
+                               form.sub_limit.data, form.sub_pris.data)
+
+        db.session.add(subquer)
+        db.session.commit()
+        flash('The Subscription has been added to the pool')
+        return render_template('subadmin.html', form=form)
     return render_template('subadmin.html', form=form)
 
+#Administrate the service, adding servers, ports and managing them through the control panel.
 @admin_required
 @app.route('/servadmin', methods=['POST', 'GET'])
 def servadmin():
@@ -244,14 +284,16 @@ def servadmin():
             flash('Server Added')
         else:
             flash('Info missing')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
+                               ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
-        flash('Port Added')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
+            flash('Port Added')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
+                               ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         servertest = form3.server.data
         serverparseid = servertest.server_id
@@ -260,7 +302,8 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
+                               ports=ports, servq=servq)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         server = form4.serversel.data
         servername = Serverreserve.query.filter_by(server_name=server).first()
@@ -269,8 +312,10 @@ def servadmin():
         Serverreserve.query.filter_by(server_name=server).delete()
         db.session.commit()
         flash('Server deleted')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user, ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
+                               ports=ports, servq=servq)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
+                           ports=ports, servq=servq)
 
 
 #User self-administration
@@ -386,18 +431,32 @@ def uadmin():
 #Helper for the minecraft output frame
 @app.route('/mcoutput')
 def mcoutput():
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    print order.order_id
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
     serv = Server()
     user = session['username']
-    output = serv.readconsole(user)
+    output = serv.readconsole(serverip, user)
     return render_template('mcoutput.html', output=output)
 
 
 #Routes to login for users
 @app.route('/servpropout')
 def servpropout():
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    print order.order_id
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
     serv = Server()
     user = session['username']
-    output = serv.readproperties(user)
+    output = serv.readproperties(serverip, user)
     time.sleep(1)
     return render_template('servpropout.html', output=output)
 
@@ -456,6 +515,10 @@ def signup():
     if request.method == 'POST' and form.validate():
         if form.phone.data == "" or form.phone.data.isdigit():
             user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data, form.phone.data)
+    if request.method == 'POST':
+        if form.validate() and form.phone.data.isdigit():
+            user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
+                        form.phone.data)
             db.session.add(user)
             db.session.commit()
             flash('Thanks for registering')
@@ -488,43 +551,48 @@ def upload_file(rfile):
 def manage():
     user = session['username']
     serv = Server()
-    properties = serv.readproperties(user)
+
     form = PropertiesForm()
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    print serverip
+    port = dbport.port_no
+
+    properties = serv.readproperties(serverip, user)
     if request.method == 'POST':
-        if request.form['submit'] == 'servCreate':
-            server = request.form['server']
-            port = request.form['port']
-            serv = Server()
-            user = session['username']
-            serv.servercreate(server, user, port)
-            return render_template('manage.html',
-                                   user = session['username'],
-                                   properties=properties,
-                                   email = session['email'],
-                                   form = form)
+        if request.form['submit'] == 'Generate properties':
+            serv.servercreate(str(serverip), user, str(port))
+            flash("Properties Generated")
+            return render_template('manage.html', user=session['username'], properties=properties,
+                                   email=session['email'], form=form)
+
         if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port':
             key = form.props.data
             value = form.value.data
-            serv.editproperties(user, key, value)
+            serv.editproperties(serverip, user, key, value)
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
-                                   email = session['email'],
-                                   form = form)
+                                   email = session['email'],form=form)
+
         elif request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
-                                   email = session['email'],
-                                   form = form)
+                                   email = session['email'],form=form)
+
         if request.form['submit'] == 'Delete Server Content':
-            serv.deleteserv(user)
+            serv.deleteserv(serverip, user)
             return render_template('manage.html',
                                    user = session['username'],
                                    properties=properties,
                                    email = session['email'],
-                                   form = form)
+                                   form=form)
         if request.form['submit'] == 'Upload Zip':
             zipfile = request.files['file']
             upload_file(zipfile)
@@ -532,10 +600,10 @@ def manage():
             if filenameplaceholder != "":
                 filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
                 servername = filenamestripped
-                serv.sendfile('80', zipfile.filename, user)
-                serv.unzip(user, zipfile.filename)
-                serv.editproperties(user, 'mscs-server-jar', servername)
-                serv.editproperties(user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
+                serv.sendfile(serverip, zipfile.filename, user)
+                serv.unzip(serverip, user, zipfile.filename)
+                serv.editproperties(serverip, user, 'mscs-server-jar', servername)
+                serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
                 os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
                 flash('You did it!')
             else:
@@ -544,12 +612,12 @@ def manage():
                            user = session['username'],
                            properties=properties,
                            email = session['email'],
-                           form = form)
+                           form=form)
     return render_template('manage.html',
                            user = session['username'],
                            properties=properties,
                            email = session['email'],
-                           form = form)
+                           form=form)
 
 
 #Logs the user out

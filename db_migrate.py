@@ -1,4 +1,3 @@
-__author__ = 'cruor'
 #!flask/bin/python
 import imp
 from migrate.versioning import api
