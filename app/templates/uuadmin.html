@@ -4,7 +4,8 @@
 {% from "_formhelpers.html" import form_field %}
 <br>
 <div class="content"><div class="inner-box">
-Change User info here <b>(Current password required for any change!)</b><br><br>
+<h1>Change User info here</h1><br><br>
+    <b>(Current password required for any change!)</b><br><br>
     <form action="/uuadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.oldpwd) }}

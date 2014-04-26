@@ -3,25 +3,11 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box2" style="margin-right: 17px">
-    <b>Server.Properties creator</b>
+    <h3>Server.Properties creator</h3>
      <form method="post" action="/manage">
     <input type="submit" value="Generate properties" name="submit">
          </form>
-    </div>
-    <div class="box2" style="margin-right: 17px">
-    <b>Upload your custom minecraft server with modifications here:</b>
-    <p>For a guide on how to proceed, look here!</p>
-    <p><b>Important!</b> For simple deployment, make sure to name your zip file the same as your server .jar file!</p>
-    <form action="" method="post" enctype="multipart/form-data">
-      <p><input type=file name=file>
-         <input type="submit" value="Upload Zip" name="submit">
-    </form>
-    <br><form action="/manage" method="post" name="deletecontent">
-        <input type="submit" value="Delete Server Content" name="submit" onclick="return confirm('Are you sure?')">
-    </form>
-    </div>
-    <div class="box2">
-    <b>Change Server Properties</b>
+    <br><h3>Change Server Properties</h3>
     <form action="/manage" method="post" name="changeproperties">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.props) }}
@@ -30,5 +16,21 @@
     </form>
     <b>Server.properties file:</b><br>
     <iframe width="370" src="servpropout"></iframe>
+    </div>
+    <div class="box2" style="margin-right: 17px">
+    <h3>Upload custom mods to your minecraft server:</h3>
+    <p>For a guide on how to proceed, look here!</p>
+    <p><b>Important!</b> For simple deployment, make sure to name your zip file the same as your server .jar file!</p>
+    <form action="" method="post" enctype="multipart/form-data">
+      <p><input type=file name=file>
+         <input type="submit" value="Upload Zip" name="submit">
+    </form>
+    <h3>Delete all your server content</h3>
+    <form action="/manage" method="post" name="deletecontent">
+        <input type="submit" value="Delete Server Content" name="submit" onclick="return confirm('Are you sure?')">
+    </form>
+    </div>
+    <div class="box2">
+
     </div></div></div>
 {% endblock %}

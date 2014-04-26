@@ -111,11 +111,16 @@ h1{
 		display:inline-block;
 		}
 h1 a{display:inline-block;}
-h2{ font-size:16px; 
-	font-family: 'Orbitron', sans-serif;
-	color:#c4c4c4; 
-	line-height:20px;
-	font-weight:800;
+h2{ font-size:20px;
+	#font-family: 'Orbitron', sans-serif;
+	#color:#c4c4c4;
+	#line-height:50px;
+    float:left;
+	margin:10 0 0 0px;
+	}
+h3{ font-size:15px;
+    #float:left;
+	margin:5 0 5 0px;
 	}
 /*********************************header*************************************/
 .head{
@@ -218,7 +223,7 @@ header{
 .list li a:hover{color:#fff;}
 .list2 li{
     list-style-type:none;
-    width:185px;
+    width:190px;
     position:relative;
 }
 /**********************************index***********************************/
@@ -329,7 +334,20 @@ header{
     padding-right: 5px;
     padding-top: 5px;
     width: 376px;
-    height: 600px;
+    min-height: 500px;
+    float: left;
+	}
+.box3{
+	border:1px solid #2d2d2f;
+	border-radius: 8px;
+    background-color:#ffffff;
+	overflow:hidden;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    width: 572px;
+    min-height: 500px;
     float: left;
 	}
 .content-box-1{

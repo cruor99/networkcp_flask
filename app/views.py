@@ -270,10 +270,6 @@ def servadmin():
     form2 = PortForm()
     form3 = UpdatePortForm()
     form4 = DeleteserverForm()
-    portusequer = Port.query.filter_by(port_used=1).all()
-    ports = portusequer
-    servusequer = Serverreserve.query.all()
-    servq = servusequer
     if request.method == 'POST' and request.form['submit'] == "Add Server":
         servname = form.servername.data
         servip = form.serverip.data
@@ -284,16 +280,14 @@ def servadmin():
             flash('Server Added')
         else:
             flash('Info missing')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
-                               ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
             flash('Port Added')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
-                               ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         servertest = form3.server.data
         serverparseid = servertest.server_id
@@ -302,20 +296,19 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
-                               ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         server = form4.serversel.data
-        servername = Serverreserve.query.filter_by(server_name=server).first()
+        server2 = server.server_name
+        servername = Serverreserve.query.filter_by(server_name=server2).first()
         serverid = servername.server_id
         Port.query.filter_by(server_id=serverid).delete()
-        Serverreserve.query.filter_by(server_name=server).delete()
+        Serverreserve.query.filter_by(server_name=server2).delete()
         db.session.commit()
+        time.sleep(1)
         flash('Server deleted')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
-                               ports=ports, servq=servq)
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user,\
-                           ports=ports, servq=servq)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
 
 
 #User self-administration
@@ -382,6 +375,7 @@ def uadmin():
             user = form3.usersel.data
             User.query.filter_by(cust_username=user).delete()
             db.session.commit()
+            time.sleep(1)
             flash('User deleted')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Change Info':
@@ -460,6 +454,41 @@ def servpropout():
     time.sleep(1)
     return render_template('servpropout.html', output=output)
 
+
+@app.route('/servoutput')
+def servoutput():
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    print order.order_id
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
+    serv = Server()
+    user = session['username']
+    servusequer = Serverreserve.query.all()
+    servq = servusequer
+    time.sleep(1)
+    return render_template('servoutput.html', servq=servq)
+
+
+@app.route('/portoutput')
+def portoutput():
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    print order.order_id
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
+    serv = Server()
+    user = session['username']
+    portusequer = Port.query.filter_by(port_used=1).all()
+    ports = portusequer
+    time.sleep(1)
+    return render_template('portoutput.html', ports=ports)
+
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -514,9 +543,6 @@ def signup():
     form = signup_form(request.form)
     if request.method == 'POST' and form.validate():
         if form.phone.data == "" or form.phone.data.isdigit():
-            user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data, form.phone.data)
-    if request.method == 'POST':
-        if form.validate() and form.phone.data.isdigit():
             user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
                         form.phone.data)
             db.session.add(user)
@@ -562,35 +588,37 @@ def manage():
     print serverip
     port = dbport.port_no
 
-    properties = serv.readproperties(serverip, user)
     if request.method == 'POST':
         if request.form['submit'] == 'Generate properties':
             serv.servercreate(str(serverip), user, str(port))
             flash("Properties Generated")
-            return render_template('manage.html', user=session['username'], properties=properties,
+            return render_template('manage.html', user=session['username'],
                                    email=session['email'], form=form)
 
-        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port':
+        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and form.props.data != 'max-players':
             key = form.props.data
             value = form.value.data
             serv.editproperties(serverip, user, key, value)
             return render_template('manage.html',
                                    user = session['username'],
-                                   properties=properties,
                                    email = session['email'],form=form)
 
-        elif request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
+        if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html',
                                    user = session['username'],
-                                   properties=properties,
+                                   email = session['email'],form=form)
+
+        if request.form['submit'] == 'Change Properties' and form.props.data == 'max-players':
+            flash('You are not allowed to change the maximum players on your server')
+            return render_template('manage.html',
+                                   user = session['username'],
                                    email = session['email'],form=form)
 
         if request.form['submit'] == 'Delete Server Content':
             serv.deleteserv(serverip, user)
             return render_template('manage.html',
                                    user = session['username'],
-                                   properties=properties,
                                    email = session['email'],
                                    form=form)
         if request.form['submit'] == 'Upload Zip':
@@ -610,12 +638,10 @@ def manage():
                 flash('Select a file!')
             return render_template('manage.html',
                            user = session['username'],
-                           properties=properties,
                            email = session['email'],
                            form=form)
     return render_template('manage.html',
                            user = session['username'],
-                           properties=properties,
                            email = session['email'],
                            form=form)
 
