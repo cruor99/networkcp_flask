@@ -13,6 +13,7 @@ import random
 import os
 import datetime
 import dateutils
+import re
 from werkzeug.utils import secure_filename
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
@@ -378,6 +379,19 @@ def uadmin():
             time.sleep(1)
             flash('User deleted')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
+
+        #if request.method == 'POST' and request.form['submit'] == "Delete Server":
+         #   server = form4.serversel.data
+          #  server2 = server.server_name
+           # servername = Serverreserve.query.filter_by(server_name=server2).first()
+            #serverid = servername.server_id
+         #   Port.query.filter_by(server_id=serverid).delete()
+          #  Serverreserve.query.filter_by(server_name=server2).delete()
+           # db.session.commit()
+            #time.sleep(1)
+            #flash('Server deleted')
+        #return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+
         if request.form['submit'] == 'Change Info':
             newpwd = form2.pwdfield.data
             newfname = form2.fname.data
@@ -542,15 +556,30 @@ def login():
 def signup():
     form = signup_form(request.form)
     if request.method == 'POST' and form.validate():
-        if form.phone.data == "" or form.phone.data.isdigit():
-            user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
-                        form.phone.data)
-            db.session.add(user)
-            db.session.commit()
-            flash('Thanks for registering')
-            return redirect(url_for('login'))
+        olduser = User.query.filter_by(cust_username=form.username.data).first()
+        newuser = form.username.data
+        newmail = form.email.data
+        oldmaildb = User.query.filter_by(cust_mail=newmail).first()
+        oldmail = ""
+        if oldmaildb != None:
+            oldmail = oldmaildb.cust_mail
+        if (str(newuser) != str(olduser)) and (str(newmail) != str(oldmail)):
+            if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", form.email.data):
+                if form.phone.data == "" or form.phone.data.isdigit():
+                    user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
+                                form.phone.data)
+                    db.session.add(user)
+                    db.session.commit()
+                    flash('Thanks for registering!')
+                    return redirect(url_for('login'))
+                else:
+                    flash('Phone number not valid!')
+                    return render_template('signup.html', form=form)
+            else:
+                flash('Not a valid eMail!')
+                return render_template('signup.html', form=form)
         else:
-            flash('Something went wrong')
+            flash('Username or eMail already exists!')
             return render_template('signup.html', form=form)
     else:
         return render_template('signup.html', form=form)
