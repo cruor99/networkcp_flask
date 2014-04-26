@@ -379,19 +379,6 @@ def uadmin():
             time.sleep(1)
             flash('User deleted')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
-
-        #if request.method == 'POST' and request.form['submit'] == "Delete Server":
-         #   server = form4.serversel.data
-          #  server2 = server.server_name
-           # servername = Serverreserve.query.filter_by(server_name=server2).first()
-            #serverid = servername.server_id
-         #   Port.query.filter_by(server_id=serverid).delete()
-          #  Serverreserve.query.filter_by(server_name=server2).delete()
-           # db.session.commit()
-            #time.sleep(1)
-            #flash('Server deleted')
-        #return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
-
         if request.form['submit'] == 'Change Info':
             newpwd = form2.pwdfield.data
             newfname = form2.fname.data
