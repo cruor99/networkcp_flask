@@ -2,25 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/portoutput.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/servoutput.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/adminchoice.html" afterPath="$PROJECT_DIR$/app/templates/adminchoice.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/controllers.html" afterPath="$PROJECT_DIR$/app/templates/controllers.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/forms.py" afterPath="$PROJECT_DIR$/app/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/login.html" afterPath="$PROJECT_DIR$/app/templates/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/manage.html" afterPath="$PROJECT_DIR$/app/templates/manage.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/mcsubopt.html" afterPath="$PROJECT_DIR$/app/templates/mcsubopt.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/networkcp_flask.iml" afterPath="$PROJECT_DIR$/.idea/networkcp_flask.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/prodadmin.html" afterPath="$PROJECT_DIR$/app/templates/prodadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/server.html" afterPath="$PROJECT_DIR$/app/templates/server.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/signup.html" afterPath="$PROJECT_DIR$/app/templates/signup.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/style2.css" afterPath="$PROJECT_DIR$/app/static/style2.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/subadmin.html" afterPath="$PROJECT_DIR$/app/templates/subadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/subchoice.html" afterPath="$PROJECT_DIR$/app/templates/subchoice.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/uadmin.html" afterPath="$PROJECT_DIR$/app/templates/uadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/uuadmin.html" afterPath="$PROJECT_DIR$/app/templates/uuadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/vtserver.html" afterPath="$PROJECT_DIR$/app/templates/vtserver.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -62,13 +44,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="378" column="33" selection-start="15378" selection-end="15378" vertical-scroll-proportion="0.6448598" vertical-offset="6321" max-vertical-offset="11934">
+            <state line="377" column="12" selection-start="15331" selection-end="15378" vertical-scroll-proportion="0.0" vertical-offset="6321" max-vertical-offset="11934">
               <folding>
                 <element signature="e#21#40#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="uadmin.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/templates/uadmin.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="19" selection-start="1311" selection-end="1311" vertical-scroll-proportion="0.7132964" vertical-offset="43" max-vertical-offset="792">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -127,7 +118,6 @@
         <option value="$PROJECT_DIR$/app/templates/vtserver.html" />
         <option value="$PROJECT_DIR$/app/templates/server.html" />
         <option value="$PROJECT_DIR$/app/templates/manage.html" />
-        <option value="$PROJECT_DIR$/app/templates/uadmin.html" />
         <option value="$PROJECT_DIR$/app/templates/prodadmin.html" />
         <option value="$PROJECT_DIR$/app/templates/subchoice.html" />
         <option value="$PROJECT_DIR$/app/templates/controllers.html" />
@@ -138,6 +128,7 @@
         <option value="$PROJECT_DIR$/app/static/style2.css" />
         <option value="$PROJECT_DIR$/app/templates/signup.html" />
         <option value="$PROJECT_DIR$/app/templates/uuadmin.html" />
+        <option value="$PROJECT_DIR$/app/templates/uadmin.html" />
       </list>
     </option>
   </component>
@@ -653,13 +644,18 @@
       <created>1398370708513</created>
       <updated>1398370708513</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="CSS, bugs">
+      <created>1398536682739</created>
+      <updated>1398536682739</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-2" y="0" width="1924" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985386" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -675,7 +671,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -976,13 +971,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/uadmin.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="28" selection-start="1325" selection-end="1325" vertical-scroll-proportion="0.7132964" vertical-offset="43" max-vertical-offset="792">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/mcsubopt.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="4" column="58" selection-start="154" selection-end="154" vertical-scroll-proportion="0.09972299" vertical-offset="0" max-vertical-offset="722">
@@ -1032,10 +1020,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="378" column="33" selection-start="15378" selection-end="15378" vertical-scroll-proportion="0.6448598" vertical-offset="6321" max-vertical-offset="11934">
+        <state line="377" column="12" selection-start="15331" selection-end="15378" vertical-scroll-proportion="0.0" vertical-offset="6321" max-vertical-offset="11934">
           <folding>
             <element signature="e#21#40#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/uadmin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="19" selection-start="1311" selection-end="1311" vertical-scroll-proportion="0.7132964" vertical-offset="43" max-vertical-offset="792">
+          <folding />
         </state>
       </provider>
     </entry>

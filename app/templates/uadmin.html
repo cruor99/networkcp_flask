@@ -14,7 +14,7 @@
     </form>
     </div>
     <div class="box2" style="margin-right: 17px">
-    <h3>Change User info here</h3>
+    <h3>Change User info</h3>
     <form action="/uadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form2.usersel) }}
@@ -29,7 +29,7 @@
     </form>
     </div>
     <div class="box2">
-    <h3>Delete User here</h3>
+    <h3>Delete User</h3>
     <form action="/uadmin" method="post" name="deleteuser">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form3.usersel) }}
