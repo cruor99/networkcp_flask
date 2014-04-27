@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/deleteserver.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/prodadmin.html" afterPath="$PROJECT_DIR$/app/templates/prodadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/deleteserver.html" afterPath="$PROJECT_DIR$/app/templates/deleteserver.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -17,7 +15,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398619867838" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398620398704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -46,10 +44,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="318" column="52" selection-start="12600" selection-end="12600" vertical-scroll-proportion="0.73564756" vertical-offset="5173" max-vertical-offset="10008">
+            <state line="318" column="52" selection-start="12600" selection-end="12600" vertical-scroll-proportion="0.0" vertical-offset="5335" max-vertical-offset="10008">
               <folding>
                 <element signature="e#21#40#0" expanded="true" />
                 <element signature="e#12830#14879#0" expanded="false" />
@@ -75,10 +73,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="deleteserver.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="deleteserver.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/templates/deleteserver.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="38" selection-start="310" selection-end="310" vertical-scroll-proportion="-5.3333335" vertical-offset="0" max-vertical-offset="306">
+            <state line="1" column="65" selection-start="72" selection-end="72" vertical-scroll-proportion="0.024930747" vertical-offset="0" max-vertical-offset="722">
               <folding />
             </state>
           </provider>
@@ -139,8 +137,8 @@
         <option value="$PROJECT_DIR$/app/templates/subadmin.html" />
         <option value="$PROJECT_DIR$/app/forms.py" />
         <option value="$PROJECT_DIR$/app/templates/prodadmin.html" />
-        <option value="$PROJECT_DIR$/app/templates/deleteserver.html" />
         <option value="$PROJECT_DIR$/app/views.py" />
+        <option value="$PROJECT_DIR$/app/templates/deleteserver.html" />
       </list>
     </option>
   </component>
@@ -676,7 +674,11 @@
       <created>1398562311981</created>
       <updated>1398562311981</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="CSS, bugs">
+      <created>1398620316013</created>
+      <updated>1398620316013</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -693,7 +695,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1933472" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1933472" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294979" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1044,13 +1046,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/deleteserver.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="38" selection-start="310" selection-end="310" vertical-scroll-proportion="-5.3333335" vertical-offset="0" max-vertical-offset="306">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/prodadmin.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="14" selection-start="1519" selection-end="1519" vertical-scroll-proportion="-26.666666" vertical-offset="0" max-vertical-offset="828">
@@ -1063,7 +1058,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="318" column="52" selection-start="12600" selection-end="12600" vertical-scroll-proportion="0.73564756" vertical-offset="5173" max-vertical-offset="10008">
+        <state line="318" column="52" selection-start="12600" selection-end="12600" vertical-scroll-proportion="0.0" vertical-offset="5173" max-vertical-offset="10008">
           <folding>
             <element signature="e#21#40#0" expanded="true" />
             <element signature="e#12830#14879#0" expanded="false" />
@@ -1073,6 +1068,13 @@
             <element signature="e#19437#20014#0" expanded="false" />
             <element signature="e#20065#20656#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/deleteserver.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="65" selection-start="72" selection-end="72" vertical-scroll-proportion="0.024930747" vertical-offset="0" max-vertical-offset="722">
+          <folding />
         </state>
       </provider>
     </entry>
