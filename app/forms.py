@@ -90,7 +90,7 @@ class AdmininfoForm(Form):
 
 
 class SubscriptionForm(Form):
-    subsel = SelectField('<h3>Select Subscription</h3>')
+    subsel = SelectField('<h3>Select Subscription:</h3>')
 
 
 class LoginForm(Form):

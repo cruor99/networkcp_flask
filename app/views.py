@@ -374,8 +374,11 @@ def uadmin():
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Delete User':
             user = form3.usersel.data
+            print user
             User.query.filter_by(cust_username=user).delete()
+            print user
             db.session.commit()
+            print user
             time.sleep(1)
             flash('User deleted')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
