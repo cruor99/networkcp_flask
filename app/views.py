@@ -275,20 +275,27 @@ def servadmin():
         servname = form.servername.data
         servip = form.serverip.data
         if servname != "" and servip != "":
-            servquer = Serverreserve(servname, servip)
-            db.session.add(servquer)
-            db.session.commit()
-            flash('Server Added')
+            oldservdb = Serverreserve.query.filter_by(server_name=servname).first()
+            oldserv = ""
+            if oldservdb != None:
+                oldserv = oldservdb.server_name
+            if (str(oldserv)) != (str(servname)):
+                servquer = Serverreserve(servname, servip)
+                db.session.add(servquer)
+                db.session.commit()
+                flash('Server Added')
+            else:
+                flash('Servername already in use!')
         else:
             flash('Info missing')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
             db.session.add(portquer)
             db.session.commit()
             flash('Port Added')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         servertest = form3.server.data
         serverparseid = servertest.server_id
@@ -297,19 +304,20 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
-        server = form4.serversel.data
-        server2 = server.server_name
-        servername = Serverreserve.query.filter_by(server_name=server2).first()
+        serverform = form4.serversel.data
+        serverdata = serverform.server_name
+        servername = Serverreserve.query.filter_by(server_name=serverdata).first()
         serverid = servername.server_id
+        print serverid
         Port.query.filter_by(server_id=serverid).delete()
-        Serverreserve.query.filter_by(server_name=server2).delete()
+        Serverreserve.query.filter_by(server_name=serverdata).delete()
         db.session.commit()
         time.sleep(1)
-        flash('Server deleted')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, form4=form4, user=user)
+        flash('Server deleted!')
+        return render_template('deleteserver.html', form4=form4)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
 
 
 #User self-administration
@@ -492,6 +500,23 @@ def portoutput():
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
 
+@app.route('/deleteserver', methods = ['GET', 'POST'])
+def deleteserver():
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    print order.order_id
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
+    serv = Server()
+    user = session['username']
+    form4 = DeleteserverForm()
+    time.sleep(1)
+    return render_template('deleteserver.html', form4=form4)
+
+
+
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -538,7 +563,7 @@ def login():
                 return redirect(url_for('index'))
         else:
             flash('Something went wrong, Email or Password might be wrong')
-    return render_template('login.html', title = 'Sign In', form = form)
+    return render_template('login.html', title='Sign In', form=form)
 
 
 #Routes to signup for new users
