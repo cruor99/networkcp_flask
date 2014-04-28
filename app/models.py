@@ -7,6 +7,8 @@ ROLE_USER = 0
 ROLE_ADMIN = 1
 ROLE_PREMIUM = 2
 
+
+
 class User(db.Model):
     cust_id = db.Column(db.Integer, primary_key = True)
     cust_username = db.Column(db.String(64), unique = True)
@@ -112,8 +114,8 @@ class Orderline(db.Model):
     port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
     sub_id = db.Column(db.Integer, ForeignKey('subscription.sub_id'))
     order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
-    orderl_create = db.Column(db.String)
-    orderl_expire = db.Column(db.String)
+    orderl_create = db.Column(db.Date)
+    orderl_expire = db.Column(db.Date)
 
     def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire):
         self.port_id = port_id

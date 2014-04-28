@@ -19,12 +19,10 @@
                 <li> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></li>
                     {% endif %}
                   {% if 'admin' in session %}
-                <li> <a href="{{ url_for('controllers') }}" class="menu-link">Control Panels</a></li>
-                <li> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></li>
                 <li> <a href="{{ url_for('administrate') }}" class="menu-link">Administration</a></li>
 
                    {% endif %}
-                <li> <a href="{{ url_for('subscribe') }}" class="menu-link">Subscribe</a></li>
+                <li> <a href="{{ url_for('subscribe') }}" class="menu-link">Purchases</a></li>
                 <li> <a href="{{ url_for('uuadmin') }}" class="menu-link">User Control</a></li>
                 <li> <a href="{{ url_for('logout') }}" class="menu-link">Logout</a></li>
                 {% else %}

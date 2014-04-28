@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
+service = PayEx(merchant_number='XXXXXXXXX', encryption_key='XXXXXXXX', production=False)
 
 
 #Catches internal server errors
@@ -96,11 +96,18 @@ def mcsubopt():
     return render_template('mcsubopt.html', user=session['username'])
 
 def genorder():
-    orderident = session['username']+str(random.randint(1, 2000))
-    session['ordertmpholder'] = orderident
-    ordquer = Order(session['userid'], orderident)
-    db.session.add(ordquer)
-    db.session.commit()
+    if 'premium' in session or 'admin' in session:
+        uquer = User.query.filter_by(cust_id=session['userid']).first()
+        ordquer = Order(session['userid'], uquer.cust_notes)
+        db.session.add(ordquer)
+        db.session.commit()
+    else:
+        orderident = session['username']+str(random.randint(1, 2000))
+        session['ordertmpholder'] = orderident
+        ordquer = Order(session['userid'], orderident)
+        db.session.add(ordquer)
+        db.session.commit()
+        session['ordertmpholder'] = orderident
 
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
@@ -137,17 +144,35 @@ def mcsubscribe():
         dbprice = subprice[:-2]
         sub = Subscription.query.filter_by(sub_pris=dbprice).first()
         dbsubid = sub.sub_id
-        avport = Port.query.filter_by(port_used=2).first()
-        genorder()
-        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-        orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
-        db.session.add(orderlinequer)
-        db.session.commit()
-        session['premium'] = 2
-        stmt = update(User).where(User.cust_id==session['userid']).\
-        values(role=2)
-        db.session.execute(stmt)
-        db.session.commit()
+        uquer = User.query.filter_by(cust_id=session['userid']).first()
+        if uquer.cust_notes is None:
+            avport = Port.query.filter_by(port_used=2).first()
+            stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
+            db.session.execute(stmt)
+            genorder()
+            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
+            db.session.add(orderlinequer)
+            db.session.commit()
+        else:
+
+            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
+            existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
+            db.session.add(orderlinequer)
+            db.session.commit()
+        if 'premium' in session:
+            stmt = update(User).where(User.cust_id==session['userid']).\
+            values(role=2, cust_notes=session['ordertmpholder'])
+            db.session.execute(stmt)
+            db.session.commit()
+            return redirect(response['redirectUrl'])
+        else:
+            session['premium'] = 2
+            stmt = update(User).where(User.cust_id==session['userid']).\
+            values(role=2, cust_notes=session['ordertmpholder'])
+            db.session.execute(stmt)
+            db.session.commit()
         return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form)
 
@@ -158,14 +183,23 @@ def mcsubscribe():
 def response():
     receipt2 = request.args.get('orderRef')
     if receipt2 is not None:
-        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-        order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-        subid = order.sub_id
-        ordid = order.order_id
-        ordexp = order.orderl_expire
+        uquer = User.query.filter_by(cust_id=session['userid']).first()
+        if 'ordertmpholder' in session:
+            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+            subid = order.sub_id
+            ordid = str(order.order_id)
+            ordexp = str(order.orderl_expire)
+        else:
+            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
+            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+            subid = order.sub_id
+            ordid = str(order.order_id)
+            ordexp = str(order.orderl_expire)
         return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
         cancmes = 'Your order has been terminated'
+
         return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
@@ -466,7 +500,8 @@ def mcoutput():
 #Routes to login for users
 @app.route('/servpropout')
 def servpropout():
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    uquer = User.query.filter_by(cust_id=session['userid']).first()
+    order = Order.query.filter_by(orderident=uquer.cust_notes).first()
     #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
@@ -482,15 +517,6 @@ def servpropout():
 
 @app.route('/servoutput')
 def servoutput():
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    #print order.order_id
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
-    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
-    serverip = server.server_ip
-    port = dbport.port_no
-    serv = Server()
-    user = session['username']
     servusequer = Serverreserve.query.all()
     servq = servusequer
     time.sleep(1)
@@ -499,38 +525,20 @@ def servoutput():
 
 @app.route('/portoutput')
 def portoutput():
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    #print order.order_id
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
-    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
-    serverip = server.server_ip
-    port = dbport.port_no
-    serv = Server()
-    user = session['username']
     portusequer = Port.query.filter_by(port_used=1).all()
     ports = portusequer
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
 
 
-@app.route('/deleteserver', methods = ['GET', 'POST'])
+@app.route('/deleteserver', methods=['GET', 'POST'])
 def deleteserver():
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    #print order.order_id
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
-    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
-    serverip = server.server_ip
-    port = dbport.port_no
-    serv = Server()
-    user = session['username']
     form4 = DeleteserverForm()
     time.sleep(1)
     return render_template('deleteserver.html', form4=form4)
 
 
-@app.route('/login', methods = ['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     cust_mail = form.email.data
@@ -555,6 +563,7 @@ def login():
                 session['username'] = usermail.cust_username
                 session['email'] = usermail.cust_mail
                 session['userid'] = usermail.cust_id
+                session['ordertmpholder'] = usermail.cust_notes
                 if usermail.role == 3:
                     session['premium'] = usermail.role
                 if usermail.role == 2:
@@ -568,6 +577,7 @@ def login():
                 session['username'] = user.cust_username
                 session['email'] = user.cust_mail
                 session['userid'] = user.cust_id
+                session['ordertmpholder'] = user.cust_notes
                 if user.role == 3:
                     session['premium'] = user.role
                 if user.role == 2:

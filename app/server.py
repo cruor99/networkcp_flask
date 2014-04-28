@@ -20,7 +20,7 @@ class Server(threading.Thread):
     def serverstart(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+" /etc/init.d/minecraft_server start "+user)
         print ssh_stdout.readlines()
         #ssh_stdout.flush()
@@ -28,14 +28,14 @@ class Server(threading.Thread):
     def serverstop(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"st /etc/init.d/minecraft_server stop "+user)
         print ssh_stdout.readlines()
 
     def servercreate(self, server, user, port):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         print server+"Test"
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
         return ssh_stdout.readlines()
@@ -43,7 +43,7 @@ class Server(threading.Thread):
     def startvent(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         time.sleep(3)
         ssh.exec_command("cd /home/steve/ventriloservers/"+user+"; ./ventrilo_srv-Linux -d -r/home/steve/misc/key")
 
@@ -51,7 +51,7 @@ class Server(threading.Thread):
     def stopvent(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         ssh.exec_command("/home/steve/stoptest.sh /home/steve/ventriloservers/"+user+"/ventrilo_srv.pid")
 
 
@@ -63,7 +63,7 @@ class Server(threading.Thread):
     def readconsole(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines 15 /home/minecraft/worlds/"+user+"/console.out")
         return ssh_stdin.readlines()
 
@@ -71,14 +71,14 @@ class Server(threading.Thread):
     def servercommand(self, server, user, command):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server send "+user+" "+command)
 
     #Method to get the server.properties file
     def readproperties(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/minecraft/worlds/"+user+"/server.properties")
         return ssh_stdin.readlines()
 
@@ -86,7 +86,7 @@ class Server(threading.Thread):
     def sendfile(self, server, filename, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         sftp = ssh.open_sftp()
         localpath = upload_dir+'/' + filename
         remotepath = '/home/minecraft/worlds/'+user+'/'+filename
@@ -97,7 +97,7 @@ class Server(threading.Thread):
     def sendvent(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("mkdir /home/steve/ventriloservers/"+user)
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("cp -r /home/steve/misc/ventpro.zip /home/steve/ventriloservers/"+user)
         return ssh_stdin.readlines()
@@ -106,7 +106,7 @@ class Server(threading.Thread):
         homedir = "/home/steve/ventriloservers/"+user+"/"
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         ssh.exec_command("unzip "+homedir+filename+" -d "+homedir+"; chmod 777 "+homedir+"ventrilo_srv-Linux")
         time.sleep(1)
         ssh.exec_command("python /home/steve/editinit.py -w "+user+" -o intf -v "+str(server)+" -c Intf")
@@ -115,7 +115,7 @@ class Server(threading.Thread):
     def readventprops(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/steve/ventriloservers/"+user+"/ventrilo_srv.ini")
         return ssh_stdin.readlines()
         ssh.close()
@@ -123,7 +123,7 @@ class Server(threading.Thread):
     def editventprops(self, server, user, key, value):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='steve', password='12Karen34')
+        ssh.connect(server, username='s', password='1')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/steve/editinit.py -w "+user+" -o "+key+" -v "+value+" -c Server")
         return ssh_stdin.readlines()
         ssh.close()
@@ -132,7 +132,7 @@ class Server(threading.Thread):
         homedir = "/home/minecraft/worlds/"+user+"/"
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("unzip "+homedir+filename+" -d "+homedir)
         return ssh_stdin.readlines()
 
@@ -140,13 +140,13 @@ class Server(threading.Thread):
     def editproperties(self, server, user, key, value):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/minecraft/mcprop.py -w "+user+" -o "+key+" -v "+value)
         return ssh_stdin.readlines()
 
     def deleteserv(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.connect(server, username='m', password='m')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user+"/*")
         return ssh_stdin.readlines()
