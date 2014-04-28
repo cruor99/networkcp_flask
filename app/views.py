@@ -357,7 +357,6 @@ def servadmin():
         serverdata = serverform.server_name
         servername = Serverreserve.query.filter_by(server_name=serverdata).first()
         serverid = servername.server_id
-        print serverid
         Port.query.filter_by(server_id=serverid).delete()
         Serverreserve.query.filter_by(server_name=serverdata).delete()
         db.session.commit()
@@ -429,11 +428,8 @@ def uadmin():
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Delete User':
             user = form3.usersel.data
-            print user
             User.query.filter_by(cust_username=user).delete()
-            print user
             db.session.commit()
-            print user
             time.sleep(1)
             flash('User deleted')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
@@ -485,7 +481,6 @@ def uadmin():
 @app.route('/mcoutput')
 def mcoutput():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -502,7 +497,6 @@ def mcoutput():
 def servpropout():
     uquer = User.query.filter_by(cust_id=session['userid']).first()
     order = Order.query.filter_by(orderident=uquer.cust_notes).first()
-    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -643,15 +637,12 @@ def upload_file(rfile):
 def manage():
     user = session['username']
     serv = Server()
-
     form = PropertiesForm()
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
-    print serverip
     port = dbport.port_no
 
     if request.method == 'POST':
