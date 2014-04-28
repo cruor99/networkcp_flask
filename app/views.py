@@ -291,14 +291,27 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
-            portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
-            db.session.add(portquer)
-            db.session.commit()
-            flash('Port Added')
+            servnew = form2data.server_id
+            servolddb = Port.query.filter_by(server_id=servnew).first()
+            servold = ""
+            if servolddb != None:
+                servold = servolddb.server_id
+            portnew = form2.portno.data
+            portolddb = Port.query.filter_by(port_no=portnew, server_id=servnew).first()
+            portold = ""
+            if portolddb != None:
+                portold = portolddb.port_no
+            if (str(portnew) != str(portold)) or (str(servnew) != str(servold)):
+                portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
+                db.session.add(portquer)
+                db.session.commit()
+                flash('Port Added')
+            else:
+                flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
-        servertest = form3.server.data
-        serverparseid = servertest.server_id
+        serverdata = form3.server.data
+        serverparseid = serverdata.server_id
         stmt = update(Port).where(Port.server_id == serverparseid and Port.port_no == form3.portno.data).\
         values(port_used=form3.portused.data)
         db.session.execute(stmt)
@@ -438,7 +451,7 @@ def uadmin():
 @app.route('/mcoutput')
 def mcoutput():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    print order.order_id
+    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -454,7 +467,7 @@ def mcoutput():
 @app.route('/servpropout')
 def servpropout():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    print order.order_id
+    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -470,7 +483,7 @@ def servpropout():
 @app.route('/servoutput')
 def servoutput():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    print order.order_id
+    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -487,7 +500,7 @@ def servoutput():
 @app.route('/portoutput')
 def portoutput():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    print order.order_id
+    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -500,10 +513,11 @@ def portoutput():
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
 
+
 @app.route('/deleteserver', methods = ['GET', 'POST'])
 def deleteserver():
     order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    print order.order_id
+    #print order.order_id
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -514,8 +528,6 @@ def deleteserver():
     form4 = DeleteserverForm()
     time.sleep(1)
     return render_template('deleteserver.html', form4=form4)
-
-
 
 
 @app.route('/login', methods = ['GET', 'POST'])

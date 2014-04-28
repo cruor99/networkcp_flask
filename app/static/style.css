@@ -350,6 +350,17 @@ header{
     min-height: 500px;
     float: left;
 	}
+.box4{
+	border:1px solid #2d2d2f;
+	border-radius: 8px;
+	overflow:hidden;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    width: 360px;
+    float: left;
+	}
 .content-box-1{
 	box-shadow:inset 0 0 51px rgba(0,0,0,0.6);
 	padding:25px 19px 19px 19px;
