@@ -89,12 +89,6 @@ def subscribe():
     return render_template('subchoice.html', user=session['username'])
 
 
-#Routes to Minecraft Subscription Options
-@app.route('/mcsubopt', methods=['GET', 'POST'])
-@login_required
-def mcsubopt():
-    return render_template('mcsubopt.html', user=session['username'])
-
 def genorder():
     if 'premium' in session or 'admin' in session:
         uquer = User.query.filter_by(cust_id=session['userid']).first()
@@ -531,6 +525,14 @@ def portoutput():
     ports = portusequer
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
+
+
+@app.route('/portoutput2')
+def portoutput2():
+    portusequer = Port.query.filter_by(port_used=2).all()
+    ports = portusequer
+    time.sleep(1)
+    return render_template('portoutput2.html', ports=ports)
 
 
 @app.route('/deleteserver', methods=['GET', 'POST'])

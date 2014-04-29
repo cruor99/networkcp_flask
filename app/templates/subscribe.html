@@ -2,12 +2,14 @@
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 <br>
-<div class="content"><div class="inner-box">
-<form method="post">
-{{ render_field(form.subsel) }}
-<br>
-
+<div class="content"><div class="inner-box4">
+    <div class="box3" style="margin-right: 18px">
+    <form method="post">
+    {{ render_field(form.subsel) }}
+    <br>
     <input type="submit">
-</form>
-</div></div>
+    </form>
+    </div>
+    <div class="box3">
+</div></div></div>
 {% endblock %}
