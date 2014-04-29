@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/large.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/liten.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/medium.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/middels.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/small.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/images/stor.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/portoutput2.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/templates/mcsubopt.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/prodadmin.html" afterPath="$PROJECT_DIR$/app/templates/prodadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/style.css" afterPath="$PROJECT_DIR$/app/static/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/subchoice.html" afterPath="$PROJECT_DIR$/app/templates/subchoice.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/subscribe.html" afterPath="$PROJECT_DIR$/app/templates/subscribe.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/adminchoice.html" afterPath="$PROJECT_DIR$/app/templates/adminchoice.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/controllers.html" afterPath="$PROJECT_DIR$/app/templates/controllers.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/response.html" afterPath="$PROJECT_DIR$/app/templates/response.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -27,7 +17,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398772212923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398784255375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -67,35 +57,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="subchoice.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/subchoice.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="39" selection-start="652" selection-end="652" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="504">
-              <folding>
-                <element signature="e#142#168#0" expanded="true" />
-                <element signature="e#247#266#0" expanded="true" />
-                <element signature="e#376#402#0" expanded="true" />
-                <element signature="e#483#502#0" expanded="true" />
-                <element signature="e#690#709#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminchoice.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="adminchoice.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/templates/adminchoice.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="0" selection-start="476" selection-end="476" vertical-scroll-proportion="0.25827813" vertical-offset="0" max-vertical-offset="906">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="0" selection-start="417" selection-end="504" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="648">
-              <folding />
+            <state line="11" column="58" selection-start="484" selection-end="488" vertical-scroll-proportion="-7.3333335" vertical-offset="0" max-vertical-offset="378">
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -103,7 +72,27 @@
       <file leaf-file-name="controllers.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/templates/controllers.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="4" selection-start="50" selection-end="50" vertical-scroll-proportion="-1.3333334" vertical-offset="0" max-vertical-offset="342">
+            <state line="1" column="0" selection-start="26" selection-end="45" vertical-scroll-proportion="-0.6666667" vertical-offset="0" max-vertical-offset="306">
+              <folding>
+                <element signature="e#119#145#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="response.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/templates/response.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="0.2995839" vertical-offset="0" max-vertical-offset="721">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="uuadmin.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/templates/uuadmin.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="0" selection-start="151" selection-end="195" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="468">
               <folding />
             </state>
           </provider>
@@ -140,12 +129,9 @@
         <option value="$PROJECT_DIR$/app/static/main.css" />
         <option value="$PROJECT_DIR$/networkcp_flask.py" />
         <option value="$PROJECT_DIR$/app/templates/index.html" />
-        <option value="$PROJECT_DIR$/app/templates/response.html" />
         <option value="$PROJECT_DIR$/app/templates/vtserver.html" />
         <option value="$PROJECT_DIR$/app/templates/server.html" />
         <option value="$PROJECT_DIR$/app/templates/manage.html" />
-        <option value="$PROJECT_DIR$/app/templates/controllers.html" />
-        <option value="$PROJECT_DIR$/app/templates/adminchoice.html" />
         <option value="$PROJECT_DIR$/app/templates/mcsubopt.html" />
         <option value="$PROJECT_DIR$/app/templates/login.html" />
         <option value="$PROJECT_DIR$/app/static/style2.css" />
@@ -167,6 +153,9 @@
         <option value="$PROJECT_DIR$/app/templates/portoutput2.html" />
         <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/app/templates/prodadmin.html" />
+        <option value="$PROJECT_DIR$/app/templates/adminchoice.html" />
+        <option value="$PROJECT_DIR$/app/templates/controllers.html" />
+        <option value="$PROJECT_DIR$/app/templates/response.html" />
       </list>
     </option>
   </component>
@@ -721,7 +710,11 @@
       <created>1398764925886</created>
       <updated>1398764925886</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="CSS, bugs">
+      <created>1398773889427</created>
+      <updated>1398773889428</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -740,7 +733,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12800418" sideWeight="0.5398671" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19270833" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19270833" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -912,19 +905,9 @@
         <state line="1" column="21" selection-start="41" selection-end="53" vertical-scroll-proportion="-0.3961219" vertical-offset="304" max-vertical-offset="1026" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/response.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="28" selection-start="153" selection-end="153" vertical-scroll-proportion="0.14958449" vertical-offset="0" max-vertical-offset="722" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/signup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="21" column="6" selection-start="746" selection-end="746" vertical-scroll-proportion="0.5235457" vertical-offset="0" max-vertical-offset="722" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/uuadmin.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="58" selection-start="293" selection-end="297" vertical-scroll-proportion="0.17451523" vertical-offset="0" max-vertical-offset="722" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/servpropout.html">
@@ -1003,20 +986,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/manage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="6" selection-start="153" selection-end="153" vertical-scroll-proportion="0.12482663" vertical-offset="0" max-vertical-offset="738">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="0" selection-start="417" selection-end="504" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="648">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="2" column="61" selection-start="77" selection-end="77" vertical-scroll-proportion="0.04993065" vertical-offset="0" max-vertical-offset="972">
@@ -1033,29 +1002,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/subadmin.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="4" selection-start="738" selection-end="756" vertical-scroll-proportion="0.37748346" vertical-offset="0" max-vertical-offset="906">
-          <folding>
-            <element signature="e#119#145#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/controllers.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="4" selection-start="50" selection-end="50" vertical-scroll-proportion="-1.3333334" vertical-offset="0" max-vertical-offset="342">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="396" column="4" selection-start="9109" selection-end="9109" vertical-scroll-proportion="0.0" vertical-offset="6799" max-vertical-offset="22230">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/prodadmin.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="35" column="8" selection-start="1442" selection-end="1442" vertical-scroll-proportion="0.69536424" vertical-offset="0" max-vertical-offset="906">
@@ -1067,19 +1013,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="6" selection-start="0" selection-end="154" vertical-scroll-proportion="0.119205296" vertical-offset="0" max-vertical-offset="906">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/subchoice.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="652" selection-end="652" vertical-scroll-proportion="-9.333333" vertical-offset="0" max-vertical-offset="504">
-          <folding>
-            <element signature="e#142#168#0" expanded="true" />
-            <element signature="e#247#266#0" expanded="true" />
-            <element signature="e#376#402#0" expanded="true" />
-            <element signature="e#483#502#0" expanded="true" />
-            <element signature="e#690#709#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1099,9 +1032,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="417" selection-end="504" vertical-scroll-proportion="0.29801324" vertical-offset="0" max-vertical-offset="906">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/subchoice.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="39" selection-start="652" selection-end="652" vertical-scroll-proportion="0.2781457" vertical-offset="0" max-vertical-offset="906">
+          <folding>
+            <element signature="e#142#168#0" expanded="true" />
+            <element signature="e#247#266#0" expanded="true" />
+            <element signature="e#376#402#0" expanded="true" />
+            <element signature="e#483#502#0" expanded="true" />
+            <element signature="e#690#709#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="396" column="4" selection-start="9109" selection-end="9109" vertical-scroll-proportion="0.0" vertical-offset="6799" max-vertical-offset="22230">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/manage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="4" selection-start="101" selection-end="146" vertical-scroll-proportion="-2.6666667" vertical-offset="0" max-vertical-offset="738">
+          <folding>
+            <element signature="e#119#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/subadmin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="4" selection-start="101" selection-end="146" vertical-scroll-proportion="0.0998613" vertical-offset="0" max-vertical-offset="721">
+          <folding>
+            <element signature="e#119#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/controllers.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="26" selection-end="45" vertical-scroll-proportion="-0.6666667" vertical-offset="0" max-vertical-offset="306">
+          <folding>
+            <element signature="e#119#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/adminchoice.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="476" selection-end="476" vertical-scroll-proportion="0.25827813" vertical-offset="0" max-vertical-offset="906">
+        <state line="11" column="58" selection-start="484" selection-end="488" vertical-scroll-proportion="-7.3333335" vertical-offset="0" max-vertical-offset="378">
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/uuadmin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="151" selection-end="195" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="468">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/response.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="0.2995839" vertical-offset="0" max-vertical-offset="721">
           <folding />
         </state>
       </provider>

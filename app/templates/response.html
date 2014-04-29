@@ -1,17 +1,14 @@
-<!-- extend base layout -->
 {% extends "base.html" %}
-<br>
-<div class="content">
-<div class="inner-box">
 {% block content %}
-{% if receipt is not none %}
-Your Order Status or Order Reference is: {{ receipt }}
-{% else %}
+<br>
+<div class="content"><div class="inner-box">
+    {% if receipt is not none %}
+    Your Order Status or Order Reference is: {{ receipt }}
+    {% else %}
     Your order status is: {{ receipt }}
     {% endif %}<br>
     Your subscription ID with gamerserver.no is: {{ subid }}<br>
     Your order ID with gameserver.no is: {{ ordid }}<br>
     Your order will expire on the following date: {{ ordexp }}<br>
-    </div>
-</div>
+</div></div>
 {% endblock %}

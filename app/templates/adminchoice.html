@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="content"><div class="inner-box">
-<br>
-<h1>Hi {{ user }}! {{ errmes }}</h1>
-<p><h3>Please chose what you want to administer:</h3>
-    <a href="{{ url_for('servadmin') }}" class="menu-link">Service Administration</a>
-   <br> <a href="{{ url_for('uadmin') }}" class="menu-link">User Administration</a>
-    <br> <a href="{{ url_for('subadmin') }}" class="menu-link">Subscription Administration</a>
-</p>
-</div>
-</div>
+<div class="content"><div class="inner-box4">
+    <div class="box2" style="margin-right: 17px">
+    <a href="{{ url_for('servadmin') }}" class="menu-link"><h3>Service Administration</h3></a>
+    </div>
+    <div class="box2" style="margin-right: 17px">
+    <a href="{{ url_for('uadmin') }}" class="menu-link"><h3>User Administration</h3></a>
+    </div>
+    <div class="box2">
+    <a href="{{ url_for('subadmin') }}" class="menu-link"><h3>Subscription Administration</h3></a>
+</div></div></div>
 
 {% endblock %}
