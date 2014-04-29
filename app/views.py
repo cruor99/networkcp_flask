@@ -337,7 +337,7 @@ def servadmin():
                 portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
                 db.session.add(portquer)
                 db.session.commit()
-                flash('Port Added')
+                flash('Port '+str(portnew)+' added on Server '+str(servnew)+'!')
             else:
                 flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)

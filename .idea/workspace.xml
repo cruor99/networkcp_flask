@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/adminchoice.html" afterPath="$PROJECT_DIR$/app/templates/adminchoice.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/controllers.html" afterPath="$PROJECT_DIR$/app/templates/controllers.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/response.html" afterPath="$PROJECT_DIR$/app/templates/response.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="networkcp_flask.iws" />
@@ -17,7 +15,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398784255375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/networkcp_flask$networkcp_flask.coverage" NAME="networkcp_flask Coverage Results" MODIFIED="1398784992106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/networkcp_flask$models.coverage" NAME="models Coverage Results" MODIFIED="1391357695464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -37,10 +35,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="529" column="24" selection-start="22420" selection-end="22420" vertical-scroll-proportion="0.0" vertical-offset="9049" max-vertical-offset="13140">
+            <state line="339" column="78" selection-start="13882" selection-end="13882" vertical-scroll-proportion="0.5360963" vertical-offset="5701" max-vertical-offset="13140">
               <folding>
                 <element signature="e#21#40#0" expanded="true" />
               </folding>
@@ -80,10 +78,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="response.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="response.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/templates/response.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="0.2995839" vertical-offset="0" max-vertical-offset="721">
+            <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="-8.0" vertical-offset="0" max-vertical-offset="342">
               <folding />
             </state>
           </provider>
@@ -151,11 +149,11 @@
         <option value="$PROJECT_DIR$/app/templates/subchoice.html" />
         <option value="$PROJECT_DIR$/app/templates/subscribe.html" />
         <option value="$PROJECT_DIR$/app/templates/portoutput2.html" />
-        <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/app/templates/prodadmin.html" />
         <option value="$PROJECT_DIR$/app/templates/adminchoice.html" />
         <option value="$PROJECT_DIR$/app/templates/controllers.html" />
         <option value="$PROJECT_DIR$/app/templates/response.html" />
+        <option value="$PROJECT_DIR$/app/views.py" />
       </list>
     </option>
   </component>
@@ -714,7 +712,11 @@
       <created>1398773889427</created>
       <updated>1398773889428</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="CSS, bugs">
+      <created>1398784266074</created>
+      <updated>1398784266074</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -733,7 +735,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12800418" sideWeight="0.5398671" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19270833" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19270833" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1023,15 +1025,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="529" column="24" selection-start="22420" selection-end="22420" vertical-scroll-proportion="0.0" vertical-offset="9049" max-vertical-offset="13140">
-          <folding>
-            <element signature="e#21#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="417" selection-end="504" vertical-scroll-proportion="0.29801324" vertical-offset="0" max-vertical-offset="906">
@@ -1086,6 +1079,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/uuadmin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="151" selection-end="195" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="468">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/response.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="-8.0" vertical-offset="0" max-vertical-offset="342">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/adminchoice.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="58" selection-start="484" selection-end="488" vertical-scroll-proportion="-7.3333335" vertical-offset="0" max-vertical-offset="378">
@@ -1096,17 +1103,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/uuadmin.html">
+    <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="151" selection-end="195" vertical-scroll-proportion="-3.3333333" vertical-offset="0" max-vertical-offset="468">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/response.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="12" selection-start="464" selection-end="464" vertical-scroll-proportion="0.2995839" vertical-offset="0" max-vertical-offset="721">
-          <folding />
+        <state line="339" column="78" selection-start="13882" selection-end="13882" vertical-scroll-proportion="0.5360963" vertical-offset="5701" max-vertical-offset="13140">
+          <folding>
+            <element signature="e#21#40#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
