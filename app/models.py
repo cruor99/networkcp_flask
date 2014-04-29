@@ -61,7 +61,7 @@ class Order(db.Model):
 class Serverreserve(db.Model):
     server_id = db.Column(db.Integer, primary_key=True)
     server_name = db.Column(db.String(30), unique=True)
-    server_ip = db.Column(db.String(30))
+    server_ip = db.Column(db.String(30), unique=True)
 
     def __init__(self, server_name, server_ip):
         self.server_name = server_name

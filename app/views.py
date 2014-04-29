@@ -141,6 +141,7 @@ def mcsubscribe():
             view='CREDITCARD',
             cancelUrl='http://127.0.0.1:5000/response'
         )
+        print response
         dbprice = subprice[:-2]
         sub = Subscription.query.filter_by(sub_pris=dbprice).first()
         dbsubid = sub.sub_id
@@ -155,7 +156,6 @@ def mcsubscribe():
             db.session.add(orderlinequer)
             db.session.commit()
         else:
-
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
             orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
@@ -313,13 +313,17 @@ def servadmin():
             oldserv = ""
             if oldservdb != None:
                 oldserv = oldservdb.server_name
-            if (str(oldserv)) != (str(servname)):
+            oldipdb = Serverreserve.query.filter_by(server_ip=servip).first()
+            oldip = ""
+            if oldipdb != None:
+                oldip = oldipdb.server_ip
+            if (str(oldserv)) != (str(servname)) and (str(oldip)) != (str(servip)):
                 servquer = Serverreserve(servname, servip)
                 db.session.add(servquer)
                 db.session.commit()
                 flash('Server Added')
             else:
-                flash('Servername already in use!')
+                flash('Servername or IP already in use!')
         else:
             flash('Info missing')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
@@ -354,14 +358,18 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
-        serverdata = serverform.server_name
-        servername = Serverreserve.query.filter_by(server_name=serverdata).first()
-        serverid = servername.server_id
-        Port.query.filter_by(server_id=serverid).delete()
-        Serverreserve.query.filter_by(server_name=serverdata).delete()
-        db.session.commit()
-        time.sleep(1)
-        flash('Server deleted!')
+        print serverform
+        if serverform !=None:
+            serverdata = serverform.server_name
+            servername = Serverreserve.query.filter_by(server_name=serverdata).first()
+            serverid = servername.server_id
+            Port.query.filter_by(server_id=serverid).delete()
+            Serverreserve.query.filter_by(server_name=serverdata).delete()
+            db.session.commit()
+            time.sleep(1)
+            flash('Server deleted!')
+        else:
+            flash('Server already deleted!')
         return render_template('deleteserver.html', form4=form4)
     return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
 
