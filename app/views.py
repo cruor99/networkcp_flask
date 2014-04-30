@@ -103,6 +103,7 @@ def genorder():
         db.session.commit()
         session['ordertmpholder'] = orderident
 
+
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
 @login_required
@@ -193,7 +194,6 @@ def response():
         return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
         cancmes = 'Your order has been terminated'
-
         return render_template('response.html', receipt=cancmes)
     return render_template('response.html', receipt=receipt2)
 
@@ -269,11 +269,13 @@ def mcserver():
 def administrate():
     return render_template('adminchoice.html')
 
+
 @login_required
 @premium_required
 @app.route('/controllers')
 def controllers():
     return render_template('controllers.html')
+
 
 @admin_required
 @app.route('/subadmin', methods=['POST', 'GET'])
@@ -289,6 +291,7 @@ def subadmin():
         flash('The Subscription has been added to the pool')
         return render_template('subadmin.html', form=form)
     return render_template('subadmin.html', form=form)
+
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
 @admin_required
@@ -654,14 +657,12 @@ def manage():
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
     port = dbport.port_no
-
     if request.method == 'POST':
         if request.form['submit'] == 'Generate properties':
             serv.servercreate(str(serverip), user, str(port))
             flash("Properties Generated")
             return render_template('manage.html', user=session['username'],
                                    email=session['email'], form=form)
-
         if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and form.props.data != 'max-players':
             key = form.props.data
             value = form.value.data
@@ -669,19 +670,11 @@ def manage():
             return render_template('manage.html',
                                    user = session['username'],
                                    email = session['email'],form=form)
-
         if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html',
                                    user = session['username'],
                                    email = session['email'],form=form)
-
-        if request.form['submit'] == 'Change Properties' and form.props.data == 'max-players':
-            flash('You are not allowed to change the maximum players on your server')
-            return render_template('manage.html',
-                                   user = session['username'],
-                                   email = session['email'],form=form)
-
         if request.form['submit'] == 'Delete Server Content':
             serv.deleteserv(serverip, user)
             return render_template('manage.html',
