@@ -5,25 +5,26 @@
 <br>
 <h1>Hi {{ user }}! {{ errmes }}</h1>
 <br><br>
-<p>Welcome to Gameserver.no!</p>
+    <h3>{{ newstitle }}<br></h3>
+    {{ newsbody }}<br>
 </div>
 <div class="box" style="width: 370px; height: 600px; float: left; margin-right: 17px">
 <br><br>
-Service box
+    <h3>{{ servtitle }}</h3><br>
+    {{ servbody }}<br>
 <br><br>
-<p>Welcome to Gameserver.no!</p>
 </div>
 <div class="box" style="width: 370px; height: 600px; float: left; margin-right: 17px" >
 <br><br>
-Event box
-<br><br>
-<p>Welcome to Gameserver.no!</p>
+
+<h3>{{ eventtitle }}</h3><br>
+{{ eventbody }}<br>
 </div>
 <div class="box" style="width: 370px; height: 600px; float: left" >
 <br><br>
-Promo box
-<br><br>
-<p>Welcome to Gameserver.no!</p>
+
+<h3>{{ promotitle }}</h3><br>
+{{ promobody }}<br>
 </div>
 </div></div>
 {% endblock %}

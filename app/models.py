@@ -116,14 +116,18 @@ class Orderline(db.Model):
     order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
     orderl_create = db.Column(db.Date)
     orderl_expire = db.Column(db.Date)
+    order_payed = db.Column(db.Integer)
 
-    def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire):
+    def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire, order_payed):
         self.port_id = port_id
         self.sub_id = sub_id
         self.order_id = order_id
         self.orderl_create = orderl_create
         self.orderl_expire = orderl_expire
+        self.order_payed = order_payed
 
+    def __repr__(self):
+        return 'Order ID: %s, Expiration date: %s' % (self.orderl_id, self.orderl_expire)
 
 class Giftcard(db.Model):
     giftcard_id = db.Column(db.Integer, primary_key=True)
@@ -137,3 +141,16 @@ class Giftcard(db.Model):
         self.gift_code = gift_code
         self.expiration = expiration
         self.in_use = in_use
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(100))
+    body = db.Column(db.String(300))
+    timestamp = db.Column(db.DateTime)
+    type = db.Column(db.String(10))
+    cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'))
+
+    def __repr__(self):
+        return 'Title: %s  ' \
+               '/n' \
+               'Body: %s' % (self.title, self.body)

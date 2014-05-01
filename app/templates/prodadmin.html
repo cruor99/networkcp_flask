@@ -37,6 +37,13 @@
         <iframe width="370" src="portoutput2"></iframe>
     </div>
     <div class="box2">
-
+        <form method="post" action="/servadmin">
+        {{ render_field(form5.title) }}
+        {{ render_field(form5.body) }}<br>
+        <input type="submit" value="Create Newspost" name="submit"><br>
+            <input type="submit" value="Create Service Announcement" name="submit"><br>
+            <input type="submit" value="Create Event Post" name="submit"><br>
+            <input type="submit" value="Create Promo Post" name="submit"><br>
+        </form>
 </div></div></div>
 {% endblock %}

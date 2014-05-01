@@ -7,9 +7,26 @@
     <form method="post">
     {{ render_field(form.subsel) }}
     <br>
-    <input type="submit">
+    <input type="submit" value="Start Payment Process">
     </form>
+
+
+     <p>This payment is handled by PayEx, a third party that will handle your payment in a safe manner.</p>
+         <img src="/static/images/payex.png">
+
     </div>
     <div class="box3">
+        <h2>Order Description:</h2><br><br><br>
+        <div class="box">
+        <p>   Here is the description of your order:</p>
+       Description: {{ subdescription }}<br>
+       Type:        {{ subtype }}<br>
+        <hr>
+       <p>This is the duration of the order:</p>
+       Months: {{ submaaned }}<br>
+       Days: {{ subdays }}<br>
+       Hours: {{ subhours }}<br>
+       <br>
+            </div>
 </div></div></div>
 {% endblock %}

@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='XXXXXXXXX', encryption_key='XXXXXXXX', production=False)
+service = PayEx(merchant_number='', encryption_key='', production=False)
 
 
 #Catches internal server errors
@@ -63,12 +63,25 @@ def premium_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
         if 'premium' in session:
-            return test(*args, **kwargs)
+            user = User.query.filter_by(cust_id=session['userid']).first()
+            exorderl = ''
+            exorder = ''
+            if user.cust_notes is not None:
+                exorder = Order.query.filter_by(orderident=user.cust_notes).first()
+                exorderl = Orderline.query.filter_by(order_id=exorder.order_id).first()
+                if exorderl.orderl_expire <= datetime.date.today() or exorderl.order_payed == 2:
+                    session.pop('premium', None)
+                    flash('You are not a premium user, sign up for a service before accessing this portion!')
+                    return redirect(url_for('subscribe'))
+                else:
+                    return test(*args, **kwargs)
+            else:
+                return test(*args, **kwargs)
         if 'admin' in session:
             return test(*args, **kwargs)
         else:
             flash('You are not a premium user, sign up for a service before accessing this portion!')
-            return redirect(url_for('login'))
+            return redirect(url_for('subscribe'))
     return wrap
 
 
@@ -77,9 +90,22 @@ def premium_required(test):
 @app.route('/index')
 @login_required
 def index():
+    newspost = Post.query.filter_by(type='newspost').order_by(Post.timestamp.desc()).first()
+    newstitle = newspost.title
+    newsbody = newspost.body
+    servpost = Post.query.filter_by(type='service').order_by(Post.timestamp.desc()).first()
+    servtitle = servpost.title
+    servbody = servpost.body
+    eventpost = Post.query.filter_by(type='event').order_by(Post.timestamp.desc()).first()
+    eventtitle = eventpost.title
+    eventbody = eventpost.body
+    promopost = Post.query.filter_by(type='promo').order_by(Post.timestamp.desc()).first()
+    promotitle = promopost.title
+    promobody = promopost.body
     return render_template('index.html',
         title = 'Home',
-        user = session['username'])
+        user = session['username'], newstitle=newstitle, newsbody=newsbody, servtitle=servtitle, servbody=servbody,\
+        eventtitle=eventtitle, eventbody=eventbody, promobody=promobody, promotitle=promotitle)
 
 
 #Routes to first step in subscription process
@@ -103,7 +129,6 @@ def genorder():
         db.session.commit()
         session['ordertmpholder'] = orderident
 
-
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
 @login_required
@@ -111,11 +136,19 @@ def mcsubscribe():
     user = session['username']
     form = SubscriptionForm()
     subtype2 = request.args.get('subtype')
-    if subtype2 == "Small":
+    subwip = Subscription.query.filter_by(sub_type=subtype2).first()
+    subname = subwip.sub_name
+    subdescription = subwip.sub_description
+    subtype = subwip.sub_type
+    subdays = subwip.sub_days
+    subhours = subwip.sub_hours
+    submaaned = subwip.sub_mnd
+    subpris = subwip.sub_pris
+    if subtype2 == "MC1024":
         form.subsel.choices = [(12000, '120NOK - 1-Month'), (36000, '360NOK - 3-Month'), (72000, '720NOK - 6-Month')]
-    if subtype2 == "Medium":
+    if subtype2 == "MC2048":
         form.subsel.choices = [(22000, '220NOK - 1-Month'), (66000, '660NOK - 3-Month'), (132000, '1320NOK - 6-Month')]
-    if subtype2 == "Large":
+    if subtype2 == "MC2560":
         form.subsel.choices = [(29000, '290NOK - 1-Month'), (87000, '870NOK - 3-Month'), (174000, '1740NOK - 6-Month')]
     if subtype2 == "Ventrilo":
         form.subsel.choices = [(3300, '33NOK - 10 slots'), (5800, '58NOK - 20 slots'), (8300, '83NOK - 30 slots')]
@@ -146,17 +179,24 @@ def mcsubscribe():
             stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
             db.session.execute(stmt)
             genorder()
+            months = calcmonths(subprice)
+            print months
+            print subprice
             orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
+            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), 2)
             db.session.add(orderlinequer)
             db.session.commit()
         else:
+            months = calcmonths(subprice)
+            print months
+            print subprice
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=1))
+            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), 2)
             db.session.add(orderlinequer)
+            db.session.delete(existport)
             db.session.commit()
-        if 'premium' in session:
+        if 'premium' in session or 'admin' in session:
             stmt = update(User).where(User.cust_id==session['userid']).\
             values(role=2, cust_notes=session['ordertmpholder'])
             db.session.execute(stmt)
@@ -169,8 +209,21 @@ def mcsubscribe():
             db.session.execute(stmt)
             db.session.commit()
         return redirect(response['redirectUrl'])
-    return render_template('subscribe.html', form=form)
+    return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,\
+                           subtype=subtype, subdays=subdays, subhours=subhours, submaaned=submaaned, subpris=subpris)
 
+def calcmonths(subprice):
+    if subprice == '12000' or subprice == '22000' or subprice == '29000':
+        print 1
+        return 1
+    elif subprice == '36000' or subprice == '66000' or subprice == '87000':
+        print 2
+        return 3
+    elif subprice == '72000' or subprice == '132000' or subprice == '174000':
+        print 3
+        return 6
+    else:
+        print "Something went wrong"
 
 #Response handler for PayEx
 @app.route('/response', methods=['GET','POST'])
@@ -185,17 +238,50 @@ def response():
             subid = order.sub_id
             ordid = str(order.order_id)
             ordexp = str(order.orderl_expire)
+            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=1)
+            db.session.execute(stmt)
+            db.session.commit()
         else:
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
             subid = order.sub_id
             ordid = str(order.order_id)
             ordexp = str(order.orderl_expire)
+            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=1)
+            db.session.execute(stmt)
+            db.session.commit()
         return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
-        cancmes = 'Your order has been terminated'
-        return render_template('response.html', receipt=cancmes)
-    return render_template('response.html', receipt=receipt2)
+        uquer = User.query.filter_by(cust_id=session['userid']).first()
+        if 'ordertmpholder' in session:
+            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+            subid = order.sub_id
+            ordid = str(order.order_id)
+            ordexp = str(order.orderl_expire)
+            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=2)
+            db.session.execute(stmt)
+            portreset = update(Port).where(Port.port_id == order.port_id).values(port_used=2)
+            db.session.execute(portreset)
+            db.session.delete(order)
+            db.session.commit()
+            cancmes = 'Your order has been terminated'
+            return render_template('response.html', receipt=cancmes)
+
+        else:
+            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
+            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+            subid = order.sub_id
+            ordid = str(order.order_id)
+            ordexp = str(order.orderl_expire)
+            stmt = update(Orderline).where(orderl_id == order.orderl_id).values(order_payed=2)
+            db.session.execute(stmt)
+            portreset = update(Port).where(port_id == order.port_id).values(port_used=2)
+            db.session.delete(order)
+            db.session.commit()
+            cancmes = 'Your order has been terminated'
+            return render_template('response.html', receipt=cancmes)
+#    return render_template('response.html', receipt=receipt2)
 
 
 @app.route('/vtserver', methods=['GET', 'POST'])
@@ -281,6 +367,8 @@ def controllers():
 @app.route('/subadmin', methods=['POST', 'GET'])
 def subadmin():
     form = SubManageForm()
+    orders = Orderline.query.filter_by(order_payed=1).all()
+    print orders
     if request.method == 'POST' and request.form['submit'] == 'Add Subscription':
         subquer = Subscription(form.sub_name.data, form.sub_description.data,
                                form.sub_type.data, form.sub_days.data, form.sub_hours.data, form.sub_mnd.data,
@@ -289,9 +377,10 @@ def subadmin():
         db.session.add(subquer)
         db.session.commit()
         flash('The Subscription has been added to the pool')
-        return render_template('subadmin.html', form=form)
-    return render_template('subadmin.html', form=form)
-
+        return render_template('subadmin.html', form=form, orders=orders)
+    if request.method == 'POST' and request.form['submit'] == 'Delete Unpayed':
+        pass
+    return render_template('subadmin.html', form=form, orders=orders)
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
 @admin_required
@@ -302,6 +391,7 @@ def servadmin():
     form2 = PortForm()
     form3 = UpdatePortForm()
     form4 = DeleteserverForm()
+    form5 = PostForm()
     if request.method == 'POST' and request.form['submit'] == "Add Server":
         servname = form.servername.data
         servip = form.serverip.data
@@ -323,7 +413,7 @@ def servadmin():
                 flash('Servername or IP already in use!')
         else:
             flash('Info missing')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             servnew = form2data.server_id
@@ -343,7 +433,7 @@ def servadmin():
                 flash('Port '+str(portnew)+' added on Server '+str(servnew)+'!')
             else:
                 flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         serverdata = form3.server.data
         serverparseid = serverdata.server_id
@@ -352,7 +442,7 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
         print serverform
@@ -368,7 +458,23 @@ def servadmin():
         else:
             flash('Server already deleted!')
         return render_template('deleteserver.html', form4=form4)
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4)
+    if request.method == 'POST' and request.form['submit'] == 'Create Newspost':
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='newspost')
+        db.session.add(p)
+        db.session.commit()
+    if request.method == 'POST' and request.form['submit'] == 'Create Service Announcement':
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='service')
+        db.session.add(p)
+        db.session.commit()
+    if request.method == 'POST' and request.form['submit'] == 'Create Event Post':
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='event')
+        db.session.add(p)
+        db.session.commit()
+    if request.method == 'POST' and request.form['submit'] == 'Create Promo Post':
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='promo')
+        db.session.add(p)
+        db.session.commit()
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
 
 
 #User self-administration
@@ -579,10 +685,12 @@ def login():
                 session['email'] = usermail.cust_mail
                 session['userid'] = usermail.cust_id
                 session['ordertmpholder'] = usermail.cust_notes
-                if usermail.role == 3:
-                    session['premium'] = usermail.role
                 if usermail.role == 2:
+                    session['premium'] = usermail.role
+                if usermail.role == 1:
                     session['admin'] = usermail.role
+                if usermail.role != 1:
+                    session['normal'] = usermail.role
                 return redirect(url_for('index'))
         if user is not None:
             print user.cust_username
@@ -593,10 +701,13 @@ def login():
                 session['email'] = user.cust_mail
                 session['userid'] = user.cust_id
                 session['ordertmpholder'] = user.cust_notes
-                if user.role == 3:
-                    session['premium'] = user.role
                 if user.role == 2:
+                    session['premium'] = user.role
+                if user.role == 1:
                     session['admin'] = user.role
+                    session.pop('normal', None)
+                if user.role != 1:
+                    session['normal'] = user.role
                 return redirect(url_for('index'))
         else:
             flash('Something went wrong, Email or Password might be wrong')
@@ -665,12 +776,14 @@ def manage():
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
     port = dbport.port_no
+
     if request.method == 'POST':
         if request.form['submit'] == 'Generate properties':
             serv.servercreate(str(serverip), user, str(port))
             flash("Properties Generated")
             return render_template('manage.html', user=session['username'],
                                    email=session['email'], form=form)
+
         if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and form.props.data != 'max-players':
             key = form.props.data
             value = form.value.data
@@ -720,4 +833,7 @@ def logout():
     logout_user()
     session.pop('logged_in', None)
     session.pop('admin', None)
+    session.pop('premium', None)
+    session.pop('remember_me', None)
+    session.pop('ordertmpholder', None)
     return redirect(url_for('index'))

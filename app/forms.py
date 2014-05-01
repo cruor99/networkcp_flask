@@ -62,7 +62,7 @@ class CommandForm(Form):
 
 
 class UadminForm(Form):
-    role = SelectField('Select Role', choices=[(1, 'Standard'), (2, 'Admin'), (3, 'Premium')])
+    role = SelectField('Select Role', choices=[(0, 'Standard'), (1, 'Admin'), (2, 'Premium')])
     usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
 
 
@@ -92,7 +92,7 @@ class AdmininfoForm(Form):
 
 
 class SubscriptionForm(Form):
-    subsel = SelectField('<h3>Select Subscription:</h3>')
+    subsel = RadioField('<h3>Select Subscription:</h3>')
 
 
 class LoginForm(Form):
@@ -123,3 +123,7 @@ class signup_form(Form):
     def __init__(self, *args, **kwargs):
         kwargs['csrf_enabled'] = False
         super(signup_form, self).__init__(*args, **kwargs)
+
+class PostForm(Form):
+    title = TextField('Title')
+    body = TextField('Body')
