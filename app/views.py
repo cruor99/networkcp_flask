@@ -387,6 +387,12 @@ def uuadmin():
             newphone = form.phone.data
             username = session['username']
             user = User.query.filter_by(cust_username=username).first()
+            oldemaildb = User.query.filter_by(cust_mail=newemail).first()
+            print oldemaildb
+            oldemail = ""
+            if oldemaildb != None:
+                oldemail = oldemaildb.cust_mail
+            print oldemail
             if oldpwd == "":
                 flash('Enter current password')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
@@ -402,14 +408,16 @@ def uuadmin():
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
                 db.session.commit()
                 flash('Last Name updated')
-            if newemail != "" and user.check_password(form.oldpwd.data):
-                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
-                db.session.commit()
-                flash('Email updated')
             if newphone != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
                 flash('Phone number updated')
+            if newemail != "" and user.check_password(form.oldpwd.data) and oldemail == "":
+                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                db.session.commit()
+                flash('Email updated')
+            else:
+                flash('Email already in use!')
             return render_template('uuadmin.html', form=form)
         else:
             return render_template('uuadmin.html', form=form)
@@ -713,5 +721,3 @@ def logout():
     session.pop('logged_in', None)
     session.pop('admin', None)
     return redirect(url_for('index'))
-
-

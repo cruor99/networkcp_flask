@@ -11,6 +11,7 @@ from server import Server
 def listallu():
     return User.query
 
+
 def listserv():
     return Serverreserve.query
 
@@ -25,10 +26,12 @@ class PortForm(Form):
     portno = TextField('Port Number')
     portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
 
+
 class UpdatePortForm(Form):
     server = QuerySelectField('Select Server', query_factory=listserv)
     portno = TextField('Port Number')
     portused = SelectField('Is the Port in Use', choices=[(1, "Yes"), (2, "No")])
+
 
 class DeleteserverForm(Form):
     serversel = QuerySelectField('Select Server', query_factory=listserv)
@@ -48,13 +51,11 @@ class SubManageForm(Form):
     sub_sms_payment = BooleanField('SMS Payment')
 
 
-
-
-
 class PropertiesForm(Form):
     serv = Server()
     props = TextField('Property')
     value = TextField('Value')
+
 
 class CommandForm(Form):
     command = TextField('Command')
@@ -78,6 +79,7 @@ class UserinfoForm(Form):
     lname = TextField('Last Name')
     phone = TextField('Phone Number')
 
+
 class AdmininfoForm(Form):
     usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
     username = TextField('Username')
@@ -97,25 +99,25 @@ class LoginForm(Form):
     remember_me = BooleanField('remember_me', default = False)
     password = PasswordField('Password', validators=[validators.Required()])
     email = TextField('Username or eMail', validators=[validators.Required()])
-
     def __init__(self, *args, **kwargs):
         kwargs['csrf_enabled'] = False
         super(LoginForm, self).__init__(*args, **kwargs)
+
 
 class VtEditForm(Form):
     key = SelectField('.Ini Key', choices=[('name', 'name'), ('phonetic', 'phonetic'), ('auth', 'auth'), ('duplicates', 'duplicates'), ('adminpassword', 'adminpassword'), ('password', 'password'), ('sendbuffer', 'sendbuffer'), ('recvbuffer', 'recvbuffer'), ('diag', 'diag'), ('logontimeout', 'logontimeout'), ('closestd', 'closestd'), ('timestamp', 'timestamp'), ('pingrate', 'pingrate'), ('extrabuffer', 'extrabuffer'), ('chanwidth', 'chanwidth'), ('chandepth', 'chandepth'), ('chanclients', 'chanclients'), ('disablequit', 'diasablequit'), ('voicecodec', 'voicecodec'), ('voiceformat', 'voiceformat'), ('silentlobby', 'silentlobby'), ('autokick', 'autokick'), ('codexmaxbw', 'codexmaxbw')])
     value = TextField('New Value')
 
+
 class signup_form(Form):
     username = TextField('Username*', validators=[validators.Required()])
     password = PasswordField('Password*', validators=[validators.Required()])
-    confirm = PasswordField('Confirm Password*', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Confirm Password*', validators=[validators.Required(), validators.EqualTo('password', message='Passwords must match')])
     email = TextField('eMail*', validators=[validators.Required()])
     fname = TextField('First Name*', validators=[validators.Required()])
     lname = TextField('Last Name*', validators=[validators.Required()])
     phone = TextField('Phone Number (numbers only)')
     accept_tos = BooleanField('I accept the TOS*', default = False, validators=[validators.Required()])
-
     #catches csrf_enabled for site security, and to prevent it from being sent for validation
     #this would force forms.validate() in views.py def signup() to always return False
     def __init__(self, *args, **kwargs):
