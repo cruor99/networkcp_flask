@@ -150,3 +150,18 @@ class Server(threading.Thread):
         ssh.connect(server, username='minecraft', password='minecraft')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user+"/*")
         return ssh_stdin.readlines()
+
+    def backupserv(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server backup "+user)
+        return ssh_stdin.readlines()
+
+    def restorebackup(self, server, user):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(server, username='minecraft', password='minecraft')
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user)
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("mv /home/minecraft/backup "+user+" /home/minecraft/worlds")
+        return ssh_stdin.readlines()

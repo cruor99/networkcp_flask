@@ -31,6 +31,9 @@
         {{ render_field(form3.portused) }}
         <input type="submit" value="Update Port" name="submit">
     </form>
+        <form method="post" action="/servadmin">
+            <input type="submit" value="Reset unused servers" name="submit">
+        </form>
     <br><b>Ports on servers that are currently in use: (port, server)</b><br>
         <iframe width="370" src="portoutput"></iframe>
     <br><br><b>Ports on servers that are currently available: (port, server)</b><br>

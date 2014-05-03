@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='', encryption_key='', production=False)
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 #Catches internal server errors
@@ -53,9 +53,9 @@ def admin_required(test):
         if 'admin' in session:
             return test(*args, **kwargs)
         else:
-            flash('You need to be an administrator to view this page.')
+            flash('You are not an administrator and do not have access to this.')
             return redirect(url_for('index'))
-        return wrap
+    return wrap
 
 
 #Test for existence of premium in session
@@ -69,7 +69,7 @@ def premium_required(test):
             if user.cust_notes is not None:
                 exorder = Order.query.filter_by(orderident=user.cust_notes).first()
                 exorderl = Orderline.query.filter_by(order_id=exorder.order_id).first()
-                if exorderl.orderl_expire <= datetime.date.today() or exorderl.order_payed == 2:
+                if exorderl.orderl_expire <= datetime.date.today() or exorderl.order_payed == "2":
                     session.pop('premium', None)
                     flash('You are not a premium user, sign up for a service before accessing this portion!')
                     return redirect(url_for('subscribe'))
@@ -183,7 +183,7 @@ def mcsubscribe():
             print months
             print subprice
             orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), 2)
+            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), '2')
             db.session.add(orderlinequer)
             db.session.commit()
         else:
@@ -192,9 +192,10 @@ def mcsubscribe():
             print subprice
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), 2)
+            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), '2')
+            updstmt = update(Orderline).where(Orderline.orderl_id == existport.orderl_id).values(order_payed='DELETEME')
+            db.session.execute(updstmt)
             db.session.add(orderlinequer)
-            db.session.delete(existport)
             db.session.commit()
         if 'premium' in session or 'admin' in session:
             stmt = update(User).where(User.cust_id==session['userid']).\
@@ -233,23 +234,55 @@ def response():
     if receipt2 is not None:
         uquer = User.query.filter_by(cust_id=session['userid']).first()
         if 'ordertmpholder' in session:
-            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            subid = order.sub_id
-            ordid = str(order.order_id)
-            ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=1)
-            db.session.execute(stmt)
-            db.session.commit()
+            oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
+            if oldorder is not None and oldorder.order_payed == 'DELETEME':
+
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+                subid = order.sub_id
+                ordid = str(order.order_id)
+                ordexp = str(order.orderl_expire)
+                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
+                db.session.execute(stmt)
+
+                db.session.commit()
+
+                print order.order_payed+"test1"
+            else:
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+                subid = order.sub_id
+                ordid = str(order.order_id)
+                ordexp = str(order.orderl_expire)
+                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
+                db.session.execute(stmt)
+                db.session.commit()
+                print order.order_payed+"test2"
         else:
-            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
-            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            subid = order.sub_id
-            ordid = str(order.order_id)
-            ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=1)
-            db.session.execute(stmt)
-            db.session.commit()
+            oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
+            if oldorder is not None and oldorder.order_payed == 'DELETEME':
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+                subid = order.sub_id
+                ordid = str(order.order_id)
+                ordexp = str(order.orderl_expire)
+                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
+                db.session.execute(stmt)
+
+                db.session.commit()
+
+                print order.order_payed+"test3"
+            else:
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+                subid = order.sub_id
+                ordid = str(order.order_id)
+                ordexp = str(order.orderl_expire)
+                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
+                db.session.execute(stmt)
+                db.session.commit()
+                print order.order_payed+"test4"
+            return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
         return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
         uquer = User.query.filter_by(cust_id=session['userid']).first()
@@ -259,12 +292,16 @@ def response():
             subid = order.sub_id
             ordid = str(order.order_id)
             ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed=2)
+            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='2')
             db.session.execute(stmt)
             portreset = update(Port).where(Port.port_id == order.port_id).values(port_used=2)
+            uuupdate = update(User).where(User.cust_id==session['userid']).values(role='0', cust_notes=None)
+            db.session.execute(uuupdate)
             db.session.execute(portreset)
             db.session.delete(order)
             db.session.commit()
+            session.pop('premium', None)
+            print 'Something went wrong'
             cancmes = 'Your order has been terminated'
             return render_template('response.html', receipt=cancmes)
 
@@ -274,14 +311,16 @@ def response():
             subid = order.sub_id
             ordid = str(order.order_id)
             ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(orderl_id == order.orderl_id).values(order_payed=2)
+            stmt = update(Orderline).where(orderl_id == order.orderl_id).values(order_payed='2')
             db.session.execute(stmt)
             portreset = update(Port).where(port_id == order.port_id).values(port_used=2)
+            uuupdate = update(User).where(User.cust_id==session['userid']).values(role='0', cust_notes=None)
+            db.session.execute(uuupdate)
             db.session.delete(order)
             db.session.commit()
+            session.pop('premium', None)
             cancmes = 'Your order has been terminated'
             return render_template('response.html', receipt=cancmes)
-#    return render_template('response.html', receipt=receipt2)
 
 
 @app.route('/vtserver', methods=['GET', 'POST'])
@@ -350,25 +389,27 @@ def mcserver():
     return render_template('server.html', form=form)
 
 
-@admin_required
+
 @app.route('/administrate')
+@admin_required
 def administrate():
     return render_template('adminchoice.html')
 
 
+
+@app.route('/controllers')
 @login_required
 @premium_required
-@app.route('/controllers')
 def controllers():
     return render_template('controllers.html')
 
 
-@admin_required
+
 @app.route('/subadmin', methods=['POST', 'GET'])
+@admin_required
 def subadmin():
     form = SubManageForm()
     orders = Orderline.query.filter_by(order_payed=1).all()
-    print orders
     if request.method == 'POST' and request.form['submit'] == 'Add Subscription':
         subquer = Subscription(form.sub_name.data, form.sub_description.data,
                                form.sub_type.data, form.sub_days.data, form.sub_hours.data, form.sub_mnd.data,
@@ -379,12 +420,58 @@ def subadmin():
         flash('The Subscription has been added to the pool')
         return render_template('subadmin.html', form=form, orders=orders)
     if request.method == 'POST' and request.form['submit'] == 'Delete Unpayed':
-        pass
+        unpayedorder = Orderline.query.filter_by(order_payed='2').all()
+        for unpayed in unpayedorder:
+            print unpayed
+            resetuser(unpayed.orderl_id)
+            cleanports()
+        flash('Unpayed deleted')
+    if request.method == 'POST' and request.form['submit'] == 'Delete Expired':
+        ordl = Orderline.query.filter_by(order_payed='1').all()
+        for ordr in ordl:
+            if ordr.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
+                resetuser(ordr.orderl_id)
+                cleanports()
+        flash('Expired deleted')
+        return render_template('subadmin.html', form=form, orders=orders)
     return render_template('subadmin.html', form=form, orders=orders)
 
+#cleanly purges a user and his orders from the database
+def resetuser(orderlid):
+    print orderlid
+    delorder = Orderline.query.filter_by(orderl_id=orderlid).first()
+    delorderorder = Order.query.filter_by(order_id=delorder.order_id).first()
+    print delorderorder.cust_id
+    usertbreset = User.query.filter_by(cust_id=delorderorder.cust_id).first()
+    print usertbreset.cust_username
+    upduser = update(User).where(User.cust_id == delorderorder.cust_id).values(role=0, cust_notes=None)
+    db.session.execute(upduser)
+    db.session.delete(delorder)
+    db.session.commit()
+    time.sleep(2)
+    db.session.delete(delorderorder)
+    db.session.commit()
+
+#Method for cleaning out ports set to used without an attached subscription
+def cleanports():
+    allports = Port.query.filter_by(port_used=1).all()
+    for ports in allports:
+        ordl = Orderline.query.filter_by(port_id=ports.port_id).first()
+
+        if ordl is None:
+            stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
+            db.session.execute(stmt)
+            db.session.commit()
+        elif ordl.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
+            stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
+            db.session.execute(stmt)
+            db.session.commit()
+        else:
+            flash('No ports to be reset')
+
 #Administrate the service, adding servers, ports and managing them through the control panel.
-@admin_required
 @app.route('/servadmin', methods=['POST', 'GET'])
+@admin_required
 def servadmin():
     user = session['username']
     form = ServerForm()
@@ -442,6 +529,10 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+    if request.method == 'POST' and request.form['submit'] == "Reset unused servers":
+        cleanports()
+        flash('Ports cleaned')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
@@ -531,8 +622,8 @@ def uuadmin():
 
 
 #Administrator page for user administration
-@admin_required
 @app.route('/uadmin', methods=['GET','POST'])
+@admin_required
 def uadmin():
     form = UadminForm()
     form2 = AdmininfoForm()
@@ -611,23 +702,24 @@ def mcoutput():
     return render_template('mcoutput.html', output=output)
 
 
-#Routes to login for users
+#Manage server properties output
 @app.route('/servpropout')
 def servpropout():
-    uquer = User.query.filter_by(cust_id=session['userid']).first()
-    order = Order.query.filter_by(orderident=uquer.cust_notes).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
-    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    userquer = User.query.filter_by(cust_id=session['userid']).first()
+    orderquer = Order.query.filter_by(cust_id=session['userid']).first()
+    print orderquer.order_id
+    orderlinequer = Orderline.query.filter_by(order_id=orderquer.order_id).first()
+    print orderlinequer.port_id
+    port = Port.query.filter_by(port_id=orderlinequer.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=port.server_id).first()
     serverip = server.server_ip
-    port = dbport.port_no
     serv = Server()
     user = session['username']
     output = serv.readproperties(serverip, user)
     time.sleep(1)
     return render_template('servpropout.html', output=output)
 
-
+#Serveradmin port output
 @app.route('/servoutput')
 def servoutput():
     servusequer = Serverreserve.query.all()
@@ -635,7 +727,7 @@ def servoutput():
     time.sleep(1)
     return render_template('servoutput.html', servq=servq)
 
-
+#Serveradmin port output
 @app.route('/portoutput')
 def portoutput():
     portusequer = Port.query.filter_by(port_used=1).all()
@@ -643,7 +735,7 @@ def portoutput():
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
 
-
+#Servadmin port output
 @app.route('/portoutput2')
 def portoutput2():
     portusequer = Port.query.filter_by(port_used=2).all()
@@ -651,7 +743,7 @@ def portoutput2():
     time.sleep(1)
     return render_template('portoutput2.html', ports=ports)
 
-
+#servadmin delete server
 @app.route('/deleteserver', methods=['GET', 'POST'])
 def deleteserver():
     form4 = DeleteserverForm()
@@ -776,13 +868,19 @@ def manage():
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
     port = dbport.port_no
-
+    currsub = Subscription.query.filter_by(sub_id=orderline.sub_id).first()
+    ordertype = currsub.sub_type
+    ordertypeclean = ordertype[2:]
+    print ordertypeclean
     if request.method == 'POST':
         if request.form['submit'] == 'Generate properties':
             serv.servercreate(str(serverip), user, str(port))
+            time.sleep(1)
+            serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
+            serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
             flash("Properties Generated")
             return render_template('manage.html', user=session['username'],
-                                   email=session['email'], form=form)
+                                   email=session['email'], form=form, serverip=serverip)
 
         if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and form.props.data != 'max-players':
             key = form.props.data
@@ -790,18 +888,18 @@ def manage():
             serv.editproperties(serverip, user, key, value)
             return render_template('manage.html',
                                    user = session['username'],
-                                   email = session['email'],form=form)
+                                   email = session['email'],form=form, serverip=serverip)
         if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html',
                                    user = session['username'],
-                                   email = session['email'],form=form)
+                                   email = session['email'],form=form, serverip=serverip)
         if request.form['submit'] == 'Delete Server Content':
             serv.deleteserv(serverip, user)
             return render_template('manage.html',
                                    user = session['username'],
                                    email = session['email'],
-                                   form=form)
+                                   form=form, serverip=serverip)
         if request.form['submit'] == 'Upload Zip':
             zipfile = request.files['file']
             upload_file(zipfile)
@@ -817,14 +915,18 @@ def manage():
                 flash('You did it!')
             else:
                 flash('Select a file!')
-            return render_template('manage.html',
-                           user = session['username'],
-                           email = session['email'],
-                           form=form)
+
+        if request.form['submit'] == 'Restore From Backup':
+            serv.restorebackup(serverip, user)
+            flash('Server Restored')
+        if request.form['submit'] == 'Backup Server':
+            serv.backupserv(serverip, user)
+            flash('Server Backed Up')
+
     return render_template('manage.html',
                            user = session['username'],
                            email = session['email'],
-                           form=form)
+                           form=form, serverip=serverip)
 
 
 #Logs the user out
@@ -836,4 +938,5 @@ def logout():
     session.pop('premium', None)
     session.pop('remember_me', None)
     session.pop('ordertmpholder', None)
+    session.pop('normal', None)
     return redirect(url_for('index'))

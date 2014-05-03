@@ -22,5 +22,9 @@
         {% for order in orders %}
         <br>{{ order }}
         {% endfor %}
+    <form method="post" action="/subadmin">
+        <input type="submit" value="Delete Unpayed" name="submit">
+        <input type="submit" value="Delete Expired" name="submit">
+    </form>
     </div</div></div>
 {% endblock %}

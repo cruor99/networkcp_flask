@@ -116,7 +116,7 @@ class Orderline(db.Model):
     order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
     orderl_create = db.Column(db.Date)
     orderl_expire = db.Column(db.Date)
-    order_payed = db.Column(db.Integer)
+    order_payed = db.Column(db.String(30))
 
     def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire, order_payed):
         self.port_id = port_id
