@@ -152,10 +152,8 @@ def mcsubscribe():
         form.subsel.choices = [(29000, '290NOK - 1-Month'), (87000, '870NOK - 3-Month'), (174000, '1740NOK - 6-Month')]
     if subtype2 == "Ventrilo":
         form.subsel.choices = [(3300, '33NOK - 10 slots'), (5800, '58NOK - 20 slots'), (8300, '83NOK - 30 slots')]
-    print form.subsel.data
     if request.method == 'POST':
         if form.subsel.data != "None":
-            print form.subsel.data
             subprice = form.subsel.data
             response = service.initialize(
                 purchaseOperation='SALE',
@@ -172,7 +170,6 @@ def mcsubscribe():
                 view='CREDITCARD',
                 cancelUrl='http://127.0.0.1:5000/response'
             )
-            #print response
             dbprice = subprice[:-2]
             sub = Subscription.query.filter_by(sub_pris=dbprice).first()
             dbsubid = sub.sub_id
@@ -490,9 +487,7 @@ def uuadmin():
         newphone = form.phone.data
         username = session['username']
         user = User.query.filter_by(cust_username=username).first()
-        print "hah"
         if not (newpwd == "" and newfname == "" and newlname == "" and newemail == "" and newphone == ""):
-            print "lol"
             if oldpwd == "":
                 flash('Enter current password')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
@@ -666,7 +661,6 @@ def login():
     form = LoginForm()
     cust_mail = form.email.data
     user = User.query.filter_by(cust_username='Cruor').first()
-    #print user
     #usermail = User.query.filter_by(cust_mail='kliknes@gmail.com').first()
     if request.method == 'POST':
         if 'kliknes@gmail.com' is not cust_mail:
@@ -731,12 +725,16 @@ def signup():
         if (str(newuser) != str(olduser)) and (str(newmail) != str(oldmail)):
             if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", form.email.data):
                 if form.phone.data == "" or form.phone.data.isdigit():
-                    user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
-                                form.phone.data)
-                    db.session.add(user)
-                    db.session.commit()
-                    flash('Thanks for registering!')
-                    return redirect(url_for('login'))
+                    if not re.search(r'[\s]', newuser):
+                        user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
+                                    form.phone.data)
+                        db.session.add(user)
+                        db.session.commit()
+                        flash('Thanks for registering!')
+                        return redirect(url_for('login'))
+                    else:
+                        flash('Username cannot contain whitespace!')
+                        return render_template('signup.html', form=form)
                 else:
                     flash('Phone number not valid!')
                     return render_template('signup.html', form=form)
