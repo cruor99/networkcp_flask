@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
+service = PayEx(merchant_number='', encryption_key='', production=False)
 
 
 #Catches internal server errors
@@ -573,23 +573,17 @@ def servadmin():
 @login_required
 def uuadmin():
     form = UserinfoForm()
-    if request.method == 'POST':
-        if request.form['submit'] == 'Change Info':
-            oldpwd = form.oldpwd.data
-            newpwd = form.pwdfield.data
-            confirm = form.confirm.data
-            newfname = form.fname.data
-            newlname = form.lname.data
-            newemail = form.email.data
-            newphone = form.phone.data
-            username = session['username']
-            user = User.query.filter_by(cust_username=username).first()
-            oldemaildb = User.query.filter_by(cust_mail=newemail).first()
-            print oldemaildb
-            oldemail = ""
-            if oldemaildb != None:
-                oldemail = oldemaildb.cust_mail
-            print oldemail
+    if request.method == 'POST' and request.form['submit'] == 'Change Info':
+        oldpwd = form.oldpwd.data
+        newpwd = form.pwdfield.data
+        confirm = form.confirm.data
+        newfname = form.fname.data
+        newlname = form.lname.data
+        newemail = form.email.data
+        newphone = form.phone.data
+        username = session['username']
+        user = User.query.filter_by(cust_username=username).first()
+        if not (newpwd == "" and newfname == "" and newlname == "" and newemail == "" and newphone == ""):
             if oldpwd == "":
                 flash('Enter current password')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
@@ -609,14 +603,22 @@ def uuadmin():
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
                 flash('Phone number updated')
-            if newemail != "" and user.check_password(form.oldpwd.data) and oldemail == "":
-                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
-                db.session.commit()
-                flash('Email updated')
+            if newemail != "":
+                oldemaildb = User.query.filter_by(cust_mail=newemail).first()
+                oldemail = ""
+                if oldemaildb != None:
+                    oldemail = oldemaildb.cust_mail
+                if user.check_password(form.oldpwd.data) and oldemail == "":
+                    User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                    db.session.commit()
+                    flash('Email updated')
+                else:
+                    flash('Email already in use!')
+                    return render_template('uuadmin.html', form=form)
             else:
-                flash('Email already in use!')
-            return render_template('uuadmin.html', form=form)
+                return render_template('uuadmin.html', form=form)
         else:
+            flash('Nothing updated')
             return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form)
 
@@ -756,7 +758,6 @@ def login():
     form = LoginForm()
     cust_mail = form.email.data
     user = User.query.filter_by(cust_username='Cruor').first()
-    #print user
     #usermail = User.query.filter_by(cust_mail='kliknes@gmail.com').first()
     if request.method == 'POST':
         if 'kliknes@gmail.com' is not cust_mail:
@@ -821,12 +822,16 @@ def signup():
         if (str(newuser) != str(olduser)) and (str(newmail) != str(oldmail)):
             if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", form.email.data):
                 if form.phone.data == "" or form.phone.data.isdigit():
-                    user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
-                                form.phone.data)
-                    db.session.add(user)
-                    db.session.commit()
-                    flash('Thanks for registering!')
-                    return redirect(url_for('login'))
+                    if not re.search(r'[\s]', newuser):
+                        user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
+                                    form.phone.data)
+                        db.session.add(user)
+                        db.session.commit()
+                        flash('Thanks for registering!')
+                        return redirect(url_for('login'))
+                    else:
+                        flash('Username cannot contain whitespace!')
+                        return render_template('signup.html', form=form)
                 else:
                     flash('Phone number not valid!')
                     return render_template('signup.html', form=form)
