@@ -152,63 +152,64 @@ def mcsubscribe():
         form.subsel.choices = [(29000, '290NOK - 1-Month'), (87000, '870NOK - 3-Month'), (174000, '1740NOK - 6-Month')]
     if subtype2 == "Ventrilo":
         form.subsel.choices = [(3300, '33NOK - 10 slots'), (5800, '58NOK - 20 slots'), (8300, '83NOK - 30 slots')]
+    print form.subsel.data
     if request.method == 'POST':
-        subprice = form.subsel.data
-        response = service.initialize(
-            purchaseOperation='SALE',
-            price=subprice,
-            currency='NOK',
-            vat='2500',
-            orderID=session['userid']+random.getrandbits(session['userid']),
-            productNumber='Server Hosting of type: '+subtype2,
-            description=u'Gameserver rental host for: '+user,
-            clientIPAddress='127.0.0.1',
-            clientIdentifier='USERAGENT=test&username=testuser',
-            #additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://127.0.0.1:5000/response',
-            view='CREDITCARD',
-            cancelUrl='http://127.0.0.1:5000/response'
-        )
-        print response
-        dbprice = subprice[:-2]
-        sub = Subscription.query.filter_by(sub_pris=dbprice).first()
-        dbsubid = sub.sub_id
-        uquer = User.query.filter_by(cust_id=session['userid']).first()
-        if uquer.cust_notes is None:
-            avport = Port.query.filter_by(port_used=2).first()
-            stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
-            db.session.execute(stmt)
-            genorder()
-            months = calcmonths(subprice)
-            print months
-            print subprice
-            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), 2)
-            db.session.add(orderlinequer)
-            db.session.commit()
-        else:
-            months = calcmonths(subprice)
-            print months
-            print subprice
-            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
-            existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), 2)
-            db.session.add(orderlinequer)
-            db.session.delete(existport)
-            db.session.commit()
-        if 'premium' in session or 'admin' in session:
-            stmt = update(User).where(User.cust_id==session['userid']).\
-            values(role=2, cust_notes=session['ordertmpholder'])
-            db.session.execute(stmt)
-            db.session.commit()
+        if form.subsel.data != "None":
+            print form.subsel.data
+            subprice = form.subsel.data
+            response = service.initialize(
+                purchaseOperation='SALE',
+                price=subprice,
+                currency='NOK',
+                vat='2500',
+                orderID=session['userid']+random.getrandbits(session['userid']),
+                productNumber='Server Hosting of type: '+subtype2,
+                description=u'Gameserver rental host for: '+user,
+                clientIPAddress='127.0.0.1',
+                clientIdentifier='USERAGENT=test&username=testuser',
+                #additionalValues='PAYMENTMENU=TRUE',
+                returnUrl='http://127.0.0.1:5000/response',
+                view='CREDITCARD',
+                cancelUrl='http://127.0.0.1:5000/response'
+            )
+            #print response
+            dbprice = subprice[:-2]
+            sub = Subscription.query.filter_by(sub_pris=dbprice).first()
+            dbsubid = sub.sub_id
+            uquer = User.query.filter_by(cust_id=session['userid']).first()
+            if uquer.cust_notes is None:
+                avport = Port.query.filter_by(port_used=2).first()
+                stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
+                db.session.execute(stmt)
+                genorder()
+                months = calcmonths(subprice)
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), 2)
+                db.session.add(orderlinequer)
+                db.session.commit()
+            else:
+                months = calcmonths(subprice)
+                orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
+                existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
+                orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), 2)
+                db.session.add(orderlinequer)
+                db.session.delete(existport)
+                db.session.commit()
+            if 'premium' in session or 'admin' in session:
+                stmt = update(User).where(User.cust_id==session['userid']).\
+                values(role=2, cust_notes=session['ordertmpholder'])
+                db.session.execute(stmt)
+                db.session.commit()
+                return redirect(response['redirectUrl'])
+            else:
+                session['premium'] = 2
+                stmt = update(User).where(User.cust_id==session['userid']).\
+                values(role=2, cust_notes=session['ordertmpholder'])
+                db.session.execute(stmt)
+                db.session.commit()
             return redirect(response['redirectUrl'])
         else:
-            session['premium'] = 2
-            stmt = update(User).where(User.cust_id==session['userid']).\
-            values(role=2, cust_notes=session['ordertmpholder'])
-            db.session.execute(stmt)
-            db.session.commit()
-        return redirect(response['redirectUrl'])
+            flash('Subscription not selected!')
     return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,\
                            subtype=subtype, subdays=subdays, subhours=subhours, submaaned=submaaned, subpris=subpris)
 
@@ -319,8 +320,6 @@ def vtserver():
             flash('Server Restarting')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Edit Property':
-            print form.key.data
-            print form.value.data
             serv.editventprops(serverip, user, form.key.data, form.value.data)
     return render_template('vtserver.html', form=form, props=props)
 
@@ -445,7 +444,6 @@ def servadmin():
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
-        print serverform
         if serverform !=None:
             serverdata = serverform.server_name
             servername = Serverreserve.query.filter_by(server_name=serverdata).first()
@@ -482,23 +480,19 @@ def servadmin():
 @login_required
 def uuadmin():
     form = UserinfoForm()
-    if request.method == 'POST':
-        if request.form['submit'] == 'Change Info':
-            oldpwd = form.oldpwd.data
-            newpwd = form.pwdfield.data
-            confirm = form.confirm.data
-            newfname = form.fname.data
-            newlname = form.lname.data
-            newemail = form.email.data
-            newphone = form.phone.data
-            username = session['username']
-            user = User.query.filter_by(cust_username=username).first()
-            oldemaildb = User.query.filter_by(cust_mail=newemail).first()
-            print oldemaildb
-            oldemail = ""
-            if oldemaildb != None:
-                oldemail = oldemaildb.cust_mail
-            print oldemail
+    if request.method == 'POST' and request.form['submit'] == 'Change Info':
+        oldpwd = form.oldpwd.data
+        newpwd = form.pwdfield.data
+        confirm = form.confirm.data
+        newfname = form.fname.data
+        newlname = form.lname.data
+        newemail = form.email.data
+        newphone = form.phone.data
+        username = session['username']
+        user = User.query.filter_by(cust_username=username).first()
+        print "hah"
+        if not (newpwd == "" and newfname == "" and newlname == "" and newemail == "" and newphone == ""):
+            print "lol"
             if oldpwd == "":
                 flash('Enter current password')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
@@ -518,14 +512,22 @@ def uuadmin():
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
                 flash('Phone number updated')
-            if newemail != "" and user.check_password(form.oldpwd.data) and oldemail == "":
-                User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
-                db.session.commit()
-                flash('Email updated')
+            if newemail != "":
+                oldemaildb = User.query.filter_by(cust_mail=newemail).first()
+                oldemail = ""
+                if oldemaildb != None:
+                    oldemail = oldemaildb.cust_mail
+                if user.check_password(form.oldpwd.data) and oldemail == "":
+                    User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
+                    db.session.commit()
+                    flash('Email updated')
+                else:
+                    flash('Email already in use!')
+                    return render_template('uuadmin.html', form=form)
             else:
-                flash('Email already in use!')
-            return render_template('uuadmin.html', form=form)
+                return render_template('uuadmin.html', form=form)
         else:
+            flash('Nothing updated')
             return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form)
 

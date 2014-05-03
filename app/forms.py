@@ -71,9 +71,9 @@ class DeleteuserForm(Form):
 
 
 class UserinfoForm(Form):
-    oldpwd = PasswordField('Current Password')
+    oldpwd = PasswordField('Current Password', validators=[validators.Required()])
     pwdfield = PasswordField('Password')
-    confirm = PasswordField('Confirm Password', validators=[validators.EqualTo('pwdfield', message='Passwords must match')])
+    confirm = PasswordField('Confirm Password')
     email = TextField('eMail')
     fname = TextField('First Name')
     lname = TextField('Last Name')
