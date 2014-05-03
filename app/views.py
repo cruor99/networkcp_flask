@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='', encryption_key='', production=False)
+service = PayEx(merchant_number='XXXXXXXXXX', encryption_key='XXXXXXX', production=False)
 
 
 #Catches internal server errors
