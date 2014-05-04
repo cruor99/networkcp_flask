@@ -3,8 +3,9 @@
 {% from "_formhelpers.html" import render_field %}
 {% from "_formhelpers.html" import form_field %}
 <br>
-<div class="content"><div class="inner-box">
-<h1>Change User info here</h1><br><br>
+<div class="content"><div class="inner-box4">
+    <div class="box3" style="margin-right: 18px">
+    <h4>Change User info here</h4><br><br>
     <b>(Current password required for any change!)</b><br><br>
     <form action="/uuadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
@@ -17,5 +18,13 @@
         {{ render_field(form.phone) }}
     <p><input type="submit" value="Change Info" name="submit"></p>
     </form>
-</div></div>
+    </div>
+    <div class="box3">
+    <h4>Current subscription</h4><br><br>
+    Here is the description of your subscription:<br>
+    Type:        {{ subtype }}<br>
+    Description: {{ subdescription }}<br>
+    Created: {{ subcreate }}<br>
+    Expires: {{ subexpire }}<br>
+</div></div></div>
 {% endblock %}

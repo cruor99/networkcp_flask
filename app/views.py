@@ -183,7 +183,8 @@ def mcsubscribe():
             print months
             print subprice
             orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), datetime.date.today() + dateutils.relativedelta(months=months), '2')
+            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
+                                      datetime.date.today() + dateutils.relativedelta(months=months), '2')
             db.session.add(orderlinequer)
             db.session.commit()
         else:
@@ -192,7 +193,8 @@ def mcsubscribe():
             print subprice
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(), existport.orderl_expire + dateutils.relativedelta(months=months), '2')
+            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
+                                      existport.orderl_expire + dateutils.relativedelta(months=months), '2')
             updstmt = update(Orderline).where(Orderline.orderl_id == existport.orderl_id).values(order_payed='DELETEME')
             db.session.execute(updstmt)
             db.session.add(orderlinequer)
@@ -500,7 +502,8 @@ def servadmin():
                 flash('Servername or IP already in use!')
         else:
             flash('Info missing')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             servnew = form2data.server_id
@@ -520,7 +523,8 @@ def servadmin():
                 flash('Port '+str(portnew)+' added on Server '+str(servnew)+'!')
             else:
                 flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         serverdata = form3.server.data
         serverparseid = serverdata.server_id
@@ -529,11 +533,13 @@ def servadmin():
         db.session.execute(stmt)
         db.session.commit()
         flash('Port Updated')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Reset unused servers":
         cleanports()
         flash('Ports cleaned')
-        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
         print serverform
@@ -550,19 +556,23 @@ def servadmin():
             flash('Server already deleted!')
         return render_template('deleteserver.html', form4=form4)
     if request.method == 'POST' and request.form['submit'] == 'Create Newspost':
-        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='newspost')
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
+                 cust_id=session['userid'], type='newspost')
         db.session.add(p)
         db.session.commit()
     if request.method == 'POST' and request.form['submit'] == 'Create Service Announcement':
-        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='service')
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
+                 cust_id=session['userid'], type='service')
         db.session.add(p)
         db.session.commit()
     if request.method == 'POST' and request.form['submit'] == 'Create Event Post':
-        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='event')
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
+                 cust_id=session['userid'], type='event')
         db.session.add(p)
         db.session.commit()
     if request.method == 'POST' and request.form['submit'] == 'Create Promo Post':
-        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(), cust_id=session['userid'], type='promo')
+        p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
+                 cust_id=session['userid'], type='promo')
         db.session.add(p)
         db.session.commit()
     return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
@@ -573,6 +583,14 @@ def servadmin():
 @login_required
 def uuadmin():
     form = UserinfoForm()
+    custid = session['userid']
+    order = Order.query.filter_by(cust_id=custid).first()
+    orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
+    subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
+    subdescription = subid.sub_description
+    subtype = subid.sub_type
+    subcreate = orderlineid.orderl_create
+    subexpire = orderlineid.orderl_expire
     if request.method == 'POST' and request.form['submit'] == 'Change Info':
         oldpwd = form.oldpwd.data
         newpwd = form.pwdfield.data
@@ -581,8 +599,7 @@ def uuadmin():
         newlname = form.lname.data
         newemail = form.email.data
         newphone = form.phone.data
-        username = session['username']
-        user = User.query.filter_by(cust_username=username).first()
+        user = User.query.filter_by(cust_username=session['username']).first()
         if not (newpwd == "" and newfname == "" and newlname == "" and newemail == "" and newphone == ""):
             if oldpwd == "":
                 flash('Enter current password')
@@ -620,11 +637,12 @@ def uuadmin():
         else:
             flash('Nothing updated')
             return render_template('uuadmin.html', form=form)
-    return render_template('uuadmin.html', form=form)
+    return render_template('uuadmin.html', form=form, subdescription=subdescription, subtype=subtype,
+                           subcreate=subcreate, subexpire=subexpire)
 
 
 #Administrator page for user administration
-@app.route('/uadmin', methods=['GET','POST'])
+@app.route('/uadmin', methods=['GET', 'POST'])
 @admin_required
 def uadmin():
     form = UadminForm()
@@ -709,9 +727,7 @@ def mcoutput():
 def servpropout():
     userquer = User.query.filter_by(cust_id=session['userid']).first()
     orderquer = Order.query.filter_by(cust_id=session['userid']).first()
-    print orderquer.order_id
     orderlinequer = Orderline.query.filter_by(order_id=orderquer.order_id).first()
-    print orderlinequer.port_id
     port = Port.query.filter_by(port_id=orderlinequer.port_id).first()
     server = Serverreserve.query.filter_by(server_id=port.server_id).first()
     serverip = server.server_ip
@@ -823,8 +839,8 @@ def signup():
             if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", form.email.data):
                 if form.phone.data == "" or form.phone.data.isdigit():
                     if not re.search(r'[\s]', newuser):
-                        user = User(form.username.data, form.password.data, form.email.data, form.fname.data, form.lname.data,\
-                                    form.phone.data)
+                        user = User(form.username.data, form.password.data, form.email.data, form.fname.data,
+                               form.lname.data, form.phone.data)
                         db.session.add(user)
                         db.session.commit()
                         flash('Thanks for registering!')
@@ -884,27 +900,23 @@ def manage():
             serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
             serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
             flash("Properties Generated")
-            return render_template('manage.html', user=session['username'],
-                                   email=session['email'], form=form, serverip=serverip)
-
-        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and form.props.data != 'max-players':
+            return render_template('manage.html', user=session['username'], email=session['email'],
+                                   form=form, serverip=serverip, port=port)
+        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and \
+                        form.props.data != 'max-players':
             key = form.props.data
             value = form.value.data
             serv.editproperties(serverip, user, key, value)
-            return render_template('manage.html',
-                                   user = session['username'],
-                                   email = session['email'],form=form, serverip=serverip)
+            return render_template('manage.html', user=session['username'], email=session['email'],
+                                   form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
-            return render_template('manage.html',
-                                   user = session['username'],
-                                   email = session['email'],form=form, serverip=serverip)
+            return render_template('manage.html', user = session['username'], email = session['email'],
+                                   form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Delete Server Content':
             serv.deleteserv(serverip, user)
-            return render_template('manage.html',
-                                   user = session['username'],
-                                   email = session['email'],
-                                   form=form, serverip=serverip)
+            return render_template('manage.html', user = session['username'], email = session['email'],
+                                   form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Upload Zip':
             zipfile = request.files['file']
             upload_file(zipfile)
@@ -920,18 +932,14 @@ def manage():
                 flash('You did it!')
             else:
                 flash('Select a file!')
-
         if request.form['submit'] == 'Restore From Backup':
             serv.restorebackup(serverip, user)
             flash('Server Restored')
         if request.form['submit'] == 'Backup Server':
             serv.backupserv(serverip, user)
             flash('Server Backed Up')
-
-    return render_template('manage.html',
-                           user = session['username'],
-                           email = session['email'],
-                           form=form, serverip=serverip)
+    return render_template('manage.html', user = session['username'], email = session['email'],
+                           form=form, serverip=serverip, port=port)
 
 
 #Logs the user out
