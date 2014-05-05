@@ -34,6 +34,11 @@
         <form method="post" action="/servadmin">
             <input type="submit" value="Reset unused servers" name="submit">
         </form>
+    <br><h3>Delete port</h3>
+        <form method="post" action="/servadmin">
+        {{ render_field(form6.portsel) }}
+        <input type="submit" value="Delete Port" name="submit" onclick="return confirm('Are you sure?')">
+    </form>
     <br><b>Ports on servers that are currently in use: (port, server)</b><br>
         <iframe width="370" src="portoutput"></iframe>
     <br><br><b>Ports on servers that are currently available: (port, server)</b><br>

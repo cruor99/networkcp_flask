@@ -141,9 +141,6 @@ def mcsubscribe():
     subname = subwip.sub_name
     subdescription = subwip.sub_description
     subtype = subwip.sub_type
-    subdays = subwip.sub_days
-    subhours = subwip.sub_hours
-    submaaned = subwip.sub_mnd
     subpris = subwip.sub_pris
     if subtype2 == "MC1024":
         form.subsel.choices = [(12000, '120NOK - 1-Month'), (36000, '360NOK - 3-Month'), (72000, '720NOK - 6-Month')]
@@ -213,8 +210,8 @@ def mcsubscribe():
             db.session.execute(stmt)
             db.session.commit()
         return redirect(response['redirectUrl'])
-    return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,\
-                           subtype=subtype, subdays=subdays, subhours=subhours, submaaned=submaaned, subpris=subpris)
+    return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,
+                           subtype=subtype, subpris=subpris)
 
 def calcmonths(subprice):
     if subprice == '12000' or subprice == '22000' or subprice == '29000':
@@ -417,7 +414,6 @@ def subadmin():
         subquer = Subscription(form.sub_name.data, form.sub_description.data,
                                form.sub_type.data, form.sub_days.data, form.sub_hours.data, form.sub_mnd.data,
                                form.sub_limit.data, form.sub_pris.data)
-
         db.session.add(subquer)
         db.session.commit()
         flash('The Subscription has been added to the pool')
@@ -482,6 +478,7 @@ def servadmin():
     form3 = UpdatePortForm()
     form4 = DeleteserverForm()
     form5 = PostForm()
+    form6 = DeleteportForm()
     if request.method == 'POST' and request.form['submit'] == "Add Server":
         servname = form.servername.data
         servip = form.serverip.data
@@ -504,7 +501,7 @@ def servadmin():
         else:
             flash('Info missing')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
-                               form5=form5)
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Add Port":
         for form2data in form2.server.data:
             servnew = form2data.server_id
@@ -525,7 +522,7 @@ def servadmin():
             else:
                 flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
-                               form5=form5)
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Update Port":
         serverdata = form3.server.data
         serverparseid = serverdata.server_id
@@ -535,15 +532,14 @@ def servadmin():
         db.session.commit()
         flash('Port Updated')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
-                               form5=form5)
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Reset unused servers":
         cleanports()
         flash('Ports cleaned')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
-                               form5=form5)
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Delete Server":
         serverform = form4.serversel.data
-        print serverform
         if serverform !=None:
             serverdata = serverform.server_name
             servername = Serverreserve.query.filter_by(server_name=serverdata).first()
@@ -556,6 +552,24 @@ def servadmin():
         else:
             flash('Server already deleted!')
         return render_template('deleteserver.html', form4=form4)
+    if request.method == 'POST' and request.form['submit'] == "Delete Port":
+        portform = form6.portsel.data
+        print portform
+        if portform !=None:
+            #portdata = portform.port_id
+            #print portdata
+            portname = Port.query.filter_by(port_id=portform.port_id).delete()
+            print portname
+            #serverid = portname.server_id
+            #Port.query.filter_by(server_id=serverid).delete()
+            #Serverreserve.query.filter_by(server_name=portdata).delete()
+            db.session.commit()
+            time.sleep(1)
+            flash('Port deleted!')
+        else:
+            flash('Port already deleted!')
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == 'Create Newspost':
         p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
                  cust_id=session['userid'], type='newspost')
@@ -576,7 +590,8 @@ def servadmin():
                  cust_id=session['userid'], type='promo')
         db.session.add(p)
         db.session.commit()
-    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5)
+    return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4, form5=form5,
+                           form6=form6)
 
 
 #User self-administration
@@ -741,6 +756,23 @@ def servpropout():
     time.sleep(1)
     return render_template('servpropout.html', output=output)
 
+
+#Show serverstatus
+@app.route('/servstatus')
+def servstatus():
+    userquer = User.query.filter_by(cust_id=session['userid']).first()
+    orderquer = Order.query.filter_by(cust_id=session['userid']).first()
+    orderlinequer = Orderline.query.filter_by(order_id=orderquer.order_id).first()
+    port = Port.query.filter_by(port_id=orderlinequer.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=port.server_id).first()
+    serverip = server.server_ip
+    serv = Server()
+    user = session['username']
+    status = serv.serverstatus(serverip, user)
+    time.sleep(1)
+    return render_template('servstatus.html', status=status)
+
+
 #Serveradmin port output
 @app.route('/servoutput')
 def servoutput():
@@ -748,6 +780,7 @@ def servoutput():
     servq = servusequer
     time.sleep(1)
     return render_template('servoutput.html', servq=servq)
+
 
 #Serveradmin port output
 @app.route('/portoutput')
@@ -757,6 +790,7 @@ def portoutput():
     time.sleep(1)
     return render_template('portoutput.html', ports=ports)
 
+
 #Servadmin port output
 @app.route('/portoutput2')
 def portoutput2():
@@ -764,6 +798,7 @@ def portoutput2():
     ports = portusequer
     time.sleep(1)
     return render_template('portoutput2.html', ports=ports)
+
 
 #servadmin delete server
 @app.route('/deleteserver', methods=['GET', 'POST'])
@@ -805,6 +840,9 @@ def login():
                 if usermail.role != 1:
                     session['normal'] = usermail.role
                 return redirect(url_for('index'))
+            else:
+                flash('Incorrect username or password')
+                return render_template('login.html', title='Sign In', form=form)
         if user is not None:
             print user.cust_username
             if form.email.data == user.cust_username and user.check_password(form.password.data):
@@ -822,8 +860,11 @@ def login():
                 if user.role != 1:
                     session['normal'] = user.role
                 return redirect(url_for('index'))
+            else:
+                flash('Incorrect username or password')
+                return render_template('login.html', title='Sign In', form=form)
         else:
-            flash('Something went wrong, Email or Password might be wrong')
+            flash('Incorrect username or password')
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -915,7 +956,7 @@ def manage():
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and \
-                        form.props.data != 'max-players':
+                        form.props.data != 'mscs-initial-memory' and form.props.data != 'mscs-maximum-memory':
             key = form.props.data
             value = form.value.data
             serv.editproperties(serverip, user, key, value)
@@ -923,11 +964,19 @@ def manage():
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
-            return render_template('manage.html', user = session['username'], email = session['email'],
+            return render_template('manage.html', user=session['username'], email=session['email'],
+                                   form=form, serverip=serverip, port=port)
+        elif request.form['submit'] == 'Change Properties' and form.props.data == 'mscs-initial-memory':
+            flash('You are not entitled to change your server memory')
+            return render_template('manage.html', user=session['username'], email=session['email'],
+                                   form=form, serverip=serverip, port=port)
+        elif request.form['submit'] == 'Change Properties' and form.props.data == 'mscs-maximum-memory':
+            flash('You are not entitled to change your server memory')
+            return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Delete Server Content':
             serv.deleteserv(serverip, user)
-            return render_template('manage.html', user = session['username'], email = session['email'],
+            return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Upload Zip':
             zipfile = request.files['file']

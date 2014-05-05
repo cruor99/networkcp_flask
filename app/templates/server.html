@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="content"><div class="inner-box">
-{% from "_formhelpers.html" import render_field %}
+<div class="content"><div class="inner-box4">
+    <div class="box3" style="margin-right: 18px">
+    {% from "_formhelpers.html" import render_field %}
     <form method=post action="/mcserver" name="start">
     <input type="submit" name="submit" value="Start Server">
     </form>
-<form method="post" action="/mcserver" name="stop">
+    <form method="post" action="/mcserver" name="stop">
     <input type="submit" name="submit" value="Stop Server">
     </form>
     <br><h3>Here you can send commands to your server instances!</h3>
@@ -15,6 +16,10 @@
         {{ render_field(form.command) }}
     <input type="submit" value="Send Command" name="submit">
     </form>
-    <iframe width="500" height="300" src="mcoutput"></iframe>
+    <iframe width="565" height="300" src="mcoutput"></iframe>
+    </div>
+    <div class="box3">
+    <h3>Server status</h3>
+    <iframe width="565" src="servstatus"></iframe>
     </div></div>
 {% endblock %}

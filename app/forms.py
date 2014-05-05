@@ -3,7 +3,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
-from models import User, Serverreserve
+from models import User, Serverreserve, Port
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from server import Server
 
@@ -14,6 +14,10 @@ def listallu():
 
 def listserv():
     return Serverreserve.query
+
+
+def listport():
+    return Port.query
 
 
 class ServerForm(Form):
@@ -35,6 +39,10 @@ class UpdatePortForm(Form):
 
 class DeleteserverForm(Form):
     serversel = QuerySelectField('Select Server', query_factory=listserv)
+
+
+class DeleteportForm(Form):
+    portsel = QuerySelectField('Select Port', query_factory=listport)
 
 
 class SubManageForm(Form):

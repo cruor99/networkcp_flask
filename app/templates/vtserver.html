@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="content"><div class="inner-box">
-{% from "_formhelpers.html" import render_field %}
+<div class="content"><div class="inner-box4">
+    <div class="box3" style="margin-right: 18px">
+    {% from "_formhelpers.html" import render_field %}
     <form method=post action="/vtserver" name="start">
     <input type="submit" name="submit" value="Generate Vent">
     </form>
-<form method="post" action="/vtserver" name="restart">
+    <form method="post" action="/vtserver" name="restart">
     <input type="submit" name="submit" value="Restart Server">
     </form>
-<form method="post" action="" name="restart">
+    <form method="post" action="" name="restart">
     <input type="submit" name="submit" value="Start Server">
     </form>
-<form method="post" action="/vtserver" name="restart">
+    <form method="post" action="/vtserver" name="restart">
     <input type="submit" name="submit" value="Stop Server">
     </form>
     <br><h3>Here you can edit the .ini file of your ventrilo server!</h3>
@@ -26,5 +27,8 @@
     {% for line in props %}
     <br>{{ line }}
     {% endfor %}
+    </div>
+    <div class="box3">
+
     </div></div>
 {% endblock %}
