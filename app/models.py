@@ -83,7 +83,7 @@ class Port(db.Model):
         self.port_used = port_used
 
     def __repr__(self):
-        return '%s, %i' % (self.port_no, self.server_id)
+        return '[%i, %i]' % (self.port_no, self.server_id)
 
 
 

@@ -15,13 +15,14 @@ import datetime
 import dateutils
 import re
 from werkzeug.utils import secure_filename
+from threading import Thread
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='XXXXXXXXXX', encryption_key='XXXXXXX', production=False)
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 #Catches internal server errors
@@ -708,9 +709,9 @@ def uadmin():
 
 
 #Helper for the minecraft output frame
-@app.route('/mcoutput')
+@app.route('/mcoutput', methods=['POST', 'GET'])
 def mcoutput():
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    order = Order.query.filter_by(cust_id=session['userid']).first()
     orderline = Orderline.query.filter_by(order_id=order.order_id).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
@@ -719,6 +720,9 @@ def mcoutput():
     serv = Server()
     user = session['username']
     output = serv.readconsole(serverip, user)
+    if request.method == 'POST':
+        output = serv.readconsole(serverip, user)
+        return render_template('mcoutput.html', output=output)
     return render_template('mcoutput.html', output=output)
 
 
@@ -875,6 +879,14 @@ def upload_file(rfile):
         zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash('File Uploaded Successfully')
 
+#handles file transfer from temporary storage to final location
+def transfer_file(filename, user, serverip):
+    serv = Server()
+    print serverip
+    serv.sendfile(serverip, filename, user)
+    serv.unzip(serverip, user, filename)
+    print "successfull!"
+
 
 #Routes to your server management control panel
 @app.route('/manage', methods=['GET', 'POST'])
@@ -924,8 +936,8 @@ def manage():
             if filenameplaceholder != "":
                 filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
                 servername = filenamestripped
-                serv.sendfile(serverip, zipfile.filename, user)
-                serv.unzip(serverip, user, zipfile.filename)
+                thr = Thread(target=transfer_file, args=[zipfile.filename, user, serverip])
+                thr.start()
                 serv.editproperties(serverip, user, 'mscs-server-jar', servername)
                 serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
                 os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
@@ -940,6 +952,8 @@ def manage():
             flash('Server Backed Up')
     return render_template('manage.html', user = session['username'], email = session['email'],
                            form=form, serverip=serverip, port=port)
+
+
 
 
 #Logs the user out

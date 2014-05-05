@@ -4,7 +4,7 @@ import paramiko
 import threading
 import os
 import time
-
+import progressbar
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 upload_dir = os.path.join(basedir, 'tmp')
@@ -81,6 +81,8 @@ class Server(threading.Thread):
         ssh.connect(server, username='minecraft', password='minecraft')
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("tail --lines=35 /home/minecraft/worlds/"+user+"/server.properties")
         return ssh_stdin.readlines()
+
+
 
     #Method for sending files
     def sendfile(self, server, filename, user):
