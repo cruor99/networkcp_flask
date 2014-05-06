@@ -27,7 +27,7 @@ MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'kliknes@Z.com'
+MAIL_USERNAME = 'Z'
 MAIL_PASSWORD = 'Z'
 
 
