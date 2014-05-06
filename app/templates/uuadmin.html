@@ -5,8 +5,10 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
-    <h4>Change User info here</h4><br><br>
+    <h4>Change User info here</h4><br>
     <b>(Current password required for any change!)</b><br><br>
+    <div class="inner-box3" style="padding:0px 0px 0px 0px;
+		border-radius: 0px">
     <form action="/uuadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.oldpwd) }}
@@ -19,12 +21,14 @@
     <p><input type="submit" value="Change Info" name="submit"></p>
     </form>
     </div>
+    <br><iframe width="300" src="userinfo" style="float: left; overflow: hidden; background: #ffffff; allowtransparency=true"></iframe>
+    </div>
     <div class="box3">
     <h4>Current subscription</h4><br><br>
     Here is the description of your subscription:<br>
     Type:        {{ subtype }}<br>
     Description: {{ subdescription }}<br>
     Created: {{ subcreate }}<br>
-    Expires: {{ subexpire }}<br>
+    Expires: {{ subexpire }}
 </div></div></div>
 {% endblock %}
