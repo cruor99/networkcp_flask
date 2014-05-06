@@ -29,7 +29,7 @@ service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv
 #redirects to index with original flash message intact
 @app.errorhandler(500)
 def internal_server(error):
-    flash('You did something wrong')
+    flash('Something went wrong, please report it to an administrator!')
     return render_template('index.html', user=session['username'], errmes=error)
 
 
@@ -178,8 +178,6 @@ def mcsubscribe():
             db.session.execute(stmt)
             genorder()
             months = calcmonths(subprice)
-            print months
-            print subprice
             orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
             orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
                                       datetime.date.today() + dateutils.relativedelta(months=months), '2')
@@ -187,8 +185,6 @@ def mcsubscribe():
             db.session.commit()
         else:
             months = calcmonths(subprice)
-            print months
-            print subprice
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
             orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
@@ -674,7 +670,8 @@ def uadmin():
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Delete User':
             user = form3.usersel.data
-            User.query.filter_by(cust_username=user).delete()
+            userdelquer = db.session.query(User).filter(User.cust_username == user).first()
+            db.session.delete(userdelquer)
             db.session.commit()
             time.sleep(1)
             flash('User deleted')
@@ -825,7 +822,6 @@ def login():
             #print user
     if form.validate_on_submit():
         if usermail is not None:
-            print usermail.cust_mail
             if form.email.data == usermail.cust_mail and usermail.check_password(form.password.data):
                 session['remember_me'] = form.remember_me.data
                 session['logged_in'] = True
@@ -921,12 +917,17 @@ def upload_file(rfile):
         flash('File Uploaded Successfully')
 
 #handles file transfer from temporary storage to final location
-def transfer_file(filename, user, serverip):
+def transfer_file(filename, user, serverip, port, ordertypeclean):
     serv = Server()
     print serverip
     serv.sendfile(serverip, filename, user)
     serv.unzip(serverip, user, filename)
-    print "successfull!"
+    serv.editproperties(serverip, user, 'mscs-server-jar', servername)
+    serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
+    os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
+    serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
+    serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
+    serv.editproperties(serverip, user, 'server-port', port)
 
 
 #Routes to your server management control panel
@@ -985,11 +986,9 @@ def manage():
             if filenameplaceholder != "":
                 filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
                 servername = filenamestripped
-                thr = Thread(target=transfer_file, args=[zipfile.filename, user, serverip])
+                thr = Thread(target=transfer_file, args=[zipfile.filename, user, serverip, port, ordertypeclean])
                 thr.start()
-                serv.editproperties(serverip, user, 'mscs-server-jar', servername)
-                serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
-                os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
+
                 flash('You did it!')
             else:
                 flash('Select a file!')

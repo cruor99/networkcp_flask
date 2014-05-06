@@ -4,7 +4,6 @@ import paramiko
 import threading
 import os
 import time
-import progressbar
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 upload_dir = os.path.join(basedir, 'tmp')
