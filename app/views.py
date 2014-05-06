@@ -24,7 +24,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='Z', encryption_key='Z', production=False)
+service = PayEx(merchant_number='XXXXXXXX', encryption_key='XXXXXXXXXXXXXXXX', production=False)
 
 
 #Catches internal server errors
@@ -615,13 +615,15 @@ def servadmin():
             servername = Serverreserve.query.filter_by(server_name=serverdata).first()
             serverid = servername.server_id
             Port.query.filter_by(server_id=serverid).delete()
-            Serverreserve.query.filter_by(server_name=serverdata).delete()
+            servquerydel = Serverreserve.query.filter_by(server_id=servername.server_id).first()
+            db.session.delete(servquerydel)
             db.session.commit()
             time.sleep(1)
             flash('Server deleted!')
         else:
             flash('Server already deleted!')
-        return render_template('deleteserver.html', form4=form4)
+        return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
+                               form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Delete Port":
         portform = form6.portsel.data
         print portform
@@ -677,6 +679,11 @@ def uuadmin():
     subtype = subid.sub_type
     subcreate = orderlineid.orderl_create
     subexpire = orderlineid.orderl_expire
+    name = User.query.filter_by(cust_id=custid).first()
+    email = name.cust_mail
+    fname = name.cust_fname
+    lname = name.cust_lname
+    phone = name.cust_phone
     if request.method == 'POST' and request.form['submit'] == 'Change Info':
         oldpwd = form.oldpwd.data
         newpwd = form.pwdfield.data
@@ -718,11 +725,9 @@ def uuadmin():
                 else:
                     flash('Email already in use!')
                     return render_template('uuadmin.html', form=form)
-            else:
-                return render_template('uuadmin.html', form=form)
         else:
             flash('Nothing updated')
-            return render_template('uuadmin.html', form=form)
+        return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form, subdescription=subdescription, subtype=subtype,
                            subcreate=subcreate, subexpire=subexpire)
 
@@ -871,12 +876,31 @@ def portoutput2():
     return render_template('portoutput2.html', ports=ports)
 
 
-#servadmin delete server
-@app.route('/deleteserver', methods=['GET', 'POST'])
-def deleteserver():
-    form4 = DeleteserverForm()
+#Servadmin delete server
+#@app.route('/deleteserver', methods=['GET', 'POST'])
+#def deleteserver():
+#    form4 = DeleteserverForm()
+#    time.sleep(1)
+#    return render_template('deleteserver.html', form4=form4)
+
+
+@app.route('/userinfo')
+def userinfo():
+    custid = session['userid']
+    #order = Order.query.filter_by(cust_id=custid).first()
+    #orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
+    #subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
+    #subdescription = subid.sub_description
+    #subtype = subid.sub_type
+    #subcreate = orderlineid.orderl_create
+    #subexpire = orderlineid.orderl_expire
+    name = User.query.filter_by(cust_id=custid).first()
+    email = name.cust_mail
+    fname = name.cust_fname
+    lname = name.cust_lname
+    phone = name.cust_phone
     time.sleep(1)
-    return render_template('deleteserver.html', form4=form4)
+    return render_template('userinfo.html', email=email, fname=fname, lname=lname, phone=phone)
 
 
 @app.route('/login', methods=['GET', 'POST'])
