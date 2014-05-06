@@ -2,9 +2,11 @@ __author__ = 'cruor'
 from flask import *
 from flask.ext.login import logout_user, login_required
 from app import app, db
+from config import ADMINS
 from forms import *
 from models import *
 from functools import wraps
+from decorators import async
 from server import Server
 from werkzeug import generate_password_hash
 import time
@@ -15,14 +17,14 @@ import datetime
 import dateutils
 import re
 from werkzeug.utils import secure_filename
-from threading import Thread
+from emails import send_email
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
+service = PayEx(merchant_number='Z', encryption_key='Z', production=False)
 
 
 #Catches internal server errors
@@ -163,9 +165,9 @@ def mcsubscribe():
             clientIPAddress='127.0.0.1',
             clientIdentifier='USERAGENT=test&username=testuser',
             #additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://127.0.0.1:5000/response',
+            returnUrl='http://84.49.16.101/response',
             view='CREDITCARD',
-            cancelUrl='http://127.0.0.1:5000/response'
+            cancelUrl='http://84.49.16.101/response'
         )
         print response
         dbprice = subprice[:-2]
@@ -242,7 +244,16 @@ def response():
                 db.session.execute(stmt)
 
                 db.session.commit()
-
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp),
+                                                                                               "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp))
                 print order.order_payed+"test1"
             else:
                 orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
@@ -253,6 +264,16 @@ def response():
                 stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
                 db.session.execute(stmt)
                 db.session.commit()
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'], "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp),
+                                                                                               "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp))
                 print order.order_payed+"test2"
         else:
             oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
@@ -266,8 +287,16 @@ def response():
                 db.session.execute(stmt)
 
                 db.session.commit()
-
-                print order.order_payed+"test3"
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'], "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp),
+                                                                                               "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp))
             else:
                 orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
                 order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
@@ -277,7 +306,16 @@ def response():
                 stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
                 db.session.execute(stmt)
                 db.session.commit()
-                print order.order_payed+"test4"
+                send_mail('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp),
+                                                                                               "Your order reference "
+                                                                                               "with Gameserver.no:\n"
+                                                                                               "Sub ID: " + str(subid) + "\n"
+                                                                                               "Order ID: "+str(ordid) + "\n"
+                                                                                               "Order Expiration: "+ str(ordexp))
             return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
         return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
     else:
@@ -319,6 +357,40 @@ def response():
             return render_template('response.html', receipt=cancmes)
 
 
+#Gavekort handtering
+@app.route('/gccreate', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def gccreate():
+    #sub_id, gift_code, expiration, in_use
+    form = GiftCardForm()
+    gcs = Giftcard.query.all()
+    if request.method == 'POST' and request.form['submit'] == 'Generate Giftcard':
+        gquer = Giftcard(form.sub_id.data, form.gift_code.data, form.expiration.data)
+        db.session.add(gquer)
+        db.session.commit()
+    return render_template('gccreate.html', form=form, gcs=gcs)
+
+@app.route('/gccheck', methods=['GET', 'POST'])
+@login_required
+def gccheck():
+    form = GiftCardCheckin()
+    if request.method == 'POST':
+        gc = Giftcard.query.filter_by(gift_code=form.giftcode.data).first()
+        sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
+        avport = Port.query.filter_by(port_used=2).first()
+        stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
+        db.session.execute(stmt)
+        gcstm = update(Giftcard).where(Giftcard.gift_code==gc.gift_code).values(in_use=True)
+        db.session.execute(gcstm)
+        genorder()
+        months = sub.sub_mnd
+        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+        orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
+                                      datetime.date.today() + dateutils.relativedelta(months=months), '1')
+        db.session.add(orderlinequer)
+        db.session.commit()
+    return render_template('gccheckin.html', form=form)
 @app.route('/vtserver', methods=['GET', 'POST'])
 @login_required
 @premium_required
@@ -457,12 +529,14 @@ def cleanports():
             stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
             db.session.execute(stmt)
             db.session.commit()
+            flash('Port '+str(ports.port_no)+ " cleaned")
         elif ordl.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
             stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
             db.session.execute(stmt)
             db.session.commit()
+            flash('Port '+str(ports.port_no)+ " cleaned")
         else:
-            flash('No ports to be reset')
+            flash('No port was reset')
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
 @app.route('/servadmin', methods=['POST', 'GET'])
@@ -885,6 +959,16 @@ def signup():
                         db.session.add(user)
                         db.session.commit()
                         flash('Thanks for registering!')
+                        send_email('Velkommen til Gameserver.no!', ADMINS[0], form.email.data, 'Velkommen til Gameserver.no'
+                            'Her er din brukerinfo: ' + form.username.data+ form.password.data+ form.email.data+
+                                                                                              form.fname.data+
+                                                                                              form.lname.data+
+                                                                                              form.phone.data,
+                                  'Velkommen til Gameserver.no'
+                            'Her er din brukerinfo: ' + form.username.data+ form.password.data+ form.email.data+
+                                                                                              form.fname.data+
+                                                                                              form.lname.data+
+                                                                                              form.phone.data,)
                         return redirect(url_for('login'))
                     else:
                         flash('Username cannot contain whitespace!')
@@ -917,14 +1001,17 @@ def upload_file(rfile):
         flash('File Uploaded Successfully')
 
 #handles file transfer from temporary storage to final location
-def transfer_file(filename, user, serverip, port, ordertypeclean):
+@async
+def transfer_file(filename, user, serverip, port, ordertypeclean, stripped):
     serv = Server()
     print serverip
+    serv.servercreate(str(serverip), user, str(port))
     serv.sendfile(serverip, filename, user)
     serv.unzip(serverip, user, filename)
-    serv.editproperties(serverip, user, 'mscs-server-jar', servername)
+    serv.servercreate(str(serverip), user, str(port))
+    serv.editproperties(serverip, user, 'mscs-server-jar', stripped)
     serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
-    os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], zipfile.filename)))
+    os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
     serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
     serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
     serv.editproperties(serverip, user, 'server-port', port)
@@ -986,9 +1073,7 @@ def manage():
             if filenameplaceholder != "":
                 filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
                 servername = filenamestripped
-                thr = Thread(target=transfer_file, args=[zipfile.filename, user, serverip, port, ordertypeclean])
-                thr.start()
-
+                transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
                 flash('You did it!')
             else:
                 flash('Select a file!')

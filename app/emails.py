@@ -1,14 +1,20 @@
 __author__ = 'cruor'
 from flask.ext.mail import Message
 from app import mail
+from decorators import async
+from app import app
 from threading import Thread
 
+@async
 def send_async_email(msg):
-    mail.send(msg)
+    with app.app_context():
+       mail.send(msg)
+
 
 def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender=sender, recipients=recipients)
+    rec = []
+    rec.append(recipients)
+    msg = Message(subject, sender=str(sender), recipients=rec)
     msg.body = text_body
     msg.html = html_body
-    thr = Thread(target=send_async_email, args=[msg])
-    thr.start()
+    send_async_email(msg)

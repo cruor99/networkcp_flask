@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<br>
+<div class="content"><div class="inner-box4">
+    <div class="box3" style="margin-right: 18px">
+    <form method="post">
+    {{ render_field(form.giftcode) }}
+    <br>
+    <input type="submit" value="Bruk Gavekortet!">
+    </form>
+
+
+     <p>Om du har fått ett gavekort fra oss, skriver du inn koden ovenfor!.</p>
+
+
+    </div>
+</div></div>
+{% endblock %}

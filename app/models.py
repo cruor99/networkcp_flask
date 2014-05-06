@@ -109,6 +109,9 @@ class Subscription(db.Model):
         self.sub_limit = sub_limit
         self.sub_pris = sub_pris
 
+    def __repr__(self):
+        return '%s' % (self.sub_id)
+
 class Orderline(db.Model):
     orderl_id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
@@ -136,11 +139,14 @@ class Giftcard(db.Model):
     expiration = db.Column(db.Date)
     in_use = db.Column(db.Boolean)
 
-    def __init__(self, sub_id, gift_code, expiration, in_use):
+    def __init__(self, sub_id, gift_code, expiration):
         self.sub_id = sub_id
         self.gift_code = gift_code
         self.expiration = expiration
-        self.in_use = in_use
+
+    def __repr__(self):
+        return "ID: %s Subscription ID: %s Gift Code: %s \n Expiration Date: %s" % (self.giftcard_id, self.sub_id, self.gift_code, self.expiration)
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -152,5 +158,5 @@ class Post(db.Model):
 
     def __repr__(self):
         return 'Title: %s  ' \
-               '/n' \
+               '\n' \
                'Body: %s' % (self.title, self.body)

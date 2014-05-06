@@ -3,7 +3,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
-from models import User, Serverreserve, Port
+from models import *
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from server import Server
 
@@ -19,6 +19,19 @@ def listserv():
 def listport():
     return Port.query
 
+
+def listsub():
+    return Subscription.query
+
+
+class GiftCardCheckin(Form):
+    giftcode = TextField('Skriv inn Gavekort koden:')
+
+
+class GiftCardForm(Form):
+    sub_id = QuerySelectField('Select Subscription: ', query_factory=listsub)
+    gift_code = TextField('Create Gift Code')
+    expiration = TextField('Create Expiration date: (YYYY-MM-DD)')
 
 class ServerForm(Form):
     servername = TextField('Server Name', validators=[validators.Required()])
