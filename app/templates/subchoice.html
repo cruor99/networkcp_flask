@@ -42,20 +42,20 @@ document.getElementById('slideMonths').innerHTML = m
 </script>
 </head>
 <div class="content">
-    <h4> Om du har Gavekort, trykk <a href="{{ url_for('gccheck') }}">Her!</a></h4><br>
     <div class="inner-box5">
-    <h4>Minecraft</h4>
+    <h4>Minecraft</h4><br>
+    <h4 style="font-size: 20"> If you have a gift card, <a href="{{ url_for('gccheck') }}">click here!</a></h4>
     <div class="box5" style="margin-right: 17px">
-    <a href="/mcsubscribe?subtype=MC1024"><img src="/static/images/small.png" style="float:left;"></a>
-        This is:<br> <b>120 NOK for 1 month,<br> 360 NOK for 3 months<br> and 720 NOK for 6 months</b>
+    <a href="/mcsubscribe?subtype=MC1024"><img src="/static/images/small.png" style="float:left; padding-right: 8px"></a>
+        Small server is:<br> <b>1 month: 120 NOK<br>3 months: 360 NOK<br>6 months: 720 NOK</b>
     </div>
     <div class="box5" style="margin-right: 17px">
-    <a href="/mcsubscribe?subtype=MC2048"><img src="/static/images/medium.png" style="float:left;"></a>
-        This is:<br><b>220 NOK for 1 month,<br> 660 NOK for 3 months<br> and 1320 NOK for 6 months</b>
+    <a href="/mcsubscribe?subtype=MC2048"><img src="/static/images/medium.png" style="float:left; padding-right: 8px"></a>
+        Medium server is:<br><b>1 month: 220 NOK<br>3 months: 660 NOK<br>6 months: 1320 NOK</b>
     </div>
     <div class="box5">
-    <a href="/mcsubscribe?subtype=MC2560"><img src="/static/images/large.png" style="float:left;"></a>
-        This is:<br><b> 290 NOK for 1 month,<br> 870 NOK for 3 months<br> and 1740 NOK for 6 months</b>
+    <a href="/mcsubscribe?subtype=MC2560"><img src="/static/images/large.png" style="float:left; padding-right: 8px"></a>
+        Large server is:<br><b>1 month: 290 NOK<br>3 months: 870 NOK<br>6 months: 1740 NOK</b>
     </div></div>
     <br>
     <div class="inner-box5">

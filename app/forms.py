@@ -29,11 +29,12 @@ class VentOrder(Form):
     slots = DecimalRangeField('Slots', '100', '10')
     months = DecimalRangeField('Months')
 
-class GiftCardCheckin(Form):
-    giftcode = TextField('Skriv inn Gavekort koden:')
+
+class GiftCodeCheckin(Form):
+    giftcode = TextField('Gift code:')
 
 
-class GiftCardForm(Form):
+class GiftCodeForm(Form):
     sub_id = QuerySelectField('Select Subscription: ', query_factory=listsub)
     gift_code = TextField('Create Gift Code')
     expiration = DateField('Create Expiration date: (YYYY-MM-DD)', format='%Y-%m-%d')
@@ -100,7 +101,7 @@ class UserinfoForm(Form):
     oldpwd = PasswordField('Current Password', validators=[validators.Required()])
     pwdfield = PasswordField('Password')
     confirm = PasswordField('Confirm Password')
-    email = TextField('eMail')
+    email = TextField('E-mail')
     fname = TextField('First Name')
     lname = TextField('Last Name')
     phone = TextField('Phone Number')
@@ -110,7 +111,7 @@ class AdmininfoForm(Form):
     usersel = QuerySelectField('Select User', query_factory=listallu, allow_blank=True, get_label=str)
     username = TextField('Username')
     pwdfield = PasswordField('Password')
-    email = TextField('eMail')
+    email = TextField('E-mail')
     fname = TextField('First Name')
     lname = TextField('Last Name')
     phone = TextField('Phone Number')
@@ -124,7 +125,7 @@ class SubscriptionForm(Form):
 class LoginForm(Form):
     remember_me = BooleanField('remember_me', default = False)
     password = PasswordField('Password', validators=[validators.Required()])
-    email = TextField('Username or eMail', validators=[validators.Required()])
+    email = TextField('Username or e-mail', validators=[validators.Required()])
     def __init__(self, *args, **kwargs):
         kwargs['csrf_enabled'] = False
         super(LoginForm, self).__init__(*args, **kwargs)
@@ -139,7 +140,7 @@ class signup_form(Form):
     username = TextField('Username*', validators=[validators.Required()])
     password = PasswordField('Password*', validators=[validators.Required()])
     confirm = PasswordField('Confirm Password*', validators=[validators.Required(), validators.EqualTo('password', message='Passwords must match')])
-    email = TextField('eMail*', validators=[validators.Required()])
+    email = TextField('E-mail*', validators=[validators.Required()])
     fname = TextField('First Name*', validators=[validators.Required()])
     lname = TextField('Last Name*', validators=[validators.Required()])
     phone = TextField('Phone Number (numbers only)')

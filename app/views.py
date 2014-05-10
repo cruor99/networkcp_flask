@@ -245,6 +245,7 @@ def genorder():
         db.session.commit()
         session['ordertmpholder'] = orderident
 
+
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
 @login_required
@@ -324,6 +325,7 @@ def mcsubscribe():
     return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,
                            subtype=subtype, subpris=subpris)
 
+
 def calcmonths(subprice):
     if subprice == '12000' or subprice == '22000' or subprice == '29000':
         print 1
@@ -336,10 +338,6 @@ def calcmonths(subprice):
         return 6
     else:
         print "Something went wrong"
-
-
-
-
 
 #Response handler for PayEx
 @app.route('/response', methods=['GET','POST'])
@@ -423,7 +421,7 @@ def response():
                 stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
                 db.session.execute(stmt)
                 db.session.commit()
-                send_mail('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
                                                                                                "with Gameserver.no:\n"
                                                                                                "Sub ID: " + str(subid) + "\n"
                                                                                                "Order ID: "+str(ordid) + "\n"
@@ -480,34 +478,41 @@ def response():
 @admin_required
 def gccreate():
     #sub_id, gift_code, expiration, in_use
-    form = GiftCardForm()
+    form = GiftCodeForm()
     gcs = Giftcard.query.all()
-    if request.method == 'POST' and request.form['submit'] == 'Generate Giftcard':
+    if request.method == 'POST' and request.form['submit'] == 'Generate gift code':
         gquer = Giftcard(form.sub_id.data, form.gift_code.data, form.expiration.data)
         db.session.add(gquer)
         db.session.commit()
     return render_template('gccreate.html', form=form, gcs=gcs)
 
+
 @app.route('/gccheck', methods=['GET', 'POST'])
 @login_required
 def gccheck():
-    form = GiftCardCheckin()
-    if request.method == 'POST':
-        gc = Giftcard.query.filter_by(gift_code=form.giftcode.data).first()
-        sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
-        avport = Port.query.filter_by(port_used=2).first()
-        stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
-        db.session.execute(stmt)
-        gcstm = update(Giftcard).where(Giftcard.gift_code==gc.gift_code).values(in_use=True)
-        db.session.execute(gcstm)
-        genorder()
-        months = sub.sub_mnd
-        orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-        orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
-                                      datetime.date.today() + dateutils.relativedelta(months=months), '1')
-        db.session.add(orderlinequer)
-        db.session.commit()
+    form = GiftCodeCheckin()
+    if request.method == 'POST' and request.form['submit'] == 'Use gift code':
+        if form.giftcode.data != "":
+            gc = Giftcard.query.filter_by(gift_code=form.giftcode.data).first()
+            sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
+            avport = Port.query.filter_by(port_used=2).first()
+            stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
+            db.session.execute(stmt)
+            gcstm = update(Giftcard).where(Giftcard.gift_code == gc.gift_code).values(in_use=True)
+            db.session.execute(gcstm)
+            genorder()
+            months = sub.sub_mnd
+            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+            orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
+                                          datetime.date.today() + dateutils.relativedelta(months=months), '1')
+            db.session.add(orderlinequer)
+            db.session.commit()
+        else:
+            flash("Please enter gift code")
+        return render_template('gccheckin.html', form=form)
     return render_template('gccheckin.html', form=form)
+
+
 @app.route('/vtserver', methods=['GET', 'POST'])
 @login_required
 @premium_required
@@ -567,12 +572,10 @@ def mcserver():
     return render_template('server.html', form=form)
 
 
-
 @app.route('/administrate')
 @admin_required
 def administrate():
     return render_template('adminchoice.html')
-
 
 
 @app.route('/controllers')
@@ -580,7 +583,6 @@ def administrate():
 @premium_required
 def controllers():
     return render_template('controllers.html')
-
 
 
 @app.route('/subadmin', methods=['POST', 'GET'])
@@ -613,6 +615,7 @@ def subadmin():
         return render_template('subadmin.html', form=form, orders=orders)
     return render_template('subadmin.html', form=form, orders=orders)
 
+
 #cleanly purges a user and his orders from the database
 def resetuser(orderlid):
     print orderlid
@@ -628,6 +631,7 @@ def resetuser(orderlid):
     time.sleep(2)
     db.session.delete(delorderorder)
     db.session.commit()
+
 
 #Method for cleaning out ports set to used without an attached subscription
 def cleanports():
@@ -647,6 +651,7 @@ def cleanports():
             flash('Port '+str(ports.port_no)+ " cleaned")
         else:
             flash('No port was reset')
+
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
 @app.route('/servadmin', methods=['POST', 'GET'])
@@ -834,9 +839,9 @@ def uuadmin():
                 if user.check_password(form.oldpwd.data) and oldemail == "":
                     User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
                     db.session.commit()
-                    flash('Email updated')
+                    flash('E-mail updated')
                 else:
-                    flash('Email already in use!')
+                    flash('E-mail already in use!')
                     return render_template('uuadmin.html', form=form)
         else:
             flash('Nothing updated')
@@ -908,7 +913,7 @@ def uadmin():
             if newemail != "":
                 User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
                 db.session.commit()
-                flash('Email updated, please inform the user')
+                flash('E-mail updated, please inform the user')
             if newphone != "":
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
@@ -1125,10 +1130,10 @@ def signup():
                     flash('Phone number not valid!')
                     return render_template('signup.html', form=form)
             else:
-                flash('Not a valid eMail!')
+                flash('Not a valid e-mail!')
                 return render_template('signup.html', form=form)
         else:
-            flash('Username or eMail already exists!')
+            flash('Username or e-mail already exists!')
             return render_template('signup.html', form=form)
     else:
         return render_template('signup.html', form=form)
@@ -1147,6 +1152,7 @@ def upload_file(rfile):
         filename = secure_filename(zipfile.filename)
         zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash('File Uploaded Successfully')
+
 
 #handles file transfer from temporary storage to final location
 @async
@@ -1231,10 +1237,8 @@ def manage():
         if request.form['submit'] == 'Backup Server':
             serv.backupserv(serverip, user)
             flash('Server Backed Up')
-    return render_template('manage.html', user = session['username'], email = session['email'],
+    return render_template('manage.html', user=session['username'], email=session['email'],
                            form=form, serverip=serverip, port=port)
-
-
 
 
 #Logs the user out

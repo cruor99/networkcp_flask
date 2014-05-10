@@ -3,17 +3,12 @@
 {% from "_formhelpers.html" import render_field %}
 <br>
 <div class="content"><div class="inner-box4">
-    <div class="box3" style="margin-right: 18px">
-    <form method="post">
+    <div class="box3" style="margin-left: auto; margin-right: auto; float: none">
+    <h1>Insert your gift code below!</h1><br><br>
+        <form method="post">
     {{ render_field(form.giftcode) }}
     <br>
-    <input type="submit" value="Bruk Gavekortet!">
+    <input type="submit" value="Use gift code" name="submit">
     </form>
-
-
-     <p>Om du har fått ett gavekort fra oss, skriver du inn koden ovenfor!.</p>
-
-
-    </div>
-</div></div>
+</div></div></div>
 {% endblock %}
