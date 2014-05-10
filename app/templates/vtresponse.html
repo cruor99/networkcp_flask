@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="content"><div class="inner-box">
+    {% if orderref is not none %}
+    Your Order Status or Order Reference is: {{ orderref }}
+    <br>
+    Your amount of slots with gamerserver.no is: {{ slots }}<br>
+    Your order ID with gameserver.no is: {{ ordid }}<br>
+    You ordered this many months: {{ months }}
+    The total price came to: {{ price }}
+    Your order will expire on the following date: {{ ordexp }}<br
+    <p> You will also have received this information on mail</p>
+    {% else %}
+    Your order has been cancelled
+    {% endif %}
+</div></div>
+{% endblock %}

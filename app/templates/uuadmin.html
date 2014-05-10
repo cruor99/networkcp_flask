@@ -26,9 +26,26 @@
     <div class="box3">
     <h4>Current subscription</h4><br><br>
     Here is the description of your subscription:<br>
+    <div class="box">
+    {% if subtype is not none %}
+    <h3>Minecraft</h3>
     Type:        {{ subtype }}<br>
     Description: {{ subdescription }}<br>
     Created: {{ subcreate }}<br>
     Expires: {{ subexpire }}
+    {% else %}
+        You have no Minecraft Subscription
+    {% endif %}
+    </div>
+    <br/>
+    <div class="box">
+    {% if slots is not none  %}
+    <h3>Ventrilo</h3>
+    Ventrilo slots: {{ slots }}<br/>
+    Ventrilo Expires: {{ expiration }}
+    {% else %}
+        You have no Ventrilo Subscription
+    {% endif %}
+    </div>
 </div></div></div>
 {% endblock %}

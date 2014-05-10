@@ -1,6 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
+    <head>
+<script type="text/javascript">
+function calcPrice(m, s){
+var slotprice = {
+    1: 33,
+    2: 58,
+    3: 83,
+    4: 108,
+    5: 133,
+    6: 158,
+    7: 184,
+    8: 208,
+    9: 233,
+    10: 258,
+    11: 384,
+    12: 450,
+    13: 500
+}
+var slotsize = {
+        1: 10,
+    2: 20,
+    3: 30,
+    4: 40,
+    5: 50,
+    6: 60,
+    7: 70,
+    8: 80,
+    9: 90,
+    10: 100,
+    11: 200,
+    12: 300,
+    13: 400
+}
+var totprice = slotprice[s]*m
+document.getElementById('sliderStatus').innerHTML = slotsize[s];
+document.getElementById('sliderPrice').innerHTML = totprice;
+document.getElementById('slideMonths').innerHTML = m
+}
+</script>
+</head>
 <div class="content">
     <h4> Om du har Gavekort, trykk <a href="{{ url_for('gccheck') }}">Her!</a></h4><br>
     <div class="inner-box5">
@@ -19,7 +59,20 @@
     </div></div>
     <br>
     <div class="inner-box5">
-    <h4>Ventrilo</h4>
-    <a href="/mcsubscribe?subtype=Ventrilo">Ventrilo Server</a>
+    <h4>Ventrilo</h4><br/><br/><br/>
+      <div class="slider">
+          <form method="post" action="/ventsub">
+        <input id="slotSlider" name="slotSlider" type="range" min="1" max="13" value="1" step="1" onChange="calcPrice(monthSlider.value, this.value)"></input>
+        <br/><br/>
+    Ventrilo slots: = <span id="sliderStatus">10</span> <br/><br/>
+        <input id="monthSlider" name="monthSlider" type="range" min="1" max="6" value="1" onChange="calcPrice(this.value,slotSlider.value )"><br/>Måneder: <span id="slideMonths">1</span></input><br/><br/>
+    Pris per måned: = <span id="sliderPrice">33</span> NOK
+       <br/>     <input type="submit" value="Neste Steg" name="submit">
+
+            </form>
+          <div id="vent_info" class="box" style="margin-right:110px;">
+              <p>Gameserver.no er en autorisert forhandler av Ventrilo-servere, hvilket betyr at vi leier ut Ventrilo PRO servere (versjon 3.x).<br/> Med Ventriloserver fra BroadPark Games er du sikret lav ping og en server som alltid er tilgjengelig når du skal spille clankamp,<br/> spille raid i World of Warcraft eller bare snakke med kompisene dine.<br/> Hos oss er alle codecs tillatt, og du bytter enkelt codec via kontrollpanelet vårt. </p>
+          </div>
+</div>
 </div></div>
 {% endblock %}

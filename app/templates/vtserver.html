@@ -4,13 +4,10 @@
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
     {% from "_formhelpers.html" import render_field %}
-    <form method=post action="/vtserver" name="start">
-    <input type="submit" name="submit" value="Generate Vent">
-    </form>
     <form method="post" action="/vtserver" name="restart">
     <input type="submit" name="submit" value="Restart Server">
     </form>
-    <form method="post" action="" name="restart">
+    <form method="post" action="" name="start">
     <input type="submit" name="submit" value="Start Server">
     </form>
     <form method="post" action="/vtserver" name="restart">
@@ -24,9 +21,11 @@
     <input type="submit" value="Edit Property" name="submit">
     </form>
     <br>
+    <div class="box">
     {% for line in props %}
     <br>{{ line }}
     {% endfor %}
+    </div>
     </div>
     <div class="box3">
 

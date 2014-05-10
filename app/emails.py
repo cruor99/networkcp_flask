@@ -18,3 +18,10 @@ def send_email(subject, sender, recipients, text_body, html_body):
     msg.body = text_body
     msg.html = html_body
     send_async_email(msg)
+
+
+def register_mail(subject, sender, recipient, username, password):
+    pass
+
+def receipt_mail(subject, sender, recipient, username, orderref, type, price, duration):
+    pass

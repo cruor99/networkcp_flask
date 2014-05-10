@@ -24,7 +24,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='XXXXXXXX', encryption_key='XXXXXXXXXXXXXXXX', production=False)
+service = PayEx(merchant_number='X', encryption_key='X', production=False)
 
 
 #Catches internal server errors
@@ -67,6 +67,7 @@ def premium_required(test):
     def wrap(*args, **kwargs):
         if 'premium' in session:
             user = User.query.filter_by(cust_id=session['userid']).first()
+            ventquer = VtOrder.query.filter_by(cust_id=session['userid']).first()
             exorderl = ''
             exorder = ''
             if user.cust_notes is not None:
@@ -76,6 +77,13 @@ def premium_required(test):
                     session.pop('premium', None)
                     flash('You are not a premium user, sign up for a service before accessing this portion!')
                     return redirect(url_for('subscribe'))
+                else:
+                    return test(*args, **kwargs)
+            elif ventquer.expiration is not None:
+                print ventquer.expiration
+                if ventquer.expiration <= datetime.date.today():
+                    session.pop('premium', None)
+                    flash('You are not a premium user, sign up for a service before accessing this portion')
                 else:
                     return test(*args, **kwargs)
             else:
@@ -115,7 +123,112 @@ def index():
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
-    return render_template('subchoice.html', user=session['username'])
+    form = VentOrder()
+    if request.method == 'POST':
+        print request
+        print 'post'
+        #redirect('/ventsub')
+    return render_template('subchoice.html', user=session['username'], form=form)
+
+@app.route('/ventsub', methods=['GET', 'POST'])
+@login_required
+def ventsub():
+    #TODO: Finn en bedre maate aa loese dette
+    user = session['username']
+    ventslots = {
+        1: 10,
+        2: 20,
+        3: 30,
+        4: 40,
+        5: 50,
+        6: 60,
+        7: 70,
+        8: 80,
+        9: 90,
+        10: 100,
+        11: 200,
+        12: 300,
+        13: 400
+    }
+    slotprice = {
+        1: '33',
+        2: '58',
+        3: '83',
+        4: '108',
+        5: '133',
+        6: '158',
+        7: '184',
+        8: '208',
+        9: '233',
+        10: '258',
+        11: '384',
+        12: '450',
+        13: '500'
+}
+    if request.method == 'POST' and request.form['submit'] == 'Neste Steg':
+        session['slots'] = ventslots[int(request.form['slotSlider'])]
+        session['price'] = slotprice[int(request.form['slotSlider'])]
+        session['months'] = request.form['monthSlider']
+        print 'test'
+    if request.method == 'POST' and request.form['submit'] == 'Start Payment Process':
+        print 'test2'
+       # print slots
+        print request.remote_addr
+        print request.headers.get('User-Agent')
+        print session['price']
+        print type(session['price'])
+        response = service.initialize(
+            purchaseOperation='SALE',
+            price=session['price']+'00',
+            currency='NOK',
+            vat='2500',
+            orderID=session['userid']+random.getrandbits(session['userid']),
+            productNumber='Server Hosting of type: Ventrilo',
+            description=u'Gameserver rental host for: '+user,
+            clientIPAddress=request.remote_addr,
+            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],            #additionalValues='PAYMENTMENU=TRUE',
+            returnUrl='http://127.0.0.1:5000/vtresponse',
+            view='CREDITCARD',
+            cancelUrl='http://127.0.0.1:5000/vtresponse'
+        )
+        print response
+        return redirect(response['redirectUrl'])
+    return render_template('ventsub.html', slots=session['slots'], price=session['price'], months=session['months'])
+
+@app.route('/vtresponse', methods=['GET', 'POST'])
+def vtresponse():
+    orderref = request.args.get('orderRef')
+    slots = session['slots']
+    price = session['price']
+    months = session['months']
+    serv = Server()
+    userid = session['userid']
+    user = session['username']
+    ventserver = Serverreserve.query.filter_by(server_name='Gameserver 1').first()
+    openport = Port.query.filter_by(server_id=ventserver.server_id).filter_by(port_used=2).first()
+    expire = datetime.date.today() + dateutils.relativedelta(months=int(months))
+    existvent = VtOrder.query.filter_by(cust_id=session['userid']).first()
+    if orderref is not None and existvent is not None:
+        extramonths = existvent.expiration + dateutils.relativedelta(months=int(months))
+        stmt = update(VtOrder).where(VtOrder.cust_id == session['userid']).values(expiration=extramonths).values(slots=slots)
+        db.session.execute(stmt)
+        db.session.commit()
+
+        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
+    elif orderref is not None:
+        vtadd = VtOrder(slots, price, expire, openport.port_id, userid)
+        stmt = update(Port).where(Port.port_id == openport.port_id).values(port_used=1)
+        db.session.execute(stmt)
+        db.session.add(vtadd)
+        db.session.commit()
+        serv.sendvent(ventserver.server_ip, user)
+        serv.deployvent(user, 'ventpro.zip', ventserver.server_ip)
+        serv.editventprops(user, port, openport.port_no)
+        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
+
+    else:
+
+        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
 
 
 def genorder():
@@ -162,8 +275,8 @@ def mcsubscribe():
             orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting of type: '+subtype2,
             description=u'Gameserver rental host for: '+user,
-            clientIPAddress='127.0.0.1',
-            clientIdentifier='USERAGENT=test&username=testuser',
+            clientIPAddress=request.remote_addr,
+            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],
             #additionalValues='PAYMENTMENU=TRUE',
             returnUrl='http://84.49.16.101/response',
             view='CREDITCARD',
@@ -223,6 +336,10 @@ def calcmonths(subprice):
         return 6
     else:
         print "Something went wrong"
+
+
+
+
 
 #Response handler for PayEx
 @app.route('/response', methods=['GET','POST'])
@@ -398,19 +515,12 @@ def vtserver():
     form = VtEditForm()
     user = session['username']
     serv=Server()
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
-    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    vt = VtOrder.query.filter_by(cust_id=session['userid']).first()
+    port = Port.query.filter_by(port_id=vt.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=port.server_id).first()
     serverip = server.server_ip
-    port = dbport.port_no
     props = serv.readventprops(serverip, user)
     if request.method == 'POST':
-        if request.form['submit'] == 'Generate Vent':
-            serv.sendvent(serverip, user)
-            serv.deployvent(user, 'ventpro.zip', serverip)
-            flash('Server Deployed')
-            return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Start Server':
             serv.startvent(serverip, user)
             flash('Server Started')
@@ -684,6 +794,9 @@ def uuadmin():
     fname = name.cust_fname
     lname = name.cust_lname
     phone = name.cust_phone
+    vtquer = VtOrder.query.filter_by(cust_id=session['userid']).first()
+    slots = vtquer.slots
+    expiration = vtquer.expiration
     if request.method == 'POST' and request.form['submit'] == 'Change Info':
         oldpwd = form.oldpwd.data
         newpwd = form.pwdfield.data
@@ -729,7 +842,7 @@ def uuadmin():
             flash('Nothing updated')
         return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form, subdescription=subdescription, subtype=subtype,
-                           subcreate=subcreate, subexpire=subexpire)
+                           subcreate=subcreate, subexpire=subexpire, slots=slots, expiration=expiration)
 
 
 #Administrator page for user administration
@@ -750,10 +863,21 @@ def uadmin():
         if request.form['submit'] == 'Delete User':
             user = form3.usersel.data
             userdelquer = db.session.query(User).filter(User.cust_username == user).first()
+            order = Order.query.filter_by(cust_id=userdelquer.cust_id).first()
+            if order is not None:
+                orderline = Orderline.query.filter_by(order_id = order.order_id).first()
+                if orderline is not None:
+                    db.session.delete(orderline)
+                    db.session.commit()
+                    time.sleep(1)
+                if order is not None:
+                    db.session.delete(order)
+                    db.session.commit()
+                    time.sleep(1)
             db.session.delete(userdelquer)
             db.session.commit()
             time.sleep(1)
-            flash('User deleted')
+            flash('User purged')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Change Info':
             newpwd = form2.pwdfield.data

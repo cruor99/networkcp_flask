@@ -149,7 +149,7 @@ class Giftcard(db.Model):
 
 
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     body = db.Column(db.String(300))
     timestamp = db.Column(db.DateTime)
@@ -160,3 +160,18 @@ class Post(db.Model):
         return 'Title: %s  ' \
                '\n' \
                'Body: %s' % (self.title, self.body)
+
+class VtOrder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    slots = db.Column(db.Integer)
+    price = db.Column(db.Integer)
+    expiration = db.Column(db.Date)
+    port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
+    cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'))
+
+    def __init__(self, slots, price, expiration, port_id, cust_id):
+        self.slots = slots
+        self.price = price
+        self.expiration = expiration
+        self.port_id = port_id
+        self.cust_id = cust_id

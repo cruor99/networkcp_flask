@@ -39,7 +39,6 @@ class Server(threading.Thread):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        print server+"Test"
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
         return ssh_stdout.readlines()
 

@@ -1,6 +1,7 @@
 __author__ = 'cruor'
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField
+from wtforms.fields.html5 import DecimalRangeField
+from wtforms import TextField, BooleanField, PasswordField, SelectField, RadioField, DateField
 from wtforms import validators
 from wtforms_alchemy import ModelForm
 from models import *
@@ -24,6 +25,10 @@ def listsub():
     return Subscription.query
 
 
+class VentOrder(Form):
+    slots = DecimalRangeField('Slots', '100', '10')
+    months = DecimalRangeField('Months')
+
 class GiftCardCheckin(Form):
     giftcode = TextField('Skriv inn Gavekort koden:')
 
@@ -31,7 +36,7 @@ class GiftCardCheckin(Form):
 class GiftCardForm(Form):
     sub_id = QuerySelectField('Select Subscription: ', query_factory=listsub)
     gift_code = TextField('Create Gift Code')
-    expiration = TextField('Create Expiration date: (YYYY-MM-DD)')
+    expiration = DateField('Create Expiration date: (YYYY-MM-DD)', format='%Y-%m-%d')
 
 class ServerForm(Form):
     servername = TextField('Server Name', validators=[validators.Required()])
