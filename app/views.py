@@ -24,7 +24,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='X', encryption_key='X', production=False)
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 #Catches internal server errors
@@ -213,7 +213,9 @@ def vtresponse():
         stmt = update(VtOrder).where(VtOrder.cust_id == session['userid']).values(expiration=extramonths).values(slots=slots)
         db.session.execute(stmt)
         db.session.commit()
-
+        #server, user, key, value
+        serv.editventprops(str(ventserver.server_ip), user, str("port"), str(openport.port_no))
+        serv.editventprops(str(ventserver.server_ip), user, str("maxclients"), str(slots))
         return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
     elif orderref is not None:
         vtadd = VtOrder(slots, price, expire, openport.port_id, userid)
@@ -223,7 +225,12 @@ def vtresponse():
         db.session.commit()
         serv.sendvent(ventserver.server_ip, user)
         serv.deployvent(user, 'ventpro.zip', ventserver.server_ip)
-        serv.editventprops(user, port, openport.port_no)
+        serv.editventprops(str(ventserver.server_ip), user, str("port"), str(openport.port_no))
+        serv.editventprops(str(ventserver.server_ip), user, str("maxclients"), str(slots))
+        userstm = update(User).where(User.cust_id == session['userid']).values(role=2)
+        db.session.execute(userstm)
+        db.session.commit()
+        session['premium'] = 2
         return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
 
     else:
@@ -787,21 +794,30 @@ def servadmin():
 def uuadmin():
     form = UserinfoForm()
     custid = session['userid']
+    subid = ''
+    subdescription = ''
+    subtype = ''
+    subcreate = ''
+    subexpire = ''
     order = Order.query.filter_by(cust_id=custid).first()
-    orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
-    subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
-    subdescription = subid.sub_description
-    subtype = subid.sub_type
-    subcreate = orderlineid.orderl_create
-    subexpire = orderlineid.orderl_expire
+    if order is not None:
+        orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
+        subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
+        subdescription = subid.sub_description
+        subtype = subid.sub_type
+        subcreate = orderlineid.orderl_create
+        subexpire = orderlineid.orderl_expire
     name = User.query.filter_by(cust_id=custid).first()
     email = name.cust_mail
     fname = name.cust_fname
     lname = name.cust_lname
     phone = name.cust_phone
     vtquer = VtOrder.query.filter_by(cust_id=session['userid']).first()
-    slots = vtquer.slots
-    expiration = vtquer.expiration
+    slots = ''
+    expiration = ''
+    if vtquer is not None:
+        slots = vtquer.slots
+        expiration = vtquer.expiration
     if request.method == 'POST' and request.form['submit'] == 'Change Info':
         oldpwd = form.oldpwd.data
         newpwd = form.pwdfield.data

@@ -136,7 +136,7 @@ class Server(threading.Thread):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='steve', password='12Karen34')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/steve/editinit.py -w "+user+" -o "+key+" -v "+value+" -c Server")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/steve/editinit.py -w "+user+" -o "+key+" -v " + value+" -c Server")
         return ssh_stdin.readlines()
         ssh.close()
 
