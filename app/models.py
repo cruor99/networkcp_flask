@@ -135,7 +135,7 @@ class Orderline(db.Model):
 class Giftcard(db.Model):
     giftcard_id = db.Column(db.Integer, primary_key=True)
     sub_id = db.Column(db.Integer, ForeignKey('subscription.sub_id'))
-    gift_code = db.Column(db.String(100))
+    gift_code = db.Column(db.String(100), unique=True)
     expiration = db.Column(db.Date)
     in_use = db.Column(db.Boolean)
 

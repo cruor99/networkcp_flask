@@ -31,7 +31,7 @@ class VentOrder(Form):
 
 
 class GiftCodeCheckin(Form):
-    giftcode = TextField('Gift code:')
+    gift_code = TextField('Gift code:')
 
 
 class GiftCodeForm(Form):

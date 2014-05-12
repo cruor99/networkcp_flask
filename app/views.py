@@ -488,9 +488,19 @@ def gccreate():
     form = GiftCodeForm()
     gcs = Giftcard.query.all()
     if request.method == 'POST' and request.form['submit'] == 'Generate gift code':
-        gquer = Giftcard(form.sub_id.data, form.gift_code.data, form.expiration.data)
-        db.session.add(gquer)
-        db.session.commit()
+        giftinput = form.gift_code.data
+        giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
+        giftcode = ""
+        if giftdb != None:
+            giftcode = giftdb.gift_code
+        if giftcode != giftinput:
+            gquer = Giftcard(form.sub_id.data, giftinput, form.expiration.data)
+            db.session.add(gquer)
+            db.session.commit()
+            flash("Gift code created!")
+        else:
+            flash("Gift code already in use!")
+        return render_template('gccreate.html', form=form, gcs=gcs)
     return render_template('gccreate.html', form=form, gcs=gcs)
 
 
@@ -499,21 +509,34 @@ def gccreate():
 def gccheck():
     form = GiftCodeCheckin()
     if request.method == 'POST' and request.form['submit'] == 'Use gift code':
-        if form.giftcode.data != "":
-            gc = Giftcard.query.filter_by(gift_code=form.giftcode.data).first()
-            sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
-            avport = Port.query.filter_by(port_used=2).first()
-            stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
-            db.session.execute(stmt)
-            gcstm = update(Giftcard).where(Giftcard.gift_code == gc.gift_code).values(in_use=True)
-            db.session.execute(gcstm)
-            genorder()
-            months = sub.sub_mnd
-            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
-                                          datetime.date.today() + dateutils.relativedelta(months=months), '1')
-            db.session.add(orderlinequer)
-            db.session.commit()
+        if form.gift_code.data != "":
+            giftinput = form.gift_code.data
+            giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
+            giftcode = ""
+            giftinuse = ""
+            if giftdb != None:
+                giftcode = giftdb.gift_code
+                giftinuse = giftdb.in_use
+                print giftinuse
+            if giftcode == giftinput and giftinuse != True:
+                gc = Giftcard.query.filter_by(gift_code=giftinput).first()
+                sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
+                avport = Port.query.filter_by(port_used=2).first()
+                stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
+                db.session.execute(stmt)
+                gcstm = update(Giftcard).where(Giftcard.gift_code == gc.gift_code).values(in_use=True)
+                db.session.execute(gcstm)
+                genorder()
+                months = sub.sub_mnd
+                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+                orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
+                                              datetime.date.today() + dateutils.relativedelta(months=months), '1')
+                db.session.add(orderlinequer)
+                db.session.commit()
+                flash("Valid gift code entered!")
+            else:
+                flash("Enter a valid gift code!")
+            return render_template('gccheckin.html', form=form)
         else:
             flash("Please enter gift code")
         return render_template('gccheckin.html', form=form)
@@ -526,7 +549,7 @@ def gccheck():
 def vtserver():
     form = VtEditForm()
     user = session['username']
-    serv=Server()
+    serv = Server()
     vt = VtOrder.query.filter_by(cust_id=session['userid']).first()
     port = Port.query.filter_by(port_id=vt.port_id).first()
     server = Serverreserve.query.filter_by(server_id=port.server_id).first()
