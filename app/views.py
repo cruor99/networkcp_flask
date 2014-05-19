@@ -16,11 +16,15 @@ import os
 import datetime
 import dateutils
 import re
+from threading import Thread
+from multiprocessing import Process
 from werkzeug.utils import secure_filename
 from emails import send_email
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
+print UPLOAD_DIR
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+print app.config['UPLOAD_FOLDER']
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
@@ -187,9 +191,9 @@ def ventsub():
             description=u'Gameserver rental host for: '+user,
             clientIPAddress=request.remote_addr,
             clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],            #additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://127.0.0.1:5000/vtresponse',
+            returnUrl='http://84.49.16.101/vtresponse',
             view='CREDITCARD',
-            cancelUrl='http://127.0.0.1:5000/vtresponse'
+            cancelUrl='http://85.59.16.101:5000/vtresponse'
         )
         print response
         return redirect(response['redirectUrl'])
@@ -204,7 +208,7 @@ def vtresponse():
     serv = Server()
     userid = session['userid']
     user = session['username']
-    ventserver = Serverreserve.query.filter_by(server_name='Gameserver 1').first()
+    ventserver = Serverreserve.query.filter_by(server_name='ventrilo').first()
     openport = Port.query.filter_by(server_id=ventserver.server_id).filter_by(port_used=2).first()
     expire = datetime.date.today() + dateutils.relativedelta(months=int(months))
     existvent = VtOrder.query.filter_by(cust_id=session['userid']).first()
@@ -1194,20 +1198,43 @@ def upload_file(rfile):
 
 
 #handles file transfer from temporary storage to final location
-@async
-def transfer_file(filename, user, serverip, port, ordertypeclean, stripped):
-    serv = Server()
-    print serverip
-    serv.servercreate(str(serverip), user, str(port))
-    serv.sendfile(serverip, filename, user)
-    serv.unzip(serverip, user, filename)
-    serv.servercreate(str(serverip), user, str(port))
-    serv.editproperties(serverip, user, 'mscs-server-jar', stripped)
-    serv.editproperties(serverip, user, 'mscs-server-location', '/home/minecraft/worlds/'+user)
-    os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-    serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
-    serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
-    serv.editproperties(serverip, user, 'server-port', port)
+def transfer_file(rfile, filename, user, serverip, port, ordertypeclean, stripped):
+    print "testtft"
+    zipfile = rfile
+    filename = filename
+    print filename
+    if zipfile and allowed_file(zipfile.filename):
+        filename = secure_filename(zipfile.filename)
+        zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print filename
+
+        serv = Server()
+        print serverip
+        serv.sendfile(str(serverip), str(filename), str(user))
+        print 1
+        serv.unzip(str(serverip), str(user), str(filename))
+        print 2
+        serv.servercreate(str(serverip), str(user), str(port))
+        print 3
+        serv.editproperties(str(serverip), str(user), 'mscs-server-jar', str(stripped))
+        print 4
+        serv.editproperties(str(serverip), str(user), str('mscs-server-location'), str('/home/minecraft/worlds/'+user))
+        print 5
+        os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+        print 6
+        serv.editproperties(str(serverip), user, str('mscs-initial-memory'), str('128M'))
+        print 6
+        serv.editproperties(str(serverip), str(user), str('mscs-maximum-memory'), str(ordertypeclean+'M'))
+        print 7
+        serv.editproperties(str(serverip), str(user), str('server-port'), str(port))
+        print "done"
+
+def threadtest(a, b, c):
+    print a
+    time.sleep(10)
+    print b
+    time.sleep(10)
+    print c
 
 
 #Routes to your server management control panel
@@ -1226,10 +1253,11 @@ def manage():
     currsub = Subscription.query.filter_by(sub_id=orderline.sub_id).first()
     ordertype = currsub.sub_type
     ordertypeclean = ordertype[2:]
-    print ordertypeclean
     if request.method == 'POST':
         if request.form['submit'] == 'Generate properties':
             serv.servercreate(str(serverip), user, str(port))
+            t = Thread(target=threadtest, args=('2','4','6'))
+            t.start()
             time.sleep(1)
             serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
             serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
@@ -1260,14 +1288,25 @@ def manage():
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Upload Zip':
+            print "test0"
             zipfile = request.files['file']
-            upload_file(zipfile)
+            print "test1"
+            #upload_file(zipfile)
             filenameplaceholder = zipfile.filename
+            filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+            servername = filenamestripped
+            print "test2"
+            thr = Thread(target=transfer_file, args=(zipfile, zipfile.filename, user, serverip, port, ordertypeclean, servername))
+            print "test3"
             if filenameplaceholder != "":
-                filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
-                servername = filenamestripped
-                transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
-                flash('You did it!')
+                #filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+                #servername = filenamestripped
+                print "test4"
+                thr.start()
+                print "test5"
+                flash('File upload process started, you will be notified by mail when it is complete')
+                #transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
+                #flash('You did it!')
             else:
                 flash('Select a file!')
         if request.form['submit'] == 'Restore From Backup':
