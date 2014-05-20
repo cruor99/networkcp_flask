@@ -3,16 +3,16 @@
 <br>
 <div class="content"><div class="inner-box">
     {% if orderref is not none %}
-    Your Order Status or Order Reference is: {{ orderref }}
+    Din ordrestatus eller referanse er: {{ orderref }}
     <br>
-    Your amount of slots with gamerserver.no is: {{ slots }}<br>
-    Your order ID with gameserver.no is: {{ ordid }}<br>
-    You ordered this many months: {{ months }}
-    The total price came to: {{ price }}
-    Your order will expire on the following date: {{ ordexp }}<br
-    <p> You will also have received this information on mail</p>
+    Ditt antall slits på gamerserver.no er: {{ slots }}<br>
+    Din ordre ID hos gameserver.no er: {{ ordid }}<br>
+    Antall måneder du har bestilt: {{ months }}
+    Totalbeløp: {{ price }}
+    Din ordre utløper: {{ ordexp }}<br
+    <p>Du vil også motta denne inforamsjonen på e-post</p>
     {% else %}
-    Your order has been cancelled
+    Din ordre har blitt kansellert!
     {% endif %}
 </div></div>
 {% endblock %}

@@ -5,25 +5,22 @@
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
     <form method="post" action="/ventsub">
-
     <br>
-    <input type="submit" value="Start Payment Process" name="submit">
-    </form>
-
-
-     <p>This payment is handled by PayEx, a third party that will handle your payment in a safe manner.</p>
-         <img src="/static/images/payex.png">
+    <input type="submit" value="Start betalingsprosessen" name="submit">
+    </form><br><br>
+    Denne transaksjonen blir håndtert av PayEx.<br>
+    <img src="/static/images/payex.png">
 
     </div>
     <div class="box3">
-        <h2>Order Description:</h2><br><br><br>
+        <h2>Beskrivelse av ordren:</h2><br><br><br>
         <div class="box">
-        <p>   Here is the description of your order:</p>
-            Ventrilo Slots: {{ slots }}<br/>
-            Antall Måneder: {{ months }}<br/>
-            Total Pris:     {{ price }}<br/>
+        <p>Her er en beskrivelse av ordren din:</p>
+            Ventrilo slots: {{ slots }}<br/>
+            Antall måneder: {{ months }}<br/>
+            Total pris:     {{ price }}<br/>
         <hr>
-       <p>After the purchase, your IP and port number are to be found at your Manage page, under Ventrilo</p>
+       <p>Etter du har betalt så kan du se din IP og port i Ventrilo kontrollpanelet.</p>
             </div>
 </div></div></div>
 {% endblock %}

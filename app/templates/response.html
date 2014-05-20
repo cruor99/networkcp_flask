@@ -3,12 +3,12 @@
 <br>
 <div class="content"><div class="inner-box">
     {% if receipt is not none %}
-    Your Order Status or Order Reference is: {{ receipt }}
+    Din ordrestatus eller referanse er: {{ receipt }}
     {% else %}
-    Your order status is: {{ receipt }}
+    Din ordrestatus er: {{ receipt }}
     {% endif %}<br>
-    Your subscription type ID with gamerserver.no is: {{ subid }}<br>
-    Your order ID with agameserver.no is: {{ ordid }}<br>
-    Your order will expire on the following date: {{ ordexp }}<br>
+    Ditt abonnement type ID med gameserver.no er: {{ subid }}<br>
+    Din ordre ID med gameserver.no er: {{ ordid }}<br>
+    Din ordre utløper: {{ ordexp }}<br>
 </div></div>
 {% endblock %}

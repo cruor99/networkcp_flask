@@ -3,13 +3,13 @@
 {% block content %}
 <br>
 <div class="content"><div class="inner-box">
-<h1>Sign In</h1><br>
+<h1>Logg Inn</h1><br>
 <form action="" method="post" name="login"><br>
     {% from "_formhelpers.html" import render_field %}
     {{ render_field(form.email) }}<br>
     {{ render_field(form.password) }}<br>
-    {{form.remember_me}} Remember Me<br>
-    <input type="submit" value="Sign In">
+    {{form.remember_me}} Husk meg<br>
+    <input type="submit" value="Logg inn">
 </form>
 </div></div>
 {% endblock %}

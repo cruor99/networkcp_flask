@@ -15,21 +15,21 @@
             <ul class="sf-menu">
                 <li><a href="{{ url_for('index') }}" class="menu-link">Home</a></li>
                 {% if 'admin' in session %}
-                <li> <a href="{{ url_for('administrate') }}" class="menu-link">Administration</a></li>
+                <li> <a href="{{ url_for('administrate') }}" class="menu-link">Administrasjon</a></li>
 
                 {% endif %}
                 {% if 'normal' in session %}
                     {% if 'premium' in session %}
-                <li> <a href="{{ url_for('controllers') }}" class="menu-link">Control Panels</a></li>
-                <li> <a href="{{ url_for('manage') }}" class="menu-link">Manage</a></li>
+                <li> <a href="{{ url_for('controllers') }}" class="menu-link">Kontrollpaneler</a></li>
+                <li> <a href="{{ url_for('manage') }}" class="menu-link">Administrere</a></li>
                     {% endif %}
 
-                <li> <a href="{{ url_for('subscribe') }}" class="menu-link">Purchases</a></li>
-                <li> <a href="{{ url_for('uuadmin') }}" class="menu-link">Your Profile</a></li>
+                <li> <a href="{{ url_for('subscribe') }}" class="menu-link">Bestill Tjenester</a></li>
+                <li> <a href="{{ url_for('uuadmin') }}" class="menu-link">Din Profil</a></li>
 
                 {% endif %}
             {% if 'logged_in' in session %}
-            <li> <a href="{{ url_for('logout') }}" class="menu-link">Logout</a></li>
+            <li> <a href="{{ url_for('logout') }}" class="menu-link">Logg ut</a></li>
             {% else %}
                 <li> <a href="{{ url_for('signup') }}" class="menu-link">Signup</a></li>
             {% endif %}

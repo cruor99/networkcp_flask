@@ -4,10 +4,10 @@
 <br>
 <div class="content"><div class="inner-box">
 <div class="inner-box3" style="float: left;">
-<h1>Signup</h1><br>
+<h1>Registrering</h1><br>
 <form method=post action="/signup">
   <dl class="list2">
-    <li><b>Required fields are marked with *</b></li>
+    <li><b>Påkrevde felt er markert med *</b></li>
     <li>{{ render_field(form.username) }}</li>
     <li>{{ render_field(form.email) }}</li>
     <li>{{ render_field(form.password) }}</li>
@@ -17,11 +17,11 @@
     <li>{{ render_field(form.phone) }}</li>
     <li>{{ render_field(form.accept_tos) }}</li>
     </dl>
-    <input type=submit value=Submit>
+    <input type="submit" value="Registrer">
     </form>
     </div>
     <div class="inner-box3"><br>
-    <p>Example:<br>
+    <p>Eksempel:<br>
     <img src="../static/images/example.png" alt="Example form"></p>
     </div>
 </div></div>

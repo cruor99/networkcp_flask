@@ -5,8 +5,8 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
-    <h4>Change User info here</h4><br>
-    <b>(Current password required for any change!)</b><br><br>
+    <h4>Endre brukerinformasjon</h4><br>
+    <b>(Nåværende passord er påkrevd for alle endringer!)</b><br><br>
     <div class="inner-box3" style="padding:0px 0px 0px 0px;
 		border-radius: 0px">
     <form action="/uuadmin" method="post" name="changeinfo">
@@ -18,33 +18,33 @@
         {{ render_field(form.fname) }}
         {{ render_field(form.lname) }}
         {{ render_field(form.phone) }}
-    <p><input type="submit" value="Change Info" name="submit"></p>
+    <p><input type="submit" value="Endre informasjon" name="submit"></p>
     </form>
     </div>
     <br><iframe width="300" src="userinfo" style="float: left; overflow: hidden; background: #ffffff; allowtransparency=true"></iframe>
     </div>
     <div class="box3">
-    <h4>Current subscription</h4><br><br>
-    Here is the description of your subscription:<br>
+    <h4>Nåværende abonnement</h4><br><br>
+    Her er en beskrivelse av ditt abonnement:<br>
     <div class="box">
     {% if subtype is not none %}
     <h3>Minecraft</h3>
     Type:        {{ subtype }}<br>
-    Description: {{ subdescription }}<br>
-    Created: {{ subcreate }}<br>
-    Expires: {{ subexpire }}
+    Beskrivelse: {{ subdescription }}<br>
+    Opprettet: {{ subcreate }}<br>
+    Utløper: {{ subexpire }}
     {% else %}
-        You have no Minecraft Subscription
+        Du har ikke noe Minecraft abonnement
     {% endif %}
     </div>
     <br/>
     <div class="box">
     {% if slots is not none  %}
     <h3>Ventrilo</h3>
-    Ventrilo slots: {{ slots }}<br/>
-    Ventrilo Expires: {{ expiration }}
+    Slots: {{ slots }}<br/>
+    Utløper: {{ expiration }}
     {% else %}
-        You have no Ventrilo Subscription
+        Du har ikke noe Ventrilo abonnement
     {% endif %}
     </div>
 </div></div></div>

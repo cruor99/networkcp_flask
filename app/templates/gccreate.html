@@ -3,18 +3,17 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
-        <h1>Gift Code Administration</h1><br><br>
+        <h1>Gavekort Administrasjon</h1><br><br>
         {% from "_formhelpers.html" import render_field %}
         <form action="" method="post">
         {{ render_field(form.sub_id) }}
         {{ render_field(form.gift_code) }}
         {{ render_field(form.expiration) }}<br>
-    <input type="submit" value="Generate gift code" name="submit">
+    <input type="submit" value="Opprett gavekort" name="submit">
     </form>
     </div>
     <div class="box3" >
-        <h1>Gift Code Availability</h1><br><br>
-        Available gift codes:<br>
+        <h1>Tilgjengelige Gavekort</h1><br><br>
         {% for gc in gcs %}
         {{ gc }}<br>
         {% endfor %}

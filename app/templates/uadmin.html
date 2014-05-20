@@ -5,22 +5,22 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
-    <h3>Select User and Role</h3>
+    <h3>Endre rolle på bruker</h3>
     <form action="/uadmin" method="post" name="changerole">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.usersel) }}
         {{ render_field(form.role) }}
-    <p><input type="submit" value="Change Role" name="submit" onclick="return confirm('Are you sure?')"></p>
+    <p><input type="submit" value="Bytt rolle" name="submit" onclick="return confirm('Er du sikker?')"></p>
     </form>
-    <h3>Delete User</h3>
+    <h3>Slett bruker</h3>
     <form action="/uadmin" method="post" name="deleteuser">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form3.usersel) }}
-    <p><input type="submit" value="Delete User" name="submit" onclick="return confirm('Are you sure?')"></p>
+    <p><input type="submit" value="Slett bruker" name="submit" onclick="return confirm('Er du sikker?')"></p>
     </form>
     </div>
     <div class="box3">
-    <h3>Change User info</h3>
+    <h3>Endre bruker informajson</h3>
     <form action="/uadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form2.usersel) }}
@@ -31,7 +31,7 @@
         {{ render_field(form2.lname) }}
         {{ render_field(form2.phone) }}
         {{ render_field(form2.note) }}
-    <p><input type="submit" value="Change Info" name="submit" onclick="return confirm('Are you sure?')"></p>
+    <p><input type="submit" value="Endre informasjon" name="submit" onclick="return confirm('Er du sikker?')"></p>
     </form>
 </div></div></div>
 {% endblock %}

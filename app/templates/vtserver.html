@@ -5,20 +5,20 @@
     <div class="box3" style="margin-right: 18px">
     {% from "_formhelpers.html" import render_field %}
     <form method="post" action="/vtserver" name="restart">
-    <input type="submit" name="submit" value="Restart Server">
+    <input type="submit" name="submit" value="Restart serveren">
     </form>
     <form method="post" action="" name="start">
-    <input type="submit" name="submit" value="Start Server">
+    <input type="submit" name="submit" value="Start serveren">
     </form>
     <form method="post" action="/vtserver" name="restart">
-    <input type="submit" name="submit" value="Stop Server">
+    <input type="submit" name="submit" value="Stopp serveren">
     </form>
-    <br><h3>Here you can edit the .ini file of your ventrilo server!</h3>
+    <br><h3>Her kan du endre .ini filen til Ventrilo serveren!</h3>
     <form action="/vtserver" method="post" name="sendcommand">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.key) }}
         {{ render_field(form.value) }}
-    <input type="submit" value="Edit Property" name="submit">
+    <input type="submit" value="Endre instillinger" name="submit">
     </form>
     <br>
     <div class="box">

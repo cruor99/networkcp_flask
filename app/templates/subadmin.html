@@ -3,28 +3,28 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box3" style="margin-right: 18px">
-        <h1>Subscription Administration</h1><br><br>
+        <h1>Abonnement Administrasjon</h1><br><br>
         {% from "_formhelpers.html" import render_field %}
         <form action="" method="post">
         {{ render_field(form.sub_name) }}
         {{ render_field(form.sub_description) }}
         {{ render_field(form.sub_type) }}
+        {{ render_field(form.sub_mnd) }}
         {{ render_field(form.sub_days) }}
         {{ render_field(form.sub_hours) }}
-        {{ render_field(form.sub_mnd) }}
         {{ render_field(form.sub_limit) }}
         {{ render_field(form.sub_pris) }}<br>
-    <input type="submit" value="Add Subscription" name="submit">
+    <input type="submit" value="Legg til abonnement" name="submit">
     </form>
     </div>
     <div class="box3">
-        Currently Active Susbcriptions:
+        <h1>Aktive Abonnementer</h1><br>
         {% for order in orders %}
         <br>{{ order }}
         {% endfor %}
-    <form method="post" action="/subadmin">
-        <input type="submit" value="Delete Unpayed" name="submit">
-        <input type="submit" value="Delete Expired" name="submit">
+    <form method="post" action="/subadmin"><br>
+        <input type="submit" value="Slett ubetalte abonnementer" name="submit"><br><br>
+        <input type="submit" value="Slett utløpte abonnementer" name="submit">
     </form>
-    </div</div></div>
+</div</div></div>
 {% endblock %}

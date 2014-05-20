@@ -7,22 +7,20 @@
     <form method="post">
     {{ render_field(form.subsel) }}
     <br>
-    <input type="submit" value="Start Payment Process">
-    </form>
-
-
-     <p>This payment is handled by PayEx, a third party that will handle your payment in a safe manner.</p>
-         <img src="/static/images/payex.png">
+    <input type="submit" value="Start betalingsprosessen">
+    </form><br><br>
+    Denne transaksjonen blir håndtert av PayEx.<br>
+    <img src="/static/images/payex.png">
 
     </div>
     <div class="box3">
-        <h2>Order Description:</h2><br><br><br>
+        <h2>Beskrivelse av ordren:</h2><br><br><br>
         <div class="box">
-        <p>   Here is the description of your order:</p>
-       Description: {{ subdescription }}<br>
+        <p>Her er en beskrivelse av ordren din:</p>
+       Beskrivelse: {{ subdescription }}<br>
        Type:        {{ subtype }}<br>
         <hr>
-       <p>Price depends on how many months you subscribe.</p>
+       <p>Prisen avhenger av hvor mange måneder du abonnerer.</p>
             </div>
 </div></div></div>
 {% endblock %}

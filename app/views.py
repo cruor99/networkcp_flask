@@ -173,10 +173,7 @@ def ventsub():
         session['slots'] = ventslots[int(request.form['slotSlider'])]
         session['price'] = slotprice[int(request.form['slotSlider'])]
         session['months'] = request.form['monthSlider']
-        print 'test'
-    if request.method == 'POST' and request.form['submit'] == 'Start Payment Process':
-        print 'test2'
-       # print slots
+    if request.method == 'POST' and request.form['submit'] == 'Start betalingsprosessen':
         print request.remote_addr
         print request.headers.get('User-Agent')
         print session['price']
@@ -491,7 +488,7 @@ def gccreate():
     #sub_id, gift_code, expiration, in_use
     form = GiftCodeForm()
     gcs = Giftcard.query.all()
-    if request.method == 'POST' and request.form['submit'] == 'Generate gift code':
+    if request.method == 'POST' and request.form['submit'] == 'Opprett gavekort':
         giftinput = form.gift_code.data
         giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
         giftcode = ""
@@ -512,7 +509,7 @@ def gccreate():
 @login_required
 def gccheck():
     form = GiftCodeCheckin()
-    if request.method == 'POST' and request.form['submit'] == 'Use gift code':
+    if request.method == 'POST' and request.form['submit'] == 'Bruk gavekort':
         if form.gift_code.data != "":
             giftinput = form.gift_code.data
             giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
@@ -560,21 +557,21 @@ def vtserver():
     serverip = server.server_ip
     props = serv.readventprops(serverip, user)
     if request.method == 'POST':
-        if request.form['submit'] == 'Start Server':
+        if request.form['submit'] == 'Start serveren':
             serv.startvent(serverip, user)
             flash('Server Started')
             return render_template('vtserver.html', form=form, props=props)
-        if request.form['submit'] == 'Stop Server':
+        if request.form['submit'] == 'Stopp serveren':
             serv.stopvent(serverip, user)
             flash('Server Stopped')
             return render_template('vtserver.html', form=form, props=props)
-        if request.form['submit'] == 'Restart Server':
+        if request.form['submit'] == 'Restart serveren':
             serv.stopvent(serverip, user)
             time.sleep(2)
             serv.startvent(serverip, user)
             flash('Server Restarting')
             return render_template('vtserver.html', form=form, props=props)
-        if request.form['submit'] == 'Edit Property':
+        if request.form['submit'] == 'Endre instillinger':
             print form.key.data
             print form.value.data
             serv.editventprops(serverip, user, form.key.data, form.value.data)
@@ -596,11 +593,11 @@ def mcserver():
     serverip = server.server_ip
     port = dbport.port_no
     if request.method == 'POST':
-        if request.form['submit'] == 'Start Server':
+        if request.form['submit'] == 'Start serveren':
             serv.serverstart(serverip, user)
-        if request.form['submit'] == 'Stop Server':
+        if request.form['submit'] == 'Stopp serveren':
             serv.serverstop(str(serverip), user)
-        if request.form['submit'] == 'Send Command':
+        if request.form['submit'] == 'Send kommandoen':
             command = form.command.data
             serv.servercommand(str(serverip), user, command)
     return render_template('server.html', form=form)
@@ -624,28 +621,28 @@ def controllers():
 def subadmin():
     form = SubManageForm()
     orders = Orderline.query.filter_by(order_payed=1).all()
-    if request.method == 'POST' and request.form['submit'] == 'Add Subscription':
+    if request.method == 'POST' and request.form['submit'] == 'Legg til abonnement':
         subquer = Subscription(form.sub_name.data, form.sub_description.data,
-                               form.sub_type.data, form.sub_days.data, form.sub_hours.data, form.sub_mnd.data,
+                               form.sub_type.data, form.sub_mnd.data, form.sub_days.data, form.sub_hours.data,
                                form.sub_limit.data, form.sub_pris.data)
         db.session.add(subquer)
         db.session.commit()
         flash('The Subscription has been added to the pool')
         return render_template('subadmin.html', form=form, orders=orders)
-    if request.method == 'POST' and request.form['submit'] == 'Delete Unpayed':
+    if request.method == 'POST' and request.form['submit'] == 'Slett ubetalte abonnementer':
         unpayedorder = Orderline.query.filter_by(order_payed='2').all()
         for unpayed in unpayedorder:
             print unpayed
             resetuser(unpayed.orderl_id)
             cleanports()
         flash('Unpayed deleted')
-    if request.method == 'POST' and request.form['submit'] == 'Delete Expired':
+    if request.method == 'POST' and request.form['submit'] == u'Slett utl\xf8pte abonnementer':
         ordl = Orderline.query.filter_by(order_payed='1').all()
         for ordr in ordl:
             if ordr.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
                 resetuser(ordr.orderl_id)
                 cleanports()
-        flash('Expired deleted')
+        flash(u'Utl\xf8pte abonnementer slettet!')
         return render_template('subadmin.html', form=form, orders=orders)
     return render_template('subadmin.html', form=form, orders=orders)
 
@@ -698,7 +695,7 @@ def servadmin():
     form4 = DeleteserverForm()
     form5 = PostForm()
     form6 = DeleteportForm()
-    if request.method == 'POST' and request.form['submit'] == "Add Server":
+    if request.method == 'POST' and request.form['submit'] == "Legg til server":
         servname = form.servername.data
         servip = form.serverip.data
         if servname != "" and servip != "":
@@ -721,7 +718,7 @@ def servadmin():
             flash('Info missing')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == "Add Port":
+    if request.method == 'POST' and request.form['submit'] == "Legg til port":
         for form2data in form2.server.data:
             servnew = form2data.server_id
             servolddb = Port.query.filter_by(server_id=servnew).first()
@@ -742,7 +739,7 @@ def servadmin():
                 flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == "Update Port":
+    if request.method == 'POST' and request.form['submit'] == "Oppdatere port":
         serverdata = form3.server.data
         serverparseid = serverdata.server_id
         stmt = update(Port).where(Port.server_id == serverparseid and Port.port_no == form3.portno.data).\
@@ -752,12 +749,12 @@ def servadmin():
         flash('Port Updated')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == "Reset unused servers":
+    if request.method == 'POST' and request.form['submit'] == "Tilbakestill ubrukte servere":
         cleanports()
         flash('Ports cleaned')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == "Delete Server":
+    if request.method == 'POST' and request.form['submit'] == "Slett server":
         serverform = form4.serversel.data
         if serverform !=None:
             serverdata = serverform.server_name
@@ -773,7 +770,7 @@ def servadmin():
             flash('Server already deleted!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == "Delete Port":
+    if request.method == 'POST' and request.form['submit'] == "Slett port":
         portform = form6.portsel.data
         print portform
         if portform !=None:
@@ -791,22 +788,22 @@ def servadmin():
             flash('Port already deleted!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
-    if request.method == 'POST' and request.form['submit'] == 'Create Newspost':
+    if request.method == 'POST' and request.form['submit'] == 'Opprette nyhetspost':
         p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
                  cust_id=session['userid'], type='newspost')
         db.session.add(p)
         db.session.commit()
-    if request.method == 'POST' and request.form['submit'] == 'Create Service Announcement':
+    if request.method == 'POST' and request.form['submit'] == 'Opprette service melding':
         p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
                  cust_id=session['userid'], type='service')
         db.session.add(p)
         db.session.commit()
-    if request.method == 'POST' and request.form['submit'] == 'Create Event Post':
+    if request.method == 'POST' and request.form['submit'] == 'Opprette hendelsespost':
         p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
                  cust_id=session['userid'], type='event')
         db.session.add(p)
         db.session.commit()
-    if request.method == 'POST' and request.form['submit'] == 'Create Promo Post':
+    if request.method == 'POST' and request.form['submit'] == 'Opprette kampanjepost':
         p = Post(title=form5.title.data, body=form5.body.data, timestamp=datetime.datetime.utcnow(),
                  cust_id=session['userid'], type='promo')
         db.session.add(p)
@@ -845,7 +842,7 @@ def uuadmin():
     if vtquer is not None:
         slots = vtquer.slots
         expiration = vtquer.expiration
-    if request.method == 'POST' and request.form['submit'] == 'Change Info':
+    if request.method == 'POST' and request.form['submit'] == 'Endre informasjon':
         oldpwd = form.oldpwd.data
         newpwd = form.pwdfield.data
         confirm = form.confirm.data
@@ -901,19 +898,19 @@ def uadmin():
     form2 = AdmininfoForm()
     form3 = DeleteuserForm()
     if request.method == 'POST':
-        if request.form['submit'] == 'Change Role':
+        if request.form['submit'] == 'Bytt rolle':
             role = form.role.data
             user = form.usersel.data
             User.query.filter_by(cust_username=user).update({'role': role})
             db.session.commit()
             flash('User updated')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
-        if request.form['submit'] == 'Delete User':
+        if request.form['submit'] == 'Slett bruker':
             user = form3.usersel.data
             userdelquer = db.session.query(User).filter(User.cust_username == user).first()
             order = Order.query.filter_by(cust_id=userdelquer.cust_id).first()
             if order is not None:
-                orderline = Orderline.query.filter_by(order_id = order.order_id).first()
+                orderline = Orderline.query.filter_by(order_id=order.order_id).first()
                 if orderline is not None:
                     db.session.delete(orderline)
                     db.session.commit()
@@ -927,7 +924,7 @@ def uadmin():
             time.sleep(1)
             flash('User purged')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
-        if request.form['submit'] == 'Change Info':
+        if request.form['submit'] == 'Endre informasjon':
             newpwd = form2.pwdfield.data
             newfname = form2.fname.data
             newlname = form2.lname.data
@@ -1108,7 +1105,7 @@ def login():
                 return redirect(url_for('index'))
             else:
                 flash('Incorrect username or password')
-                return render_template('login.html', title='Sign In', form=form)
+                return render_template('login.html', title='Logg inn', form=form)
         if user is not None:
             print user.cust_username
             if form.email.data == user.cust_username and user.check_password(form.password.data):
@@ -1128,10 +1125,10 @@ def login():
                 return redirect(url_for('index'))
             else:
                 flash('Incorrect username or password')
-                return render_template('login.html', title='Sign In', form=form)
+                return render_template('login.html', title='Logg inn', form=form)
         else:
             flash('Incorrect username or password')
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Logg inn', form=form)
 
 
 #Routes to signup for new users
@@ -1254,7 +1251,7 @@ def manage():
     ordertype = currsub.sub_type
     ordertypeclean = ordertype[2:]
     if request.method == 'POST':
-        if request.form['submit'] == 'Generate properties':
+        if request.form['submit'] == 'Opprett properties':
             serv.servercreate(str(serverip), user, str(port))
             t = Thread(target=threadtest, args=('2','4','6'))
             t.start()
@@ -1264,30 +1261,30 @@ def manage():
             flash("Properties Generated")
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Change Properties' and form.props.data != 'server-port' and \
+        if request.form['submit'] == 'Endre properties' and form.props.data != 'server-port' and \
                         form.props.data != 'mscs-initial-memory' and form.props.data != 'mscs-maximum-memory':
             key = form.props.data
             value = form.value.data
             serv.editproperties(serverip, user, key, value)
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Change Properties' and form.props.data == 'server-port':
+        if request.form['submit'] == 'Endre properties' and form.props.data == 'server-port':
             flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        elif request.form['submit'] == 'Change Properties' and form.props.data == 'mscs-initial-memory':
+        elif request.form['submit'] == 'Endre properties' and form.props.data == 'mscs-initial-memory':
             flash('You are not entitled to change your server memory')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        elif request.form['submit'] == 'Change Properties' and form.props.data == 'mscs-maximum-memory':
+        elif request.form['submit'] == 'Endre properties' and form.props.data == 'mscs-maximum-memory':
             flash('You are not entitled to change your server memory')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Delete Server Content':
+        if request.form['submit'] == 'Slett serveren':
             serv.deleteserv(serverip, user)
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Upload Zip':
+        if request.form['submit'] == 'Last opp zip':
             print "test0"
             zipfile = request.files['file']
             print "test1"
@@ -1309,10 +1306,10 @@ def manage():
                 #flash('You did it!')
             else:
                 flash('Select a file!')
-        if request.form['submit'] == 'Restore From Backup':
+        if request.form['submit'] == 'Gjenopprett sikkerhetskopi':
             serv.restorebackup(serverip, user)
             flash('Server Restored')
-        if request.form['submit'] == 'Backup Server':
+        if request.form['submit'] == 'Sikkerhetskoiper serveren':
             serv.backupserv(serverip, user)
             flash('Server Backed Up')
     return render_template('manage.html', user=session['username'], email=session['email'],

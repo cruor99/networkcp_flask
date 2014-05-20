@@ -5,16 +5,16 @@
     <div class="box3" style="margin-right: 18px">
     {% from "_formhelpers.html" import render_field %}
     <form method=post action="/mcserver" name="start">
-    <input type="submit" name="submit" value="Start Server">
+    <input type="submit" name="submit" value="Start serveren">
     </form>
     <form method="post" action="/mcserver" name="stop">
-    <input type="submit" name="submit" value="Stop Server">
+    <input type="submit" name="submit" value="Stopp serveren">
     </form>
-    <br><h3>Here you can send commands to your server instances!</h3>
+    <br><h3>Her kan du sende kommandoer til minecraft serveren!</h3>
     <form action="/mcserver" method="post" name="sendcommand">
         {% from "_formhelpers.html" import render_field %}
         {{ render_field(form.command) }}
-    <input type="submit" value="Send Command" name="submit">
+    <input type="submit" value="Send kommandoen" name="submit">
     </form>
     <iframe width="565" height="300" src="mcoutput"></iframe>
     </div>

@@ -3,58 +3,58 @@
 <br>
 <div class="content"><div class="inner-box4">
     <div class="box2" style="margin-right: 17px">
-    <h1>Manage servers</h1><br><br>
+    <h1>Administrere servere</h1><br><br>
     {% from "_formhelpers.html" import render_field %}
     <form method="post" action="/servadmin">
         {{ render_field(form.servername) }}
         {{ render_field(form.serverip) }}
-        <br><input type="submit" value="Add Server" name="submit">
+        <br><input type="submit" value="Legg til server" name="submit">
     </form>
-        <b>ID, Name and IP for servers:</b>
+        <b>ID, Navn og IP til servere:</b>
         <iframe width="370" src="servoutput"></iframe>
-        <br><br><h3>Delete Server</h3>
+        <br><br><h3>Slett server</h3>
         <form method="post" action="/servadmin">
         {{ render_field(form4.serversel) }}
-        <input type="submit" value="Delete Server" name="submit" onclick="return confirm('Are you sure?')">
+        <input type="submit" value="Slett server" name="submit" onclick="return confirm('Er du sikker?')">
         </form>
     </div>
     <div class="box2" style="margin-right: 17px">
-    <h1>Manage ports</h1><br><br>
-    <h3>Add port on server</h3>
+    <h1>Administrere porter</h1><br><br>
+    <h3>Legg til port på server</h3>
     <form method="post" action="/servadmin">
         {{ render_field(form2.server) }}
         {{ render_field(form2.portno) }}
         {{ render_field(form2.portused) }}
-        <input type="submit" value="Add Port" name="submit">
+        <input type="submit" value="Legg til port" name="submit">
     </form>
-    <br><h3>Manually manage port use</h3>
+    <br><h3>Manuell administrering av porter i bruk</h3>
     <form method="post" action="/servadmin">
         {{ render_field(form3.server) }}
         {{ render_field(form3.portno) }}
         {{ render_field(form3.portused) }}
-        <input type="submit" value="Update Port" name="submit">
+        <input type="submit" value="Oppdatere port" name="submit">
     </form>
         <form method="post" action="/servadmin">
-            <input type="submit" value="Reset unused servers" name="submit">
+            <input type="submit" value="Tilbakestill ubrukte servere" name="submit">
         </form>
-    <br><h3>Delete port</h3>
+    <br><h3>Slett port</h3>
         <form method="post" action="/servadmin">
         {{ render_field(form6.portsel) }}
-        <input type="submit" value="Delete Port" name="submit" onclick="return confirm('Are you sure?')">
+        <input type="submit" value="Slett port" name="submit" onclick="return confirm('Er du sikker?')">
     </form>
-    <br><b>Ports on servers that are currently in use: (port, server)</b><br>
+    <br><b>Porter på servere som er i bruk: (port, server)</b><br>
         <iframe width="370" src="portoutput"></iframe>
-    <br><br><b>Ports on servers that are currently available: (port, server)</b><br>
+    <br><br><b>Porter på servere som er ledige: (port, server)</b><br>
         <iframe width="370" src="portoutput2"></iframe>
     </div>
     <div class="box2">
         <form method="post" action="/servadmin">
         {{ render_field(form5.title) }}
         {{ render_field(form5.body) }}<br>
-        <input type="submit" value="Create Newspost" name="submit"><br>
-            <input type="submit" value="Create Service Announcement" name="submit"><br>
-            <input type="submit" value="Create Event Post" name="submit"><br>
-            <input type="submit" value="Create Promo Post" name="submit"><br>
+        <input type="submit" value="Opprette nyhetspost" name="submit"><br>
+            <input type="submit" value="Opprette service melding" name="submit"><br>
+            <input type="submit" value="Opprette hendelsespost" name="submit"><br>
+            <input type="submit" value="Opprette kampanjepost" name="submit"><br>
         </form>
 </div></div></div>
 {% endblock %}
