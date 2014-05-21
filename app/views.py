@@ -35,7 +35,7 @@ service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv
 #redirects to index with original flash message intact
 @app.errorhandler(500)
 def internal_server(error):
-    flash('Something went wrong, please report it to an administrator!')
+    flash('Noe gikk galt, vennligst si ifra til en administrator!')
     return render_template('index.html', user=session['username'], errmes=error)
 
 
@@ -48,7 +48,7 @@ def login_required(test):
         if 'admin' in session:
             return test(*args, **kwargs)
         else:
-            flash('You need to log in first.')
+            flash(u'Du m\xe5 logge inn f\xf8rst!')
             return redirect(url_for('login'))
     return wrap
 
@@ -60,7 +60,7 @@ def admin_required(test):
         if 'admin' in session:
             return test(*args, **kwargs)
         else:
-            flash('You are not an administrator and do not have access to this.')
+            flash('Du er ikke en administrator, og har derfor ikke tilgang til dette!')
             return redirect(url_for('index'))
     return wrap
 
@@ -79,7 +79,7 @@ def premium_required(test):
                 exorderl = Orderline.query.filter_by(order_id=exorder.order_id).first()
                 if exorderl.orderl_expire <= datetime.date.today() or exorderl.order_payed == "2":
                     session.pop('premium', None)
-                    flash('You are not a premium user, sign up for a service before accessing this portion!')
+                    flash(u'Du er ikke en premium bruker. Registrer en tjeneste for \xe5 f\xe5 tilgang til denne delen!')
                     return redirect(url_for('subscribe'))
                 else:
                     return test(*args, **kwargs)
@@ -87,7 +87,7 @@ def premium_required(test):
                 print ventquer.expiration
                 if ventquer.expiration <= datetime.date.today():
                     session.pop('premium', None)
-                    flash('You are not a premium user, sign up for a service before accessing this portion')
+                    flash(u'Du er ikke en premium bruker. Registrer en tjeneste for \xe5 f\xe5 tilgang til denne delen!')
                 else:
                     return test(*args, **kwargs)
             else:
@@ -95,7 +95,7 @@ def premium_required(test):
         if 'admin' in session:
             return test(*args, **kwargs)
         else:
-            flash('You are not a premium user, sign up for a service before accessing this portion!')
+            flash(u'Du er ikke en premium bruker. Registrer en tjeneste for \xe5 f\xe5 tilgang til denne delen!')
             return redirect(url_for('subscribe'))
     return wrap
 
@@ -185,9 +185,10 @@ def ventsub():
             vat='2500',
             orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting of type: Ventrilo',
-            description=u'Gameserver rental host for: '+user,
+            description='Gameserver rental host for: '+user,
             clientIPAddress=request.remote_addr,
-            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],            #additionalValues='PAYMENTMENU=TRUE',
+            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],
+            #additionalValues='PAYMENTMENU=TRUE',
             returnUrl='http://84.49.16.101/vtresponse',
             view='CREDITCARD',
             cancelUrl='http://85.59.16.101:5000/vtresponse'
@@ -498,9 +499,9 @@ def gccreate():
             gquer = Giftcard(form.sub_id.data, giftinput, form.expiration.data)
             db.session.add(gquer)
             db.session.commit()
-            flash("Gift code created!")
+            flash("Gavekort generert!")
         else:
-            flash("Gift code already in use!")
+            flash("Gavekortet finnes allerede!")
         return render_template('gccreate.html', form=form, gcs=gcs)
     return render_template('gccreate.html', form=form, gcs=gcs)
 
@@ -534,12 +535,12 @@ def gccheck():
                                               datetime.date.today() + dateutils.relativedelta(months=months), '1')
                 db.session.add(orderlinequer)
                 db.session.commit()
-                flash("Valid gift code entered!")
+                flash("Gyldig gavekort angitt!")
             else:
-                flash("Enter a valid gift code!")
+                flash("Skriv inn gyldig gavekort!")
             return render_template('gccheckin.html', form=form)
         else:
-            flash("Please enter gift code")
+            flash("Skriv inn gavekort!")
         return render_template('gccheckin.html', form=form)
     return render_template('gccheckin.html', form=form)
 
@@ -559,17 +560,17 @@ def vtserver():
     if request.method == 'POST':
         if request.form['submit'] == 'Start serveren':
             serv.startvent(serverip, user)
-            flash('Server Started')
+            flash('Serveren starter!')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Stopp serveren':
             serv.stopvent(serverip, user)
-            flash('Server Stopped')
+            flash('Serveren stopper!')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Restart serveren':
             serv.stopvent(serverip, user)
             time.sleep(2)
             serv.startvent(serverip, user)
-            flash('Server Restarting')
+            flash(u'Serveren starter p\xe5 nytt!')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Endre instillinger':
             print form.key.data
@@ -627,7 +628,7 @@ def subadmin():
                                form.sub_limit.data, form.sub_pris.data)
         db.session.add(subquer)
         db.session.commit()
-        flash('The Subscription has been added to the pool')
+        flash('Abonnementet har blitt lagt til!')
         return render_template('subadmin.html', form=form, orders=orders)
     if request.method == 'POST' and request.form['submit'] == 'Slett ubetalte abonnementer':
         unpayedorder = Orderline.query.filter_by(order_payed='2').all()
@@ -635,7 +636,7 @@ def subadmin():
             print unpayed
             resetuser(unpayed.orderl_id)
             cleanports()
-        flash('Unpayed deleted')
+        flash('Ubetalte abonnementer slettet!')
     if request.method == 'POST' and request.form['submit'] == u'Slett utl\xf8pte abonnementer':
         ordl = Orderline.query.filter_by(order_payed='1').all()
         for ordr in ordl:
@@ -671,17 +672,17 @@ def cleanports():
         ordl = Orderline.query.filter_by(port_id=ports.port_id).first()
 
         if ordl is None:
-            stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
+            stmt = update(Port).where(Port.port_id == ports.port_id).values(port_used=2)
             db.session.execute(stmt)
             db.session.commit()
-            flash('Port '+str(ports.port_no)+ " cleaned")
+            flash('Port '+str(ports.port_no)+' gjennoprettet!')
         elif ordl.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
-            stmt = update(Port).where(Port.port_id==ports.port_id).values(port_used=2)
+            stmt = update(Port).where(Port.port_id == ports.port_id).values(port_used=2)
             db.session.execute(stmt)
             db.session.commit()
-            flash('Port '+str(ports.port_no)+ " cleaned")
+            flash('Port '+str(ports.port_no)+' gjennoprettet!')
         else:
-            flash('No port was reset')
+            flash('Ingen porter tilbakestillt!')
 
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
@@ -711,11 +712,11 @@ def servadmin():
                 servquer = Serverreserve(servname, servip)
                 db.session.add(servquer)
                 db.session.commit()
-                flash('Server Added')
+                flash('Server lagt til!')
             else:
-                flash('Servername or IP already in use!')
+                flash('Server navn eller IP er allerede i bruk!')
         else:
-            flash('Info missing')
+            flash('Mangler informasjon!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Legg til port":
@@ -734,9 +735,9 @@ def servadmin():
                 portquer = Port(form2data.server_id, form2.portno.data, form2.portused.data)
                 db.session.add(portquer)
                 db.session.commit()
-                flash('Port '+str(portnew)+' added on Server '+str(servnew)+'!')
+                flash('Port '+str(portnew)+u' lagt til p\xe5 server '+str(servnew)+'!')
             else:
-                flash('Port '+str(portnew)+' already in use on Server '+str(servnew)+'!')
+                flash('Port '+str(portnew)+u' er allerede i bruk p\xe5 server '+str(servnew)+'!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Oppdatere port":
@@ -746,12 +747,12 @@ def servadmin():
         values(port_used=form3.portused.data)
         db.session.execute(stmt)
         db.session.commit()
-        flash('Port Updated')
+        flash('Port oppdatert')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Tilbakestill ubrukte servere":
         cleanports()
-        flash('Ports cleaned')
+        flash('Servere tilbakestilt og porter ledige!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Slett server":
@@ -765,9 +766,9 @@ def servadmin():
             db.session.delete(servquerydel)
             db.session.commit()
             time.sleep(1)
-            flash('Server deleted!')
+            flash('Server slettet!')
         else:
-            flash('Server already deleted!')
+            flash('Server allerede slettet!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Slett port":
@@ -783,9 +784,9 @@ def servadmin():
             #Serverreserve.query.filter_by(server_name=portdata).delete()
             db.session.commit()
             time.sleep(1)
-            flash('Port deleted!')
+            flash('Port slettet!')
         else:
-            flash('Port already deleted!')
+            flash('Port allerede slettet!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == 'Opprette nyhetspost':
@@ -853,24 +854,24 @@ def uuadmin():
         user = User.query.filter_by(cust_username=session['username']).first()
         if not (newpwd == "" and newfname == "" and newlname == "" and newemail == "" and newphone == ""):
             if oldpwd == "":
-                flash('Enter current password')
+                flash(u'Skriv inn n\xe5v\xe6rende passord!')
             if newpwd != "" and newpwd == confirm and user.check_password(form.oldpwd.data):
                 pwdhashed = generate_password_hash(newpwd)
                 User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
                 db.session.commit()
-                flash('Password updated')
+                flash('Passord oppdatert!')
             if newfname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
                 db.session.commit()
-                flash('First Name updated')
+                flash('Fornavn oppdatert!')
             if newlname != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
                 db.session.commit()
-                flash('Last Name updated')
+                flash('Etternavn oppdatert!')
             if newphone != "" and user.check_password(form.oldpwd.data):
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
-                flash('Phone number updated')
+                flash('Telefonnummer oppdatert!')
             if newemail != "":
                 oldemaildb = User.query.filter_by(cust_mail=newemail).first()
                 oldemail = ""
@@ -879,12 +880,12 @@ def uuadmin():
                 if user.check_password(form.oldpwd.data) and oldemail == "":
                     User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
                     db.session.commit()
-                    flash('E-mail updated')
+                    flash('E-post oppdatert!')
                 else:
-                    flash('E-mail already in use!')
+                    flash('E-post allerede i bruk!')
                     return render_template('uuadmin.html', form=form)
         else:
-            flash('Nothing updated')
+            flash('Ingenting oppdatert!')
         return render_template('uuadmin.html', form=form)
     return render_template('uuadmin.html', form=form, subdescription=subdescription, subtype=subtype,
                            subcreate=subcreate, subexpire=subexpire, slots=slots, expiration=expiration)
@@ -903,7 +904,7 @@ def uadmin():
             user = form.usersel.data
             User.query.filter_by(cust_username=user).update({'role': role})
             db.session.commit()
-            flash('User updated')
+            flash('Bruker oppdatert!')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Slett bruker':
             user = form3.usersel.data
@@ -922,7 +923,7 @@ def uadmin():
             db.session.delete(userdelquer)
             db.session.commit()
             time.sleep(1)
-            flash('User purged')
+            flash('Bruker slettet!')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         if request.form['submit'] == 'Endre informasjon':
             newpwd = form2.pwdfield.data
@@ -937,31 +938,31 @@ def uadmin():
                 pwdhashed = generate_password_hash(newpwd)
                 User.query.filter_by(cust_username=user).update({'pwdhash': pwdhashed})
                 db.session.commit()
-                flash('Password updated, please inform the user')
+                flash('Passord oppdatert, vennligst informer brukeren!')
             if newuname != "":
                 User.query.filter_by(cust_username=user).update({'cust_username': newuname})
                 db.session.commit()
-                flash('Username updated, please inform the user')
+                flash('Brukernavn oppdatert, vennligst informer brukeren!')
             if newfname != "":
                 User.query.filter_by(cust_username=user).update({'cust_fname': newfname})
                 db.session.commit()
-                flash('First Name updated, please inform the user')
+                flash('Fornavn oppdatert, vennligst informer brukeren!')
             if newlname != "":
                 User.query.filter_by(cust_username=user).update({'cust_lname': newlname})
                 db.session.commit()
-                flash('Last Name updated, please inform the user')
+                flash('Etternavn oppdatert, vennligst informer brukeren!')
             if newemail != "":
                 User.query.filter_by(cust_username=user).update({'cust_mail': newemail})
                 db.session.commit()
-                flash('E-mail updated, please inform the user')
+                flash('E-post oppdatert, vennligst informer brukeren!')
             if newphone != "":
                 User.query.filter_by(cust_username=user).update({'cust_phone': newphone})
                 db.session.commit()
-                flash('Phone number updated, please inform the user')
+                flash('Telefonnummer oppdatert, vennligst informer brukeren!')
             if newnote != "":
                 User.query.filter_by(cust_username=user).update({'cust_notes': newnote})
                 db.session.commit()
-                flash('Note updated, please inform the user')
+                flash('Notat oppdatert!')
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
         else:
             return render_template('uadmin.html', form=form, form2=form2, form3=form3)
@@ -1124,10 +1125,10 @@ def login():
                     session['normal'] = user.role
                 return redirect(url_for('index'))
             else:
-                flash('Incorrect username or password')
+                flash('Feil brukernavn eller passord!')
                 return render_template('login.html', title='Logg inn', form=form)
         else:
-            flash('Incorrect username or password')
+            flash('Feil brukernavn eller passord!')
     return render_template('login.html', title='Logg inn', form=form)
 
 
@@ -1151,7 +1152,7 @@ def signup():
                                form.lname.data, form.phone.data)
                         db.session.add(user)
                         db.session.commit()
-                        flash('Thanks for registering!')
+                        flash('Takk for at du registrerte deg!')
                         send_email('Velkommen til Gameserver.no!', ADMINS[0], form.email.data, 'Velkommen til Gameserver.no'
                             'Her er din brukerinfo: ' + form.username.data+ form.password.data+ form.email.data+
                                                                                               form.fname.data+
@@ -1164,16 +1165,16 @@ def signup():
                                                                                               form.phone.data,)
                         return redirect(url_for('login'))
                     else:
-                        flash('Username cannot contain whitespace!')
+                        flash('Brukernavn kan ikke inneholde mellomrom!')
                         return render_template('signup.html', form=form)
                 else:
-                    flash('Phone number not valid!')
+                    flash('Telefonnummeret er ikke gyldig!')
                     return render_template('signup.html', form=form)
             else:
-                flash('Not a valid e-mail!')
+                flash('Ugyldig e-post!')
                 return render_template('signup.html', form=form)
         else:
-            flash('Username or e-mail already exists!')
+            flash('Brukernavn eller e-post finnes allerede!')
             return render_template('signup.html', form=form)
     else:
         return render_template('signup.html', form=form)
@@ -1191,7 +1192,7 @@ def upload_file(rfile):
     if zipfile and allowed_file(zipfile.filename):
         filename = secure_filename(zipfile.filename)
         zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        flash('File Uploaded Successfully')
+        flash('Filen er lastet opp!')
 
 
 #handles file transfer from temporary storage to final location
@@ -1258,7 +1259,7 @@ def manage():
             time.sleep(1)
             serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
             serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
-            flash("Properties Generated")
+            flash("Properties opprettet")
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Endre properties' and form.props.data != 'server-port' and \
@@ -1269,15 +1270,15 @@ def manage():
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Endre properties' and form.props.data == 'server-port':
-            flash('You are not entitled to change your server port. This is to prevent conflicting ports with other users')
+            flash(u'Du kan ikke endre din server port. Dette er for \xe5 hindre konflikt med andre servere!')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         elif request.form['submit'] == 'Endre properties' and form.props.data == 'mscs-initial-memory':
-            flash('You are not entitled to change your server memory')
+            flash(u'Du kan ikke endre minnest\xf8rrelsen p\xe5 serveren!')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         elif request.form['submit'] == 'Endre properties' and form.props.data == 'mscs-maximum-memory':
-            flash('You are not entitled to change your server memory')
+            flash(u'Du kan ikke endre minnest\xf8rrelsen p\xe5 serveren!')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Slett serveren':
@@ -1301,17 +1302,17 @@ def manage():
                 print "test4"
                 thr.start()
                 print "test5"
-                flash('File upload process started, you will be notified by mail when it is complete')
+                flash(u'Filopplastingen har startet, du vil f\xe5 en beskjed p\xe5 e-post n\xe5r den er ferdig!')
                 #transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
                 #flash('You did it!')
             else:
-                flash('Select a file!')
+                flash('Velg en fil!')
         if request.form['submit'] == 'Gjenopprett sikkerhetskopi':
             serv.restorebackup(serverip, user)
-            flash('Server Restored')
-        if request.form['submit'] == 'Sikkerhetskoiper serveren':
+            flash('Serveren er gjenopprettet!')
+        if request.form['submit'] == 'Sikkerhetskopier serveren':
             serv.backupserv(serverip, user)
-            flash('Server Backed Up')
+            flash('Serveren er sikkerhetskopiert!')
     return render_template('manage.html', user=session['username'], email=session['email'],
                            form=form, serverip=serverip, port=port)
 
