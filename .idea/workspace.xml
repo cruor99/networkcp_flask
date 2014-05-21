@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c7f7374-87a3-40c4-913e-9a5aef5ff5e3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/manage.html" afterPath="$PROJECT_DIR$/app/templates/manage.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -39,29 +38,9 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="33" selection-start="750" selection-end="750" vertical-scroll-proportion="0.62566847" vertical-offset="0" max-vertical-offset="24030">
+            <state line="30" column="60" selection-start="847" selection-end="847" vertical-scroll-proportion="0.72192514" vertical-offset="0" max-vertical-offset="24030">
               <folding>
                 <element signature="e#21#40#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="prodadmin.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/prodadmin.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="22" selection-start="2172" selection-end="2172" vertical-scroll-proportion="-17.037037" vertical-offset="422" max-vertical-offset="1170">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/forms.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="6" selection-start="1016" selection-end="1016" vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="2952">
-              <folding>
-                <element signature="e#21#51#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -741,7 +720,11 @@
       <created>1400626666403</created>
       <updated>1400626666404</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="Oversetting">
+      <created>1400631685985</created>
+      <updated>1400631685985</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1128,7 +1111,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="33" selection-start="750" selection-end="750" vertical-scroll-proportion="0.62566847" vertical-offset="0" max-vertical-offset="24030">
+        <state line="30" column="60" selection-start="847" selection-end="847" vertical-scroll-proportion="0.72192514" vertical-offset="0" max-vertical-offset="24030">
           <folding>
             <element signature="e#21#40#0" expanded="true" />
           </folding>
