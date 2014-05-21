@@ -2,7 +2,7 @@
 {% block content %}
 <br>
 <div class="content"><div class="inner-box4">
-    <div class="box3" style="margin-right: 18px">
+    <div class="box3" style="margin-right: 18px; background: url(static/images/bg-box.jpg) 0 0 repeat;">
     {% from "_formhelpers.html" import render_field %}
     <form method=post action="/mcserver" name="start">
     <input type="submit" name="submit" value="Start serveren">
@@ -18,7 +18,7 @@
     </form>
     <iframe width="565" height="300" src="mcoutput"></iframe>
     </div>
-    <div class="box3">
+    <div class="box3" style=" background: url(static/images/bg-box.jpg) 0 0 repeat;">
     <h3>Server status</h3>
     <iframe width="565" src="servstatus"></iframe>
     </div></div>

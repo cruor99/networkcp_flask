@@ -6,6 +6,23 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
 mark, rp, rt, ruby, summary, time {display:inline;}
 
 /* Global properties ======================================================== */
+input[type="submit"]{
+  background: #fff;
+  border: 1px solid #000;
+  background: url(images/b2.png);
+  background-size: 100%;
+  -webkit-background-size: 100%;
+  color: #ffffff;
+}
+input[type="submit"]:hover{
+  background: #fff;
+  border: 1px solid #000;
+  background: url(images/b2.png);
+  background-size: 100%;
+  -webkit-background-size: 100%;
+  color: #000;
+}
+
 html, body {width:100%; padding:0; margin:0; height:100%;}
 
 body {
@@ -236,6 +253,7 @@ header{
 	border-radius: 8px;
 	background: url(images/bg-box.jpg) 0 0 repeat;
 	overflow:hidden;
+    padding-left:10px;
 	}
 	.block{
 		box-shadow: 0 8px 28px rgba(0,0,0,0.9), inset 0 0 31px rgba(0,0,0,0.3);

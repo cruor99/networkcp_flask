@@ -2,7 +2,7 @@
 {% block content %}
 <br>
 <div class="content"><div class="inner-box4">
-    <div class="box2" style="margin-right: 17px">
+    <div class="box2" style="margin-right: 17px; background: url(static/images/bg-box.jpg) 0 0 repeat;">
     <h3>Server.Properties oppretter</h3>
      <form method="post" action="/manage">
     <input type="submit" value="Opprett properties" name="submit">
@@ -17,7 +17,7 @@
     <b>Server.properties filen:</b><br>
     <iframe width="370" src="servpropout"></iframe>
     </div>
-    <div class="box2" style="margin-right: 17px">
+    <div class="box2" style="margin-right: 17px; background: url(static/images/bg-box.jpg) 0 0 repeat;">
     <h3>Last opp modifikasjoner til minecraft serveren</h3>
     <p>For en guide for hvordan dette gjøres, se her!</p>
     <p><b>Viktig!</b> For å gjøre det enklere, sett samme navn på zip filen som det server .jar filen har!</p>
@@ -27,12 +27,12 @@
     </form>
     <h3>Slett hele serveren</h3>
     <form action="/manage" method="post" name="deletecontent">
-        <input type="submit" value="Sikkerhetskopier serveren" name="submit">
-        <input type="submit" value="Gjenopprett sikkerhetskopi" name="submit">
-        <input type="submit" value="Slett serveren" name="submit" onclick="return confirm('Er du sikker?')">
+        <input type="submit" value="Sikkerhetskopier serveren" name="submit"><br/>
+        <input type="submit" value="Gjenopprett sikkerhetskopi" name="submit"><br/>
+        <input type="submit" value="Slett server innholdet" name="submit" onclick="return confirm('Er du sikker?')">
     </form>
     </div>
-    <div class="box2">
+    <div class="box2" style=" background: url(static/images/bg-box.jpg) 0 0 repeat;">
     <h3>Server informasjon</h3>
     IP: {{ serverip }}<br>
     Port: {{ port }}<br><br>

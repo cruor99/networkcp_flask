@@ -2,7 +2,10 @@
 {% block content %}
 <br>
 <div class="content"><div class="inner-box4">
-    <div class="box3" style="margin-right: 18px">
+    <div class="box3" style="margin-right: 18px; background: url(static/images/bg-box.jpg) 0 0 repeat;">
+    <h4>Ventrilo Kontrollpanel</h4>
+    <br/>
+    <br/>
     {% from "_formhelpers.html" import render_field %}
     <form method="post" action="/vtserver" name="restart">
     <input type="submit" name="submit" value="Restart serveren">
@@ -27,7 +30,7 @@
     {% endfor %}
     </div>
     </div>
-    <div class="box3">
-
+    <div class="box3" style=" background: url(static/images/bg-box.jpg) 0 0 repeat;">
+        <h3>Her kommer live-informasjon om ventriloserveren</h3>
     </div></div>
 {% endblock %}

@@ -22,9 +22,7 @@ from werkzeug.utils import secure_filename
 from emails import send_email
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_DIR = os.path.join(basedir, 'tmp')
-print UPLOAD_DIR
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
-print app.config['UPLOAD_FOLDER']
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
@@ -103,7 +101,6 @@ def premium_required(test):
 #Routes to front page, login_required during dev only
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
     newspost = Post.query.filter_by(type='newspost').order_by(Post.timestamp.desc()).first()
     newstitle = newspost.title
@@ -119,7 +116,7 @@ def index():
     promobody = promopost.body
     return render_template('index.html',
         title = 'Home',
-        user = session['username'], newstitle=newstitle, newsbody=newsbody, servtitle=servtitle, servbody=servbody,\
+       newstitle=newstitle, newsbody=newsbody, servtitle=servtitle, servbody=servbody,\
         eventtitle=eventtitle, eventbody=eventbody, promobody=promobody, promotitle=promotitle)
 
 
@@ -185,10 +182,9 @@ def ventsub():
             vat='2500',
             orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting of type: Ventrilo',
-            description='Gameserver rental host for: '+user,
+            description=u'Gameserver rental host for: '+user,
             clientIPAddress=request.remote_addr,
-            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],
-            #additionalValues='PAYMENTMENU=TRUE',
+            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],            #additionalValues='PAYMENTMENU=TRUE',
             returnUrl='http://84.49.16.101/vtresponse',
             view='CREDITCARD',
             cancelUrl='http://85.59.16.101:5000/vtresponse'
@@ -1194,35 +1190,29 @@ def upload_file(rfile):
 
 
 #handles file transfer from temporary storage to final location
-def transfer_file(rfile, filename, user, serverip, port, ordertypeclean, stripped):
+def transfer_file(filename, user, serverip, port, ordertypeclean, stripped):
     print "testtft"
-    zipfile = rfile
     filename = filename
-    print filename
-    if zipfile and allowed_file(zipfile.filename):
-        filename = secure_filename(zipfile.filename)
-        zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print filename
-        serv = Server()
-        print serverip
-        serv.sendfile(str(serverip), str(filename), str(user))
-        print 1
-        serv.unzip(str(serverip), str(user), str(filename))
-        print 2
-        serv.servercreate(str(serverip), str(user), str(port))
-        print 3
-        serv.editproperties(str(serverip), str(user), 'mscs-server-jar', str(stripped))
-        print 4
-        serv.editproperties(str(serverip), str(user), str('mscs-server-location'), str('/home/minecraft/worlds/'+user))
-        print 5
-        os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-        print 6
-        serv.editproperties(str(serverip), user, str('mscs-initial-memory'), str('128M'))
-        print 6
-        serv.editproperties(str(serverip), str(user), str('mscs-maximum-memory'), str(ordertypeclean+'M'))
-        print 7
-        serv.editproperties(str(serverip), str(user), str('server-port'), str(port))
-        print "done"
+    serv = Server()
+    print serverip
+    serv.sendfile(str(serverip), str(filename), str(user))
+    print 1
+    serv.unzip(str(serverip), str(user), str(filename))
+    print 2
+    serv.servercreate(str(serverip), str(user), str(port))
+    print 3
+    serv.editproperties(str(serverip), str(user), 'mscs-server-jar', str(stripped))
+    print 4
+    serv.editproperties(str(serverip), str(user), str('mscs-server-location'), str('/home/minecraft/worlds/'+user))
+    print 5
+    os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+    print 6
+    serv.editproperties(str(serverip), user, str('mscs-initial-memory'), str('128M'))
+    print 6
+    serv.editproperties(str(serverip), str(user), str('mscs-maximum-memory'), str(ordertypeclean+'M'))
+    print 7
+    serv.editproperties(str(serverip), str(user), str('server-port'), str(port))
+    print "done"
 
 
 def threadtest(a, b, c):
@@ -1279,7 +1269,7 @@ def manage():
             flash(u'Du kan ikke endre minnest\xf8rrelsen p\xe5 serveren!')
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Slett serveren':
+        if request.form['submit'] == 'Slett server innholdet':
             serv.deleteserv(serverip, user)
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
