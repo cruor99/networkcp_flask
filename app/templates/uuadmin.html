@@ -7,7 +7,7 @@
     <div class="box3" style="margin-right: 18px">
     <h4>Endre brukerinformasjon</h4><br>
     <b>(Nåværende passord er påkrevd for alle endringer!)</b><br><br>
-    <div class="inner-box3" style="padding:0px 0px 0px 0px;
+    <div class="inner-box3" style="padding:0px 20px 0px 0px;
 		border-radius: 0px">
     <form action="/uuadmin" method="post" name="changeinfo">
         {% from "_formhelpers.html" import render_field %}
@@ -21,7 +21,8 @@
     <p><input type="submit" value="Endre informasjon" name="submit"></p>
     </form>
     </div>
-    <br><iframe width="300" src="userinfo" style="float: left; overflow: hidden; background: #ffffff; allowtransparency=true"></iframe>
+    <p><iframe width="300" height="100" src="userinfo" style="float: left; overflow: hidden;"></iframe></p>
+    <!-- padding-bottom: 5px; padding-left: 5px; padding-right: 5px; padding-top: 5px; -->
     </div>
     <div class="box3">
     <h4>Nåværende abonnement</h4><br><br>
