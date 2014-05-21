@@ -3,12 +3,12 @@
 {% from "_formhelpers.html" import render_field %}
 <br>
 <div class="content"><div class="inner-box">
-<div class="inner-box3" style="float: left;">
+<div class="inner-box3" style="float: left; margin-right: 100px">
 <h1>Registrering</h1><br>
 <form method=post action="/signup">
   <dl class="list2">
     <li><b>Påkrevde felt er markert med *</b></li>
-    <li>{{ render_field(form.username) }}</li>
+    <li>{{ render_field(form.username) }} </li>
     <li>{{ render_field(form.email) }}</li>
     <li>{{ render_field(form.password) }}</li>
     <li>{{ render_field(form.confirm) }}</li>
@@ -21,8 +21,8 @@
     </form>
     </div>
     <div class="inner-box3"><br>
-    <p>Eksempel:<br>
-    <img src="../static/images/example.png" alt="Example form"></p>
+    <h3>Eksempel:</h3>
+    <img src="../static/images/example.png" alt="Example form">
     </div>
 </div></div>
 {% endblock %}

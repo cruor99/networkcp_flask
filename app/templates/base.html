@@ -13,7 +13,7 @@
     <div class="div-nav">
         <nav>
             <ul class="sf-menu">
-                <li><a href="{{ url_for('index') }}" class="menu-link">Home</a></li>
+                <li><a href="{{ url_for('index') }}" class="menu-link">Hjem</a></li>
                 {% if 'admin' in session %}
                 <li> <a href="{{ url_for('administrate') }}" class="menu-link">Administrasjon</a></li>
 
@@ -31,7 +31,7 @@
             {% if 'logged_in' in session %}
             <li> <a href="{{ url_for('logout') }}" class="menu-link">Logg ut</a></li>
             {% else %}
-                <li> <a href="{{ url_for('signup') }}" class="menu-link">Signup</a></li>
+                <li> <a href="{{ url_for('signup') }}" class="menu-link">Registrer</a></li>
             {% endif %}
             </ul>
         </nav>
