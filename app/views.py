@@ -28,7 +28,7 @@ print app.config['UPLOAD_FOLDER']
 ALLOWED_EXTENSIONS = set(['zip'])
 
 
-service = PayEx(merchant_number='XXX', encryption_key='XXXXX', production=False)
+service = PayEx(merchant_number='60019118', encryption_key='FYnYJJ2uJeq24p2tKTNv', production=False)
 
 
 #Catches internal server errors
@@ -268,13 +268,13 @@ def mcsubscribe():
     subtype = subwip.sub_type
     subpris = subwip.sub_pris
     if subtype2 == "MC1024":
-        form.subsel.choices = [(12000, '120NOK - 1-Month'), (36000, '360NOK - 3-Month'), (72000, '720NOK - 6-Month')]
+        form.subsel.choices = [(12000, u'120 NOK - 1 m\xe5ned'), (36000, u'360 NOK - 3 m\xe5neder'), (72000, u'720 NOK - 6 m\xe5neder')]
     if subtype2 == "MC2048":
-        form.subsel.choices = [(22000, '220NOK - 1-Month'), (66000, '660NOK - 3-Month'), (132000, '1320NOK - 6-Month')]
+        form.subsel.choices = [(22000, u'220 NOK - 1 m\xe5ned'), (66000, u'660 NOK - 3 m\xe5neder'), (132000, u'1320 NOK - 6 m\xe5neder')]
     if subtype2 == "MC2560":
-        form.subsel.choices = [(29000, '290NOK - 1-Month'), (87000, '870NOK - 3-Month'), (174000, '1740NOK - 6-Month')]
+        form.subsel.choices = [(29000, u'290 NOK - 1 m\xe5ned'), (87000, u'870 NOK - 3 m\xe5neder'), (174000, u'1740 NOK - 6 m\xe5neder')]
     if subtype2 == "Ventrilo":
-        form.subsel.choices = [(3300, '33NOK - 10 slots'), (5800, '58NOK - 20 slots'), (8300, '83NOK - 30 slots')]
+        form.subsel.choices = [(3300, '33 NOK - 10 slots'), (5800, '58 NOK - 20 slots'), (8300, '83 NOK - 30 slots')]
     if request.method == 'POST':
         subprice = form.subsel.data
         response = service.initialize(
@@ -346,7 +346,7 @@ def calcmonths(subprice):
         print 3
         return 6
     else:
-        print "Something went wrong"
+        print "Noe gikk galt, vennligst si ifra til en administrator!"
 
 #Response handler for PayEx
 @app.route('/response', methods=['GET','POST'])
@@ -358,7 +358,6 @@ def response():
         if 'ordertmpholder' in session:
             oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
             if oldorder is not None and oldorder.order_payed == 'DELETEME':
-
                 orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
                 order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
                 subid = order.sub_id
@@ -459,10 +458,9 @@ def response():
             db.session.delete(order)
             db.session.commit()
             session.pop('premium', None)
-            print 'Something went wrong'
-            cancmes = 'Your order has been terminated'
+            print 'Noe gikk galt, vennligst si ifra til en administrator!'
+            cancmes = 'Din bestilling er avbrutt!'
             return render_template('response.html', receipt=cancmes)
-
         else:
             orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
             order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
@@ -477,7 +475,7 @@ def response():
             db.session.delete(order)
             db.session.commit()
             session.pop('premium', None)
-            cancmes = 'Your order has been terminated'
+            cancmes = 'Din bestilling er avbrutt!'
             return render_template('response.html', receipt=cancmes)
 
 
@@ -747,7 +745,7 @@ def servadmin():
         values(port_used=form3.portused.data)
         db.session.execute(stmt)
         db.session.commit()
-        flash('Port oppdatert')
+        flash('Port oppdatert!')
         return render_template('prodadmin.html', form=form, form2=form2, form3=form3, user=user, form4=form4,
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Tilbakestill ubrukte servere":
@@ -1105,7 +1103,7 @@ def login():
                     session['normal'] = usermail.role
                 return redirect(url_for('index'))
             else:
-                flash('Incorrect username or password')
+                flash('Feil brukernavn eller passord!')
                 return render_template('login.html', title='Logg inn', form=form)
         if user is not None:
             print user.cust_username
@@ -1205,7 +1203,6 @@ def transfer_file(rfile, filename, user, serverip, port, ordertypeclean, strippe
         filename = secure_filename(zipfile.filename)
         zipfile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         print filename
-
         serv = Server()
         print serverip
         serv.sendfile(str(serverip), str(filename), str(user))
@@ -1226,6 +1223,7 @@ def transfer_file(rfile, filename, user, serverip, port, ordertypeclean, strippe
         print 7
         serv.editproperties(str(serverip), str(user), str('server-port'), str(port))
         print "done"
+
 
 def threadtest(a, b, c):
     print a
@@ -1259,7 +1257,7 @@ def manage():
             time.sleep(1)
             serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
             serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
-            flash("Properties opprettet")
+            flash("Properties opprettet!")
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
         if request.form['submit'] == 'Endre properties' and form.props.data != 'server-port' and \
