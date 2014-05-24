@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="content"><div class="inner-box2">
-    <div class="box" style="width: 1170px; height: 150px; margin-bottom: 10px" >
+    <div class="box" style="width: 1170px; height: 200px; margin-bottom: 10px" >
     <br>
     <h1>{{ errmes }}</h1>
-    <h3>{{ newstitle }}<br></h3>
+    <a href="{{ url_for('subscribe') }}"><img src="static/images/eyecatch.gif" style="display: block;
+    margin-left: auto;
+    margin-right: auto"><br/></a>
+    <h4>{{ newstitle }}<br></h4>
     {{ newsbody }}<br>
     </div>
     <div class="box" style="width: 370px; height: 300px; float: left; margin-right: 17px">

@@ -114,6 +114,11 @@ def index():
     promopost = Post.query.filter_by(type='promo').order_by(Post.timestamp.desc()).first()
     promotitle = promopost.title
     promobody = promopost.body
+    server = Serverreserve.query.filter_by(server_name='ventrilo').first()
+    print server.server_name
+    avport = Port.query.filter_by(port_used=2).filter(Port.server_id != server.server_id).all()
+    print avport
+
     return render_template('index.html',
         title = 'Home',
        newstitle=newstitle, newsbody=newsbody, servtitle=servtitle, servbody=servbody,\
@@ -294,7 +299,9 @@ def mcsubscribe():
         dbsubid = sub.sub_id
         uquer = User.query.filter_by(cust_id=session['userid']).first()
         if uquer.cust_notes is None:
-            avport = Port.query.filter_by(port_used=2).first()
+            server = Serverreserve.query.filter_by(server_name='ventrilo').first()
+            print server.server_name
+            avport = Port.query.filter_by(port_used=2).filter(Port.server_id != server.server_id).all()
             stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
             db.session.execute(stmt)
             genorder()
@@ -1277,12 +1284,12 @@ def manage():
             print "test0"
             zipfile = request.files['file']
             print "test1"
-            #upload_file(zipfile)
+            upload_file(zipfile)
             filenameplaceholder = zipfile.filename
             filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
             servername = filenamestripped
             print "test2"
-            thr = Thread(target=transfer_file, args=(zipfile, zipfile.filename, user, serverip, port, ordertypeclean, servername))
+            thr = Thread(target=transfer_file, args=(zipfile.filename, user, serverip, port, ordertypeclean, servername))
             print "test3"
             if filenameplaceholder != "":
                 #filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
