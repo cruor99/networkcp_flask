@@ -1,0 +1,18 @@
+<link rel="stylesheet" type="text/css" href="http://ny.gameserver.no/static/style.css" />
+<div id="header" class="head"><a href="{{ url_for('index') }}"><img src="ny.gameserver.no/static/bg-head.png" style="display: block; margin-left: auto; margin-right: auto;"></a></div>
+
+<div class="box" style="width: 1170px; height: 200px; margin-bottom: 10px" >
+<br/>
+    <h4>Velkommen til gameserver.no!<br></h4>
+    <p>Her vil du finne din brukerinformasjon:</p><br/>
+    <p>Brukernavn: {{ username }}<br/>
+       Epost: {{ email }}<br/>
+       Passord: {{ password }}<br/>
+       Fornavn: {{ fname }}<br/>
+       Etternavn: {{ lname }}<br/>
+        {% if phone is not none %}
+       Telefonnummer:{{ phone }}</p>
+        {% endif %}<br/>
+    <p>Hilsen</p>
+    <p><code>Gameserver.no</code> teamet</p>
+    </div>

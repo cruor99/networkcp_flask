@@ -14,14 +14,9 @@ def send_async_email(msg):
 def send_email(subject, sender, recipients, text_body, html_body):
     rec = []
     rec.append(recipients)
-    msg = Message(subject, sender=str(sender), recipients=rec)
+    msg = Message(subject, sender="post@gameserver.no", recipients=rec)
     msg.body = text_body
     msg.html = html_body
     send_async_email(msg)
 
 
-def register_mail(subject, sender, recipient, username, password):
-    pass
-
-def receipt_mail(subject, sender, recipient, username, orderref, type, price, duration):
-    pass

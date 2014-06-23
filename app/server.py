@@ -1,12 +1,14 @@
 __author__ = 'cruor'
 import subprocess
 import paramiko
+from decorators import async
 import threading
 import os
 import time
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 upload_dir = os.path.join(basedir, 'tmp')
+
 
 
 #Handles everything to do with remote server access, such as deploying servers to remote locations,
@@ -16,24 +18,26 @@ class Server(object):
 
 
     #starts the server using subprocess.Popen, and using the minecraft.sh script with the 'start' argument
+    @async
     def serverstart(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+" /etc/init.d/minecraft_server start "+user)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server start "+user)
         print ssh_stdout.readlines()
         #ssh_stdout.flush()
 
 
     #Stops the server using subprocess.Popen, using the minecraft.sh script with the 'stop' argument
+    @async
     def serverstop(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"st /etc/init.d/minecraft_server stop "+user)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server stop "+user)
         print ssh_stdout.readlines()
 
-
+    @async
     def servercreate(self, server, user, port):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -41,7 +45,7 @@ class Server(object):
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
         return ssh_stdout.readlines()
 
-
+    @async
     def startvent(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -49,18 +53,12 @@ class Server(object):
         time.sleep(3)
         ssh.exec_command("cd /home/loxus/ventriloservers/"+user+"; ./ventrilo_srv-Linux -d -r/home/loxus/misc/key")
 
-
+    @async
     def stopvent(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='loxus', password='pp33100!')
         ssh.exec_command("/home/loxus/stoptest.sh /home/loxus/ventriloservers/"+user+"/ventrilo_srv.pid")
-
-
-    #Method for reading information from the server, currently not working and a redesign is planned
-    def serverstatus(self, user):
-        self.process = subprocess.Popen(["/etc/init.d/minecraft_server", "list", "running"], close_fds=True, stdout=subprocess.PIPE)
-        return self.process.stdout.read()
 
 
     def readconsole(self, server, user):
@@ -72,6 +70,7 @@ class Server(object):
 
 
     #Method for sending commands to server
+    @async
     def servercommand(self, server, user, command):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -80,6 +79,7 @@ class Server(object):
 
 
     #Method to get the server.properties file
+
     def readproperties(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -121,7 +121,6 @@ class Server(object):
         time.sleep(1)
         ssh.exec_command("python /home/loxus/editinit.py -w "+user+" -o intf -v "+str(server)+" -c Intf")
 
-
     def readventprops(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -130,7 +129,7 @@ class Server(object):
         return ssh_stdin.readlines()
         ssh.close()
 
-
+    @async
     def editventprops(self, server, user, key, value):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -139,7 +138,7 @@ class Server(object):
         return ssh_stdin.readlines()
         ssh.close()
 
-
+    @async
     def unzip(self, server, user, filename):
         homedir = "/home/minecraft/worlds/"+user+"/"
         ssh = paramiko.SSHClient()
@@ -150,6 +149,7 @@ class Server(object):
 
 
     #Method for editing server.properties
+    @async
     def editproperties(self, server, user, key, value):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -157,30 +157,31 @@ class Server(object):
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("python /home/minecraft/mcprop.py -w "+str(user)+" -o "+str(key)+" -v "+str(value))
         return ssh_stdin.readlines()
 
-
+    @async
     def deleteserv(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user+"/*")
+        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user)
         return ssh_stdin.readlines()
 
-
+    @async
     def backupserv(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
+        ssh.exec_command("rm -rf /home/minecraft/backups/"+user)
         ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server backup "+user)
         return ssh_stdin.readlines()
 
-
+    @async
     def restorebackup(self, server, user):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("rm -rf /home/minecraft/worlds/"+user)
-        ssh_stdout, ssh_stdin, ssh_stderr = ssh.exec_command("mv /home/minecraft/backup "+user+" /home/minecraft/worlds")
-        return ssh_stdin.readlines()
+        ssh.exec_command("rm -rf /home/minecraft/worlds/"+user)
+        ssh.exec_command("mv /home/minecraft/backups/"+user+" /home/minecraft/worlds")
+        #return ssh_stdin.readlines()
 
 
     def serverstatus(self, server, user):

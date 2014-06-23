@@ -1,0 +1,12 @@
+Velkommen til gameserver.no!
+Her vil du finne din brukerinformasjon:
+Brukernavn: {{ username }}
+Epost: {{ email }}
+Passord: {{ password }}
+Fornavn: {{ fname }}
+Etternavn: {{ lname }}
+ {% if phone is not none %}
+Telefonnummer:{{ phone }}
+ {% endif %}
+Hilsen
+Gameserver.no teamet

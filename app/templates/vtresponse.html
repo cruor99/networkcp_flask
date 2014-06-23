@@ -5,11 +5,10 @@
     {% if orderref is not none %}
     Din ordrestatus eller referanse er: {{ orderref }}
     <br>
-    Ditt antall slits på gamerserver.no er: {{ slots }}<br>
-    Din ordre ID hos gameserver.no er: {{ ordid }}<br>
-    Antall måneder du har bestilt: {{ months }}
-    Totalbeløp: {{ price }}
-    Din ordre utløper: {{ ordexp }}<br
+    Ditt antall slits på gamerserver.no er: {{ slots }} <br>
+    Antall måneder du har bestilt: {{ months }} <br>
+    Totalbeløp: {{ price }} <br>
+    Din ordre utløper: {{ordexp}} <br>
     <p>Du vil også motta denne inforamsjonen på e-post</p>
     {% else %}
     Din ordre har blitt kansellert!

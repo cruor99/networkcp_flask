@@ -1,0 +1,11 @@
+Vi takker for din bestilling!
+Her vil du finne din ordreinformasjon:
+Din ordrereferanse: {{orderref}}
+Din ordre ID hos gameserver.no: {{ ordid }}
+Din subscription ID: {{ subid }}
+Total pris: {{ totprice }} NOK
+Din ordre utløper: {{ordexp}}
+
+Hilsen
+Gameserver.no teamet
+

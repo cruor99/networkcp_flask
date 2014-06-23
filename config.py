@@ -28,7 +28,7 @@ MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'kliknes@gmail.com'
-MAIL_PASSWORD = 'h3nriksug3r'
+MAIL_PASSWORD = 'unh4ck4bl3'
 
 
 # administrator list

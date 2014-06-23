@@ -17,7 +17,7 @@ import datetime
 import dateutils
 import re
 from threading import Thread
-from multiprocessing import Process
+from cardgen import phrasegen
 from werkzeug.utils import secure_filename
 from emails import send_email
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -130,10 +130,6 @@ def index():
 @login_required
 def subscribe():
     form = VentOrder()
-    if request.method == 'POST':
-        print request
-        print 'post'
-        #redirect('/ventsub')
     return render_template('subchoice.html', user=session['username'], form=form)
 
 @app.route('/ventsub', methods=['GET', 'POST'])
@@ -173,28 +169,24 @@ def ventsub():
 }
     if request.method == 'POST' and request.form['submit'] == 'Neste Steg':
         session['slots'] = ventslots[int(request.form['slotSlider'])]
-        session['price'] = slotprice[int(request.form['slotSlider'])]
         session['months'] = request.form['monthSlider']
+        totprice = int(slotprice[int(request.form['slotSlider'])])*int(session['months'])
+        session['price'] = totprice
     if request.method == 'POST' and request.form['submit'] == 'Start betalingsprosessen':
-        print request.remote_addr
-        print request.headers.get('User-Agent')
-        print session['price']
-        print type(session['price'])
         response = service.initialize(
             purchaseOperation='SALE',
-            price=session['price']+'00',
+            price=str(session['price'])+'00',
             currency='NOK',
             vat='2500',
             orderID=session['userid']+random.getrandbits(session['userid']),
             productNumber='Server Hosting of type: Ventrilo',
             description=u'Gameserver rental host for: '+user,
             clientIPAddress=request.remote_addr,
-            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],            #additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://84.49.16.101/vtresponse',
+            clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],
+            returnUrl='http://ny.gameserver.no/vtresponse',
             view='CREDITCARD',
-            cancelUrl='http://85.59.16.101:5000/vtresponse'
+            cancelUrl='http://ny.gameserver.no/vtresponse'
         )
-        print response
         return redirect(response['redirectUrl'])
     return render_template('ventsub.html', slots=session['slots'], price=session['price'], months=session['months'])
 
@@ -219,7 +211,10 @@ def vtresponse():
         #server, user, key, value
         serv.editventprops(str(ventserver.server_ip), user, str("port"), str(openport.port_no))
         serv.editventprops(str(ventserver.server_ip), user, str("maxclients"), str(slots))
-        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
+        send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receiptvt.txt', subid=str(orderref),  ordexp=str(months), slots=str(slots), totprice=session['price'], orderexp=expire),
+                           render_template('receiptvt.html', subid=str(orderref), ordexp=str(months), slots=str(slots), totprice=session['price'], orderexp=expire))
+        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months, ordexp=expire)
     elif orderref is not None:
         vtadd = VtOrder(slots, price, expire, openport.port_id, userid)
         stmt = update(Port).where(Port.port_id == openport.port_id).values(port_used=1)
@@ -234,7 +229,10 @@ def vtresponse():
         db.session.execute(userstm)
         db.session.commit()
         session['premium'] = 2
-        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
+        send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receiptvt.txt', subid=str(orderref),  ordexp=str(months), slots=str(slots), totprice=session['price'], orderexp=expire),
+                           render_template('receiptvt.html', subid=str(orderref), ordexp=str(months), slots=str(slots), totprice=session['price'], orderexp=expire))
+        return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months, ordexp=expire)
 
     else:
 
@@ -277,6 +275,7 @@ def mcsubscribe():
     if subtype2 == "Ventrilo":
         form.subsel.choices = [(3300, '33 NOK - 10 slots'), (5800, '58 NOK - 20 slots'), (8300, '83 NOK - 30 slots')]
     if request.method == 'POST':
+
         subprice = form.subsel.data
         response = service.initialize(
             purchaseOperation='SALE',
@@ -289,18 +288,17 @@ def mcsubscribe():
             clientIPAddress=request.remote_addr,
             clientIdentifier='USERAGENT='+request.headers.get('User-Agent')+'&username='+session['username'],
             #additionalValues='PAYMENTMENU=TRUE',
-            returnUrl='http://84.49.16.101/response',
+            returnUrl='http://ny.gameserver.no/response',
             view='CREDITCARD',
-            cancelUrl='http://84.49.16.101/response'
+            cancelUrl='http://ny.gameserver.no/response'
         )
-        print response
         dbprice = subprice[:-2]
+        session['mcprice'] = dbprice
         sub = Subscription.query.filter_by(sub_pris=dbprice).first()
         dbsubid = sub.sub_id
         uquer = User.query.filter_by(cust_id=session['userid']).first()
         if uquer.cust_notes is None:
             server = Serverreserve.query.filter_by(server_name='ventrilo').first()
-            print server.server_name
             avport = Port.query.filter_by(port_used=2).filter(Port.server_id != server.server_id).all()
             stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
             db.session.execute(stmt)
@@ -340,13 +338,12 @@ def mcsubscribe():
 
 def calcmonths(subprice):
     if subprice == '12000' or subprice == '22000' or subprice == '29000':
-        print 1
+
         return 1
     elif subprice == '36000' or subprice == '66000' or subprice == '87000':
-        print 2
+
         return 3
     elif subprice == '72000' or subprice == '132000' or subprice == '174000':
-        print 3
         return 6
     else:
         print "Noe gikk galt, vennligst si ifra til en administrator!"
@@ -370,17 +367,9 @@ def response():
                 db.session.execute(stmt)
 
                 db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp),
-                                                                                               "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp))
-                print order.order_payed+"test1"
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
             else:
                 orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
                 order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
@@ -390,17 +379,9 @@ def response():
                 stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
                 db.session.execute(stmt)
                 db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'], "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp),
-                                                                                               "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp))
-                print order.order_payed+"test2"
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
         else:
             oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
             if oldorder is not None and oldorder.order_payed == 'DELETEME':
@@ -413,16 +394,9 @@ def response():
                 db.session.execute(stmt)
 
                 db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'], "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp),
-                                                                                               "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp))
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
             else:
                 orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
                 order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
@@ -432,18 +406,11 @@ def response():
                 stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
                 db.session.execute(stmt)
                 db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],  "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp),
-                                                                                               "Your order reference "
-                                                                                               "with Gameserver.no:\n"
-                                                                                               "Sub ID: " + str(subid) + "\n"
-                                                                                               "Order ID: "+str(ordid) + "\n"
-                                                                                               "Order Expiration: "+ str(ordexp))
-            return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
-        return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp)
+                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
+            return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp, totprice=session['mcprice'])
+        return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp, totprice=session['mcprice'])
     else:
         uquer = User.query.filter_by(cust_id=session['userid']).first()
         if 'ordertmpholder' in session:
@@ -461,7 +428,6 @@ def response():
             db.session.delete(order)
             db.session.commit()
             session.pop('premium', None)
-            print 'Noe gikk galt, vennligst si ifra til en administrator!'
             cancmes = 'Din bestilling er avbrutt!'
             return render_template('response.html', receipt=cancmes)
         else:
@@ -482,7 +448,6 @@ def response():
             return render_template('response.html', receipt=cancmes)
 
 
-#Gavekort handtering
 @app.route('/gccreate', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -491,7 +456,7 @@ def gccreate():
     form = GiftCodeForm()
     gcs = Giftcard.query.all()
     if request.method == 'POST' and request.form['submit'] == 'Opprett gavekort':
-        giftinput = form.gift_code.data
+        giftinput = phrasegen()
         giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
         giftcode = ""
         if giftdb != None:
@@ -510,6 +475,7 @@ def gccreate():
 @app.route('/gccheck', methods=['GET', 'POST'])
 @login_required
 def gccheck():
+    #TODO: make this method better
     form = GiftCodeCheckin()
     if request.method == 'POST' and request.form['submit'] == 'Bruk gavekort':
         if form.gift_code.data != "":
@@ -520,7 +486,6 @@ def gccheck():
             if giftdb != None:
                 giftcode = giftdb.gift_code
                 giftinuse = giftdb.in_use
-                print giftinuse
             if giftcode == giftinput and giftinuse != True:
                 gc = Giftcard.query.filter_by(gift_code=giftinput).first()
                 sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
@@ -574,8 +539,6 @@ def vtserver():
             flash(u'Serveren starter p\xe5 nytt!')
             return render_template('vtserver.html', form=form, props=props)
         if request.form['submit'] == 'Endre instillinger':
-            print form.key.data
-            print form.value.data
             serv.editventprops(serverip, user, form.key.data, form.value.data)
     return render_template('vtserver.html', form=form, props=props)
 
@@ -596,6 +559,8 @@ def mcserver():
     port = dbport.port_no
     if request.method == 'POST':
         if request.form['submit'] == 'Start serveren':
+            ttt = Thread(target=serv.serverstart, args=(serverip, user))
+            ttt.start()
             serv.serverstart(serverip, user)
         if request.form['submit'] == 'Stopp serveren':
             serv.serverstop(str(serverip), user)
@@ -774,7 +739,6 @@ def servadmin():
                                form5=form5, form6=form6)
     if request.method == 'POST' and request.form['submit'] == "Slett port":
         portform = form6.portsel.data
-        print portform
         if portform !=None:
             #portdata = portform.port_id
             #print portdata
@@ -1154,16 +1118,13 @@ def signup():
                         db.session.add(user)
                         db.session.commit()
                         flash('Takk for at du registrerte deg!')
-                        send_email('Velkommen til Gameserver.no!', ADMINS[0], form.email.data, 'Velkommen til Gameserver.no'
-                            'Her er din brukerinfo: ' + form.username.data+ form.password.data+ form.email.data+
-                                                                                              form.fname.data+
-                                                                                              form.lname.data+
-                                                                                              form.phone.data,
-                                  'Velkommen til Gameserver.no'
-                            'Her er din brukerinfo: ' + form.username.data+ form.password.data+ form.email.data+
-                                                                                              form.fname.data+
-                                                                                              form.lname.data+
-                                                                                              form.phone.data,)
+                        send_email('Velkommen til Gameserver.no!', ADMINS[0], form.email.data,
+                                   render_template('velkommen.txt', username = form.username.data,
+                                                   password = form.password.data, email=form.email.data,
+                                                   fname=form.fname.data, lname=form.lname.data, phone=form.phone.data),
+                                  render_template('velkommen.html', username = form.username.data,
+                                                   password = form.password.data, email=form.email.data,
+                                                   fname=form.fname.data, lname=form.lname.data, phone=form.phone.data))
                         return redirect(url_for('login'))
                     else:
                         flash('Brukernavn kan ikke inneholde mellomrom!')
@@ -1198,38 +1159,50 @@ def upload_file(rfile):
 
 #handles file transfer from temporary storage to final location
 def transfer_file(filename, user, serverip, port, ordertypeclean, stripped):
-    print "testtft"
     filename = filename
     serv = Server()
-    print serverip
-    serv.sendfile(str(serverip), str(filename), str(user))
-    print 1
-    serv.unzip(str(serverip), str(user), str(filename))
-    print 2
     serv.servercreate(str(serverip), str(user), str(port))
-    print 3
+    serv.sendfile(str(serverip), str(filename), str(user))
+    serv.unzip(str(serverip), str(user), str(filename))
+    serv.servercreate(str(serverip), str(user), str(port))
     serv.editproperties(str(serverip), str(user), 'mscs-server-jar', str(stripped))
-    print 4
     serv.editproperties(str(serverip), str(user), str('mscs-server-location'), str('/home/minecraft/worlds/'+user))
-    print 5
     os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-    print 6
     serv.editproperties(str(serverip), user, str('mscs-initial-memory'), str('128M'))
-    print 6
     serv.editproperties(str(serverip), str(user), str('mscs-maximum-memory'), str(ordertypeclean+'M'))
-    print 7
     serv.editproperties(str(serverip), str(user), str('server-port'), str(port))
-    print "done"
 
 
-def threadtest(a, b, c):
-    print a
-    time.sleep(10)
-    print b
-    time.sleep(10)
-    print c
-
-
+@app.route('/mcupload', methods=['GET', 'POST'])
+def mcupload():
+    user = session['username']
+    serv = Server()
+    form = PropertiesForm()
+    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
+    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
+    serverip = server.server_ip
+    port = dbport.port_no
+    currsub = Subscription.query.filter_by(sub_id=orderline.sub_id).first()
+    ordertype = currsub.sub_type
+    ordertypeclean = ordertype[2:]
+    zipfile = request.files['thefile']
+    upload_file(zipfile)
+    filenameplaceholder = zipfile.filename
+    filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+    servername = filenamestripped
+    thr = Thread(target=transfer_file, args=(filenameplaceholder, user, serverip, port, ordertypeclean, servername))
+    if filenameplaceholder != "":
+        #filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
+        #servername = filenamestripped
+        thr.start()
+        flash(u'Filopplastingen har startet, du vil f\xe5 en beskjed p\xe5 e-post n\xe5r den er ferdig!')
+        #transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
+        #flash('You did it!')
+    else:
+        flash('Velg en fil!')
+    return redirect('/manage')
 #Routes to your server management control panel
 @app.route('/manage', methods=['GET', 'POST'])
 @premium_required
@@ -1247,6 +1220,7 @@ def manage():
     ordertype = currsub.sub_type
     ordertypeclean = ordertype[2:]
     if request.method == 'POST':
+        print request.form
         if request.form['submit'] == 'Opprett properties':
             serv.servercreate(str(serverip), user, str(port))
             t = Thread(target=threadtest, args=('2','4','6'))
@@ -1280,23 +1254,17 @@ def manage():
             serv.deleteserv(serverip, user)
             return render_template('manage.html', user=session['username'], email=session['email'],
                                    form=form, serverip=serverip, port=port)
-        if request.form['submit'] == 'Last opp zip':
-            print "test0"
+        if request.files is not None:
             zipfile = request.files['file']
-            print "test1"
             upload_file(zipfile)
             filenameplaceholder = zipfile.filename
             filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
             servername = filenamestripped
-            print "test2"
             thr = Thread(target=transfer_file, args=(zipfile.filename, user, serverip, port, ordertypeclean, servername))
-            print "test3"
             if filenameplaceholder != "":
                 #filenamestripped = filenameplaceholder.strip('.zip') + '.jar'
                 #servername = filenamestripped
-                print "test4"
                 thr.start()
-                print "test5"
                 flash(u'Filopplastingen har startet, du vil f\xe5 en beskjed p\xe5 e-post n\xe5r den er ferdig!')
                 #transfer_file(zipfile.filename, user, serverip, port, ordertypeclean, servername)
                 #flash('You did it!')

@@ -1,0 +1,10 @@
+Vi takker for din bestilling!
+Her vil du finne din ordreinformasjon:
+Din ordrereferanse: {{orderref}}
+Antall måneder : {{ordexp}}
+Antall slots: {{slots}}
+Total pris: {{ totprice }} NOK
+Din ordre utløper: {{orderexp}}
+
+Hilsen
+Gameserver.no teamet
