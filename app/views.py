@@ -68,13 +68,12 @@ def premium_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
         if 'premium' in session:
-            user = User.query.filter_by(cust_id=session['userid']).first()
+            user = Order.query.filter_by(cust_id=session['userid']).first()
             ventquer = VtOrder.query.filter_by(cust_id=session['userid']).first()
             exorderl = ''
             exorder = ''
-            if user.cust_notes is not None:
-                exorder = Order.query.filter_by(orderident=user.cust_notes).first()
-                exorderl = Orderline.query.filter_by(order_id=exorder.order_id).first()
+            if user.cust_id is not None:
+                exorderl = Order.query.filter_by(cust_id = session['userid']).first()
                 if exorderl.orderl_expire <= datetime.date.today() or exorderl.order_payed == "2":
                     session.pop('premium', None)
                     flash(u'Du er ikke en premium bruker. Registrer en tjeneste for \xe5 f\xe5 tilgang til denne delen!')
@@ -82,7 +81,6 @@ def premium_required(test):
                 else:
                     return test(*args, **kwargs)
             elif ventquer.expiration is not None:
-                print ventquer.expiration
                 if ventquer.expiration <= datetime.date.today():
                     session.pop('premium', None)
                     flash(u'Du er ikke en premium bruker. Registrer en tjeneste for \xe5 f\xe5 tilgang til denne delen!')
@@ -114,10 +112,7 @@ def index():
     promopost = Post.query.filter_by(type='promo').order_by(Post.timestamp.desc()).first()
     promotitle = promopost.title
     promobody = promopost.body
-    server = Serverreserve.query.filter_by(server_name='ventrilo').first()
-    print server.server_name
-    avport = Port.query.filter_by(port_used=2).filter(Port.server_id != server.server_id).all()
-    print avport
+    
 
     return render_template('index.html',
         title = 'Home',
@@ -199,8 +194,7 @@ def vtresponse():
     serv = Server()
     userid = session['userid']
     user = session['username']
-    ventserver = Serverreserve.query.filter_by(server_name='ventrilo').first()
-    openport = Port.query.filter_by(server_id=ventserver.server_id).filter_by(port_used=2).first()
+    openport = VoicePort.query.filter_by(port_used=2).first()
     expire = datetime.date.today() + dateutils.relativedelta(months=int(months))
     existvent = VtOrder.query.filter_by(cust_id=session['userid']).first()
     if orderref is not None and existvent is not None:
@@ -239,21 +233,6 @@ def vtresponse():
         return render_template('vtresponse.html', orderref=orderref, slots=slots, price=price, months=months)
 
 
-def genorder():
-    if 'premium' in session or 'admin' in session:
-        uquer = User.query.filter_by(cust_id=session['userid']).first()
-        ordquer = Order(session['userid'], uquer.cust_notes)
-        db.session.add(ordquer)
-        db.session.commit()
-    else:
-        orderident = session['username']+str(random.randint(1, 2000))
-        session['ordertmpholder'] = orderident
-        ordquer = Order(session['userid'], orderident)
-        db.session.add(ordquer)
-        db.session.commit()
-        session['ordertmpholder'] = orderident
-
-
 #Routes to Minecraft Subscription settings regarding time periods and cost
 @app.route('/mcsubscribe', methods=['GET', 'POST'])
 @login_required
@@ -274,6 +253,7 @@ def mcsubscribe():
         form.subsel.choices = [(29000, u'290 NOK - 1 m\xe5ned'), (87000, u'870 NOK - 3 m\xe5neder'), (174000, u'1740 NOK - 6 m\xe5neder')]
     if subtype2 == "Ventrilo":
         form.subsel.choices = [(3300, '33 NOK - 10 slots'), (5800, '58 NOK - 20 slots'), (8300, '83 NOK - 30 slots')]
+    orderid = session['userid']+random.getrandbits(session['userid'])
     if request.method == 'POST':
 
         subprice = form.subsel.data
@@ -282,7 +262,7 @@ def mcsubscribe():
             price=subprice,
             currency='NOK',
             vat='2500',
-            orderID=session['userid']+random.getrandbits(session['userid']),
+            orderID=orderid,
             productNumber='Server Hosting of type: '+subtype2,
             description=u'Gameserver rental host for: '+user,
             clientIPAddress=request.remote_addr,
@@ -294,44 +274,14 @@ def mcsubscribe():
         )
         dbprice = subprice[:-2]
         session['mcprice'] = dbprice
-        sub = Subscription.query.filter_by(sub_pris=dbprice).first()
-        dbsubid = sub.sub_id
-        uquer = User.query.filter_by(cust_id=session['userid']).first()
-        if uquer.cust_notes is None:
-            server = Serverreserve.query.filter_by(server_name='ventrilo').first()
-            avport = Port.query.filter_by(port_used=2).filter(Port.server_id != server.server_id).all()
-            stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
-            db.session.execute(stmt)
-            genorder()
-            months = calcmonths(subprice)
-            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            orderlinequer = Orderline(avport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
-                                      datetime.date.today() + dateutils.relativedelta(months=months), '2')
-            db.session.add(orderlinequer)
-            db.session.commit()
-        else:
-            months = calcmonths(subprice)
-            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
-            existport = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            orderlinequer = Orderline(existport.port_id, dbsubid, orderlineorderquer.order_id, datetime.date.today(),
-                                      existport.orderl_expire + dateutils.relativedelta(months=months), '2')
-            updstmt = update(Orderline).where(Orderline.orderl_id == existport.orderl_id).values(order_payed='DELETEME')
-            db.session.execute(updstmt)
-            db.session.add(orderlinequer)
-            db.session.commit()
-        if 'premium' in session or 'admin' in session:
-            stmt = update(User).where(User.cust_id==session['userid']).\
-            values(role=2, cust_notes=session['ordertmpholder'])
-            db.session.execute(stmt)
-            db.session.commit()
+        session['mcmonths'] = calcmonths(subprice)
+        subsid = Subscription.query.filter_by(sub_type=subtype2).first()
+        session['orderid'] = orderid
+        session['subid'] = subsid.sub_id
+        avport = Port.query.filter_by(port_used=2).first()
+        if avport.port_id is not None:
+            session['portid'] = str(avport.port_id)
             return redirect(response['redirectUrl'])
-        else:
-            session['premium'] = 2
-            stmt = update(User).where(User.cust_id==session['userid']).\
-            values(role=2, cust_notes=session['ordertmpholder'])
-            db.session.execute(stmt)
-            db.session.commit()
-        return redirect(response['redirectUrl'])
     return render_template('subscribe.html', form=form, subname=subname, subdescription=subdescription,
                            subtype=subtype, subpris=subpris)
 
@@ -346,106 +296,37 @@ def calcmonths(subprice):
     elif subprice == '72000' or subprice == '132000' or subprice == '174000':
         return 6
     else:
-        print "Noe gikk galt, vennligst si ifra til en administrator!"
-
+        pass
 #Response handler for PayEx
 @app.route('/response', methods=['GET','POST'])
 @login_required
 def response():
     receipt2 = request.args.get('orderRef')
     if receipt2 is not None:
-        uquer = User.query.filter_by(cust_id=session['userid']).first()
-        if 'ordertmpholder' in session:
-            oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
-            if oldorder is not None and oldorder.order_payed == 'DELETEME':
-                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-                subid = order.sub_id
-                ordid = str(order.order_id)
-                ordexp = str(order.orderl_expire)
-                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
-                db.session.execute(stmt)
-
-                db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
-                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
-                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
-            else:
-                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-                subid = order.sub_id
-                ordid = str(order.order_id)
-                ordexp = str(order.orderl_expire)
-                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
-                db.session.execute(stmt)
-                db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
-                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
-                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
+        session['premium'] = 2
+        subid = session['subid']
+        ordid = session['orderid']
+        ordercreate = datetime.date.today()
+        ordexp = ordercreate + dateutils.relativedelta(months=session['mcmonths'])
+        existquer = Order.query.filter_by(cust_id=session['userid']).first()
+        if existquer is not None:
+            updorder = update(Order).where(Order.cust_id == session['userid']).values(orderl_expire=ordexp, sub_id=int(subid), ordernumber=int(ordid))
+            db.session.execute(updorder)
+            db.session.commit()
+            send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                        render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                        render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
+            return render_template('response.html', receipt=receipt2, subid=subid, totprice=session['mcprice'], ordid=ordid, ordexp=ordexp)
         else:
-            oldorder = Orderline.query.filter_by(order_payed='DELETEME').first()
-            if oldorder is not None and oldorder.order_payed == 'DELETEME':
-                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-                subid = order.sub_id
-                ordid = str(order.order_id)
-                ordexp = str(order.orderl_expire)
-                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
-                db.session.execute(stmt)
-
-                db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
-                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
-                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
-            else:
-                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-                order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-                subid = order.sub_id
-                ordid = str(order.order_id)
-                ordexp = str(order.orderl_expire)
-                stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='1')
-                db.session.execute(stmt)
-                db.session.commit()
-                send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
-                           render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
-                           render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
-            return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp, totprice=session['mcprice'])
-        return render_template('response.html', receipt=receipt2, subid=subid, ordid=ordid, ordexp=ordexp, totprice=session['mcprice'])
+            order = Order(int(session['portid']), int(subid), int(ordid), ordercreate, ordexp, '1', int(session['userid']))
+            db.session.add(order)
+            db.session.commit()
+            send_email('Din ordrereferanse fra Gameserver.no', ADMINS[0], session['email'],
+                        render_template('receipt.txt', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']),
+                        render_template('receipt.html', subid=str(subid), ordid=str(ordid), ordexp=str(ordexp), orderref=receipt2, totprice=session['mcprice']))
+            return render_template('response.html', receipt=receipt2, subid=subid, totprice=session['mcprice'], ordid=ordid, ordexp=ordexp)
     else:
-        uquer = User.query.filter_by(cust_id=session['userid']).first()
-        if 'ordertmpholder' in session:
-            orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            subid = order.sub_id
-            ordid = str(order.order_id)
-            ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(Orderline.orderl_id == order.orderl_id).values(order_payed='2')
-            db.session.execute(stmt)
-            portreset = update(Port).where(Port.port_id == order.port_id).values(port_used=2)
-            uuupdate = update(User).where(User.cust_id==session['userid']).values(role='0', cust_notes=None)
-            db.session.execute(uuupdate)
-            db.session.execute(portreset)
-            db.session.delete(order)
-            db.session.commit()
-            session.pop('premium', None)
-            cancmes = 'Din bestilling er avbrutt!'
-            return render_template('response.html', receipt=cancmes)
-        else:
-            orderlineorderquer = Order.query.filter_by(orderident=uquer.cust_notes).first()
-            order = Orderline.query.filter_by(order_id=orderlineorderquer.order_id).first()
-            subid = order.sub_id
-            ordid = str(order.order_id)
-            ordexp = str(order.orderl_expire)
-            stmt = update(Orderline).where(orderl_id == order.orderl_id).values(order_payed='2')
-            db.session.execute(stmt)
-            portreset = update(Port).where(port_id == order.port_id).values(port_used=2)
-            uuupdate = update(User).where(User.cust_id==session['userid']).values(role='0', cust_notes=None)
-            db.session.execute(uuupdate)
-            db.session.delete(order)
-            db.session.commit()
-            session.pop('premium', None)
-            cancmes = 'Din bestilling er avbrutt!'
-            return render_template('response.html', receipt=cancmes)
+        return render_template('response.html', receipt='Din bestilling er avbrutt')        
 
 
 @app.route('/gccreate', methods=['GET', 'POST'])
@@ -477,37 +358,9 @@ def gccreate():
 def gccheck():
     #TODO: make this method better
     form = GiftCodeCheckin()
-    if request.method == 'POST' and request.form['submit'] == 'Bruk gavekort':
-        if form.gift_code.data != "":
-            giftinput = form.gift_code.data
-            giftdb = Giftcard.query.filter_by(gift_code=giftinput).first()
-            giftcode = ""
-            giftinuse = ""
-            if giftdb != None:
-                giftcode = giftdb.gift_code
-                giftinuse = giftdb.in_use
-            if giftcode == giftinput and giftinuse != True:
-                gc = Giftcard.query.filter_by(gift_code=giftinput).first()
-                sub = Subscription.query.filter_by(sub_id=gc.sub_id).first()
-                avport = Port.query.filter_by(port_used=2).first()
-                stmt = update(Port).where(Port.port_id == avport.port_id).values(port_used=1)
-                db.session.execute(stmt)
-                gcstm = update(Giftcard).where(Giftcard.gift_code == gc.gift_code).values(in_use=True)
-                db.session.execute(gcstm)
-                genorder()
-                months = sub.sub_mnd
-                orderlineorderquer = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-                orderlinequer = Orderline(avport.port_id, sub.sub_id, orderlineorderquer.order_id, datetime.date.today(),
-                                              datetime.date.today() + dateutils.relativedelta(months=months), '1')
-                db.session.add(orderlinequer)
-                db.session.commit()
-                flash("Gyldig gavekort angitt!")
-            else:
-                flash("Skriv inn gyldig gavekort!")
-            return render_template('gccheckin.html', form=form)
-        else:
-            flash("Skriv inn gavekort!")
-        return render_template('gccheckin.html', form=form)
+    #Check for the validity of the gift card code
+    ##Discern the service nature
+    ###Set up service - Send to Response?
     return render_template('gccheckin.html', form=form)
 
 
@@ -551,8 +404,7 @@ def mcserver():
     form = CommandForm()
     user = session['username']
     serv = Server()
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    orderline = Order.query.filter_by(cust_id=session['userid']).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
@@ -587,7 +439,7 @@ def controllers():
 @admin_required
 def subadmin():
     form = SubManageForm()
-    orders = Orderline.query.filter_by(order_payed=1).all()
+    orders = Order.query.filter_by(order_payed=1).all()
     if request.method == 'POST' and request.form['submit'] == 'Legg til abonnement':
         subquer = Subscription(form.sub_name.data, form.sub_description.data,
                                form.sub_type.data, form.sub_mnd.data, form.sub_days.data, form.sub_hours.data,
@@ -597,17 +449,16 @@ def subadmin():
         flash('Abonnementet har blitt lagt til!')
         return render_template('subadmin.html', form=form, orders=orders)
     if request.method == 'POST' and request.form['submit'] == 'Slett ubetalte abonnementer':
-        unpayedorder = Orderline.query.filter_by(order_payed='2').all()
+        unpayedorder = Order.query.filter_by(order_payed='2').all()
         for unpayed in unpayedorder:
-            print unpayed
-            resetuser(unpayed.orderl_id)
+            resetuser(unpayed.cust_id)
             cleanports()
         flash('Ubetalte abonnementer slettet!')
     if request.method == 'POST' and request.form['submit'] == u'Slett utl\xf8pte abonnementer':
-        ordl = Orderline.query.filter_by(order_payed='1').all()
+        ordl = Order.query.filter_by(order_payed='1').all()
         for ordr in ordl:
             if ordr.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
-                resetuser(ordr.orderl_id)
+                resetuser(ordr.cust_id)
                 cleanports()
         flash(u'Utl\xf8pte abonnementer slettet!')
         return render_template('subadmin.html', form=form, orders=orders)
@@ -615,28 +466,21 @@ def subadmin():
 
 
 #cleanly purges a user and his orders from the database
-def resetuser(orderlid):
-    print orderlid
-    delorder = Orderline.query.filter_by(orderl_id=orderlid).first()
-    delorderorder = Order.query.filter_by(order_id=delorder.order_id).first()
-    print delorderorder.cust_id
-    usertbreset = User.query.filter_by(cust_id=delorderorder.cust_id).first()
-    print usertbreset.cust_username
-    upduser = update(User).where(User.cust_id == delorderorder.cust_id).values(role=0, cust_notes=None)
+def resetuser(userid):
+    delorder = Order.query.filter_by(cust_id=userid).first()
+    usertbreset = User.query.filter_by(cust_id=userid).first()
+    upduser = update(User).where(User.cust_id == delorder.cust_id).values(role=0, cust_notes=None)
     db.session.execute(upduser)
     db.session.delete(delorder)
-    db.session.commit()
-    time.sleep(2)
-    db.session.delete(delorderorder)
     db.session.commit()
 
 
 #Method for cleaning out ports set to used without an attached subscription
 def cleanports():
     allports = Port.query.filter_by(port_used=1).all()
+    allvoiceports = Port.query.filter_by(port_used=1).all()
     for ports in allports:
-        ordl = Orderline.query.filter_by(port_id=ports.port_id).first()
-
+        ordl = Order.query.filter_by(port_id=ports.port_id).first()
         if ordl is None:
             stmt = update(Port).where(Port.port_id == ports.port_id).values(port_used=2)
             db.session.execute(stmt)
@@ -648,7 +492,21 @@ def cleanports():
             db.session.commit()
             flash('Port '+str(ports.port_no)+' gjennoprettet!')
         else:
-            flash('Ingen porter tilbakestillt!')
+            flash('Ingen spillporter tilbakestillt!')
+    for ports in allvoiceports:
+        ordl = VtOrder.query.filter_by(port_id=ports.port_id).first()
+        if ordl is None:
+            stmt = update(Port).where(Port.port_id == ports.port_id).values(port_used=2)
+            db.session.execute(stmt)
+            db.session.commit()
+            flash('Port '+str(ports.port_no)+' gjennoprettet!')
+        elif ordl.orderl_expire + dateutils.relativedelta(months=1) <= datetime.date.today():
+            stmt = update(Port).where(Port.port_id == ports.port_id).values(port_used=2)
+            db.session.execute(stmt)
+            db.session.commit()
+            flash('Port '+str(ports.port_no)+' gjennoprettet!')
+        else:
+            flash('Ingen spillporter tilbakestillt!')
 
 
 #Administrate the service, adding servers, ports and managing them through the control panel.
@@ -740,13 +598,7 @@ def servadmin():
     if request.method == 'POST' and request.form['submit'] == "Slett port":
         portform = form6.portsel.data
         if portform !=None:
-            #portdata = portform.port_id
-            #print portdata
             portname = Port.query.filter_by(port_id=portform.port_id).delete()
-            print portname
-            #serverid = portname.server_id
-            #Port.query.filter_by(server_id=serverid).delete()
-            #Serverreserve.query.filter_by(server_name=portdata).delete()
             db.session.commit()
             time.sleep(1)
             flash('Port slettet!')
@@ -791,12 +643,11 @@ def uuadmin():
     subexpire = ''
     order = Order.query.filter_by(cust_id=custid).first()
     if order is not None:
-        orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
-        subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
+        subid = Subscription.query.filter_by(sub_id=order.sub_id).first()
         subdescription = subid.sub_description
         subtype = subid.sub_type
-        subcreate = orderlineid.orderl_create
-        subexpire = orderlineid.orderl_expire
+        subcreate = order.orderl_create
+        subexpire = order.orderl_expire
     name = User.query.filter_by(cust_id=custid).first()
     email = name.cust_mail
     fname = name.cust_fname
@@ -876,15 +727,9 @@ def uadmin():
             userdelquer = db.session.query(User).filter(User.cust_username == user).first()
             order = Order.query.filter_by(cust_id=userdelquer.cust_id).first()
             if order is not None:
-                orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-                if orderline is not None:
-                    db.session.delete(orderline)
-                    db.session.commit()
-                    time.sleep(1)
-                if order is not None:
-                    db.session.delete(order)
-                    db.session.commit()
-                    time.sleep(1)
+                db.session.delete(order)
+                db.session.commit()
+                time.sleep(1)
             db.session.delete(userdelquer)
             db.session.commit()
             time.sleep(1)
@@ -938,8 +783,7 @@ def uadmin():
 @app.route('/mcoutput', methods=['POST', 'GET'])
 def mcoutput():
     order = Order.query.filter_by(cust_id=session['userid']).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
-    dbport = Port.query.filter_by(port_id=orderline.port_id).first()
+    dbport = Port.query.filter_by(port_id=order.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
     port = dbport.port_no
@@ -957,8 +801,7 @@ def mcoutput():
 def servpropout():
     userquer = User.query.filter_by(cust_id=session['userid']).first()
     orderquer = Order.query.filter_by(cust_id=session['userid']).first()
-    orderlinequer = Orderline.query.filter_by(order_id=orderquer.order_id).first()
-    port = Port.query.filter_by(port_id=orderlinequer.port_id).first()
+    port = Port.query.filter_by(port_id=orderquer.port_id).first()
     server = Serverreserve.query.filter_by(server_id=port.server_id).first()
     serverip = server.server_ip
     serv = Server()
@@ -973,8 +816,7 @@ def servpropout():
 def servstatus():
     userquer = User.query.filter_by(cust_id=session['userid']).first()
     orderquer = Order.query.filter_by(cust_id=session['userid']).first()
-    orderlinequer = Orderline.query.filter_by(order_id=orderquer.order_id).first()
-    port = Port.query.filter_by(port_id=orderlinequer.port_id).first()
+    port = Port.query.filter_by(port_id=orderquer.port_id).first()
     server = Serverreserve.query.filter_by(server_id=port.server_id).first()
     serverip = server.server_ip
     serv = Server()
@@ -1011,24 +853,9 @@ def portoutput2():
     return render_template('portoutput2.html', ports=ports)
 
 
-#Servadmin delete server
-#@app.route('/deleteserver', methods=['GET', 'POST'])
-#def deleteserver():
-#    form4 = DeleteserverForm()
-#    time.sleep(1)
-#    return render_template('deleteserver.html', form4=form4)
-
-
 @app.route('/userinfo')
 def userinfo():
     custid = session['userid']
-    #order = Order.query.filter_by(cust_id=custid).first()
-    #orderlineid = Orderline.query.filter_by(order_id=order.order_id).first()
-    #subid = Subscription.query.filter_by(sub_id=orderlineid.sub_id).first()
-    #subdescription = subid.sub_description
-    #subtype = subid.sub_type
-    #subcreate = orderlineid.orderl_create
-    #subexpire = orderlineid.orderl_expire
     name = User.query.filter_by(cust_id=custid).first()
     email = name.cust_mail
     fname = name.cust_fname
@@ -1047,12 +874,8 @@ def login():
     if request.method == 'POST':
         if 'kliknes@gmail.com' is not cust_mail:
             usermail = User.query.filter_by(cust_mail=cust_mail).first()
-            #user = User.query.filter_by(cust_username=cust_mail).first()
-            #print user
-            #print usermail.cust_mail
         if 'Cruor' is not cust_mail:
             user = User.query.filter_by(cust_username=cust_mail).first()
-            #print user
     if form.validate_on_submit():
         if usermail is not None:
             if form.email.data == usermail.cust_mail and usermail.check_password(form.password.data):
@@ -1061,7 +884,6 @@ def login():
                 session['username'] = usermail.cust_username
                 session['email'] = usermail.cust_mail
                 session['userid'] = usermail.cust_id
-                session['ordertmpholder'] = usermail.cust_notes
                 if usermail.role == 2:
                     session['premium'] = usermail.role
                 if usermail.role == 1:
@@ -1073,14 +895,12 @@ def login():
                 flash('Feil brukernavn eller passord!')
                 return render_template('login.html', title='Logg inn', form=form)
         if user is not None:
-            print user.cust_username
             if form.email.data == user.cust_username and user.check_password(form.password.data):
                 session['remember_me'] = form.remember_me.data
                 session['logged_in'] = True
                 session['username'] = user.cust_username
                 session['email'] = user.cust_mail
                 session['userid'] = user.cust_id
-                session['ordertmpholder'] = user.cust_notes
                 if user.role == 2:
                     session['premium'] = user.role
                 if user.role == 1:
@@ -1178,8 +998,7 @@ def mcupload():
     user = session['username']
     serv = Server()
     form = PropertiesForm()
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    orderline = Order.query.filter_by(cust_id=session['userid']).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
@@ -1210,8 +1029,7 @@ def manage():
     user = session['username']
     serv = Server()
     form = PropertiesForm()
-    order = Order.query.filter_by(orderident=session['ordertmpholder']).first()
-    orderline = Orderline.query.filter_by(order_id=order.order_id).first()
+    orderline = Order.query.filter_by(cust_id=session['userid']).first()
     dbport = Port.query.filter_by(port_id=orderline.port_id).first()
     server = Serverreserve.query.filter_by(server_id=dbport.server_id).first()
     serverip = server.server_ip
@@ -1220,12 +1038,8 @@ def manage():
     ordertype = currsub.sub_type
     ordertypeclean = ordertype[2:]
     if request.method == 'POST':
-        print request.form
         if request.form['submit'] == 'Opprett properties':
             serv.servercreate(str(serverip), user, str(port))
-            t = Thread(target=threadtest, args=('2','4','6'))
-            t.start()
-            time.sleep(1)
             serv.editproperties(serverip, user, 'mscs-initial-memory', '128M')
             serv.editproperties(serverip, user, 'mscs-maximum-memory', ordertypeclean+'M')
             flash("Properties opprettet!")

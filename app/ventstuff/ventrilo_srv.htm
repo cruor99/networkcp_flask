@@ -1,0 +1,885 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Ventrilo Server Setup Information</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<div align="center"> 
+  <p><font face="Arial, Helvetica, sans-serif">Ventrilo Server Setup Information.<br>
+    </font><font face="Arial, Helvetica, sans-serif">Version 3.0.0 <br>
+  Copyright 1999-2007 Flagship Industries, Inc.<br>
+    =================================== </font></p>
+</div>
+<h4><font face="Arial, Helvetica, sans-serif">This document is divided into different 
+  sections.</font></h4>
+<p><font face="Arial, Helvetica, sans-serif">1) <a href="#1">Requirements</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">The basic requirements and general operational information about the server 
+        and what is expected before it can run.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">2) <a href="#2">INI File settings</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">All of the possible options and parameters in the ventrilo_srv.ini file.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">3) <a href="#4">Server program</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">How its run and any special options associated with the specific platform 
+        version of the server.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">4) 
+  <a href="#5">NT Service program</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">How to configure and setup the NT Service.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">5) 
+  <a href="#6">RCon commands</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Server administration commands.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">6</font><font face="Arial, Helvetica, sans-serif">) <a href="#7">ventrilo status program</a></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">How to use this statusing tool.</font></p>
+</blockquote>
+<hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="1"></a>1) Requirements 
+  </em> </font></h4>
+<font face="Arial, Helvetica, sans-serif"> 
+</font>
+<p><font face="Arial, Helvetica, sans-serif">Servers come in two flavors: Public and Pro version. The Public version is freely downloadable and
+can be used without paying a license fee in accordance to the LICENSE file
+included with each of the server distributions.</font></p>
+<font face="Arial, Helvetica, sans-serif"><p><i>Public version.</i></p>
+<p>The Public version of the server is hard coded to 8 slots per instance, one
+instance per machine and port 3784.</p>
+<p><i>Pro version.</i></p>
+<p>The Pro version of the server is designed to be scalable, in that multiple copies of 
+  the server can be started on the same machine. Each instance of the Ventrilo 
+  server running on the same machine must be assigned a unique port number 
+  in it's corresponding INI file.</p>
+<p>CPU utilization by the Ventrilo server is negligible so just about any low 
+  end machine can be used. However, servers will require better upload and download 
+  bandwidth capacities due to the nature of voice communication. The more concurrent 
+  clients connected to a server (and in the same channel) the greater the bandwidth 
+  utilization. </p>
+</font><hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="2"></a>2) INI File 
+  settings </em> </font></h4>
+<font face="Arial, Helvetica, sans-serif"> 
+<p>The &quot;<font face="Courier New, Courier, mono">ventrilo_srv.ini</font>&quot; 
+  file has several categories:</p>
+</font>
+<blockquote> 
+  <p><font face="Arial, Helvetica, sans-serif"><strong>Server</strong> - General 
+    configuration info.<br>
+    <strong>Intf</strong> - Accept connections only from specific IP interfaces.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>Each category is contained in <strong>[</strong> brackets <strong>]</strong> 
+  and each option is entered using <strong>key=value</strong> formatting. This 
+  document will use the settings included in the example INI file.</p>
+<p><strong>[Server]</strong></p>
+<p><strong>Name=Server 1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This is the name of the server that appears at the top of the active user list 
+      when someone connects. (Required)</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Phonetic=</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This is the phonetic pronunciation of the server name. If left blank the servers 
+      Name will be used in all TTS events that involve the servers name being announced.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Comment=</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option has been removed. It is now controlled via the client by using the Server Properties window.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Port=3784</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option has no meaning on Public
+      versions of the server. The port will default to 3784. If you use a router to
+      forward the connection from the outside internet to your internal private
+    network then the external port must also be 3784.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">This is the TCP/IP port number that the server will listen on waiting for clients 
+      to connect. If you start multiple instances of the server on the same computer 
+      then they must have different INI files with unique TCP port numbers assigned 
+      to them.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Auth=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This is the authentication mode. (Required)</font></p>
+  <p><font face="Arial, Helvetica, sans-serif"> 0 = No authentication and anyone can connect.<br>
+    1 = Global password authentication.<br>
+    2 = Specific user/password authentication.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Duplicates=1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Enables or disables duplicate login names. (Required)</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">0 = Disables duplicates.<br>
+    1 = Allows duplicate login names.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">If disabled and someone logs in with a user name identical to that of a currently 
+      connected user, the server will disconnect the first user. This setting should 
+      only be used when <strong>Auth=2</strong> for sanity reasons but it can be disabled 
+      for any Auth mode. Note: When this option is set to 0 it creates problems for 
+      clients that had auto-reconnect enabled, however, starting with version 2.0.0 
+      this is no longer a problem.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>AdminPassword=</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This is the remote server administration password. Leaving this option blank 
+      will disable remote admin logins. This password is used by normal login accounts 
+      and they activate a menu option to have admin rights assigned to their login. 
+      (Optional)</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Password=</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This is the global login password for when <strong>Auth=1</strong>. All users 
+      connecting to this server must have this password, otherwise the server will 
+      send back an error message saying that they could not be authenticated. (Optional)</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>MaxClients=8</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option is not available on Public versions
+      of the server. It is hard coded to a maximum of 8 simultaneous clients (also
+      called slots). If you need more then 8 slots then you will need to rent a server
+    from a <a href="http://www.ventrilo.com/hosting.php">licensed professional hosting company</a>.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies the maximum number of clients that can be connected to 
+      the server at the same time. Pro servers have a hard coded maximum limit of 400 
+      clients, however, your servers network connection might 
+      not be able to handle a large number of simultaneous connections. (Required)</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>SendBuffer=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies the size of the TCP outbound 
+      buffers to each client. The value is in bytes.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">A value of 0 will force the program to use a default 
+      value of 131072 bytes. If you have a smaller value then I recommend setting 
+      it to 0 and let the program use its default.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">In the servers log file there will be a line starting with &quot;MSG_CONN&quot; when a new client connects. At the end of this line will be two pairs of numbers 
+      (A,B) (C,D). The A number is the buffer size as defined by your platform. The 
+      B number is the buffer size as reported by the system after the Ventrilo server 
+      has changed it. The number could be larger or smaller depending on the platform.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>RecvBuffer=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies the size of the TCP inbound 
+      buffers for each client. The value is in bytes.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">A value of 0 will force the program to use it's default settings of 131072 
+      bytes per client connection.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">In the servers log file there will 
+      be a line starting with &quot;MSG_CONN&quot; when a new client connects. At 
+      the end of this line will be two pairs of numbers (A,B) (C,D). The C number 
+      is the buffer size as defined by your platform. The D number is the buffer size 
+      as reported by the system after the Ventrilo server has changed it. The number 
+      could be larger or smaller depending on the platform.</font><font face="Arial, Helvetica, sans-serif"> 
+    </font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif"> 
+<p><strong>Diag=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">0 = Diagnostics off.<br>
+    1 = Diagnostics on.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">This option has no use to end users and is for developer use only.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>LogonTimeout=5</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies in seconds how long a client 
+      has to logon to the server before it is automatically disconnected. Once logged 
+      on the option has no meaning.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>CloseStd=1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">0 = Don't close standard input, output and error handles.<br>
+    1 = Close standard input, output and error handles.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his option instructs the server to close or 
+      leave-intact the standard input, output and error file handles when starting 
+      in daemon mode. At the time of this writing the Ventrilo server is compiled 
+      on RedHat 7.2 systems but there seems to be an incompatibility with closing 
+      these standard file handles on RedHat80 systems thus causing the program to 
+      crash. Setting this option to 0 will force the program to leave the file handles 
+      open and prevent it from crashing on RH80 systems. The only downside to this 
+      will be if the program was started in daemon mode via an SSH terminal session. 
+      When you &quot;exit&quot; the terminal session it will hang waiting for all 
+      file handles in spawned processes to close, and you will be forced to manually 
+      kill the SSH terminal program. This doesn't seem to happen with normal xterm, 
+      gnome-terminal or telnet sessions. *shrug*</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">Note: Starting with version 2.0.0 this doesn't seem to be an issue anymore 
+      due to changes made to the build process. However, the option remains available 
+      in case it is needed in the future.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>FilterWave=0<br>
+</strong><strong>FilterTTS=0</strong></p>
+</font><font face="Arial, Helvetica, sans-serif">
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">These options have been removed. They are now controlled via the client by using the Server Properties window.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>TimeStamp=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">0 = Disable console timestamp's.<br>
+    1 = Enable console timestamp's.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">This option enables or disables timestamp's being 
+      displayed in console messages. This includes remote consoles.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>PingRate=10</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his option allows the administrator to change 
+      the interval at which the server pings the clients. The value is specified in 
+      seconds and defaults to 10. Setting to a lower value might be useful for diagnosing 
+      problem clients especially when the remote console command &quot;pingtrace&quot; is used.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>ExtraBuffer=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option allows the administrator to give 
+      each outbound client data stream additional buffer space but it's allocated 
+      and controlled by the server instead of relying on the TCP stack implementation. 
+      A value of 0 instructs the server to use it's default value of 128K bytes of 
+      extra buffer space. Any attempt to change the value will usually make any existing problems worse. It remains intact for historical purposes. </font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>ChanWidth=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies a maximum number of parallel 
+      sub-channels that can be created in each channel. It has no effect on root level 
+      channels which only server admin's can create. A value of 0 means there is no 
+      limit. </font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>ChanDepth=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies the maximum number of 
+      nested sub-channels (depth) that can be created. A value of 0 means the server 
+      will use it's default max value of 8 nested channels.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>ChanClients=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option specifies the maximum number of 
+      clients allowed in any channel. A value of 0 means there is no limit to the 
+      number of clients per channel.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>DisableMaxClients=1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option has has been removed . </font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p> <strong>DisableQuit=1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">0=Allow remote consoles to issue the &quot;quit&quot; command.<br>
+    1=Disable (prevent) remote console from issuing the &quot;quit&quot; command.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his option prevents remote console commands 
+      (those typed into the chat window when logged in with server admin rights) from 
+      issuing the &quot;quit&quot; command which would instruct the server to exit 
+      the system. However, if the server was started in a non-daemon mode the local 
+      console can still issue the quit command.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>VoiceCodec=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his option tells the server which codec all 
+      clients must use. The value is a 0 based index into a list of possible codec's. 
+      To see the list of currently supported codec types issue the command &quot;<font face="Courier New, Courier, mono">ventrilo_srv 
+      -?</font>&quot; and the program will display a table of codec's and their associated 
+      formats.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>VoiceFormat=1</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his option is the second part of VoiceCodec. 
+      Each codec can have one or more possible formats that control the quality and 
+      bandwidth usage of the specified codec. To see the list of currently supported 
+      codec formats issue the command &quot;<font face="Courier New, Courier, mono">ventrilo_srv 
+      -?</font>&quot; and the program will display a table of codec's and their associated 
+      formats.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>SilentLobby=0</strong></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">0 = Allow replication.<br>
+    1 = Suppress replication, thus making the lobby silent.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">This option allows or suppresses replication 
+      of voice, wave binds and TTS binds when the client is in the main lobby.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><b>AutoKick=0</b></p>
+</font><font face="Arial, Helvetica, sans-serif"></font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option enables auto-kicking of a client
+    after it has been connected for X number of seconds. A value of 0 disables the
+    autokick feature, otherwise it specifies the number of seconds that a client is
+    allowed to remain connected before the server will automatically disconnect
+    them. This feature is primarily intended for professional hosting services who
+    setup servers for potential customers to test the quality of the hosters network
+    and machines, while at the same time prevent people from hijacking the server
+    for their own private use.</font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>[Intf]</strong></p>
+</font><font face="Arial, Helvetica, sans-serif"> 
+</font>
+<p><font face="Arial, Helvetica, sans-serif">This feature is not available on Public versions
+of the server. All versions of
+the Public server will attach to the global interface 0.0.0.0 which means to accept
+connections from all interfaces.</font></p>
+<font face="Arial, Helvetica, sans-serif"><p>Pro versions of the server should only attach to a single interface.&nbsp;</p>
+<p>This section allows for controlling which interface the server will accept 
+  client connections from. If you do not specify anything in this section then 
+  the server will accept client connections from all available interfaces. </p>
+<p>When the server displays the message &quot;Accepting connections from the following 
+  interfaces&quot; and the displayed IP address is 0.0.0.0 then this means the 
+  server will accept incoming network connections from all interface cards. This 
+  is the default behavior unless you specify an interface.</p>
+</font><p><font face="Arial, Helvetica, sans-serif">Note: The key names do not need to be unique but 
+  we would encourage you to continue using names like the following examples where 
+  the key name starts with &quot;Intf&quot; and followed by a unique identifier.</font></p>
+<font face="Arial, Helvetica, sans-serif"><p><strong>Intf1=192.168.0.31</strong></p>
+<p><strong>Intf2=external.mydomain.com</strong></p>
+<p><strong>Intf3=internal.mydomain.com</strong></p>
+<p><strong>Intf4=127.0.0.1</strong></p>
+<p><font face="Arial, Helvetica, sans-serif">The interfaces can now be specified 
+  as host names or IP numbers.</font><font face="Arial, Helvetica, sans-serif"> 
+  </font></p>
+</font><font face="Arial, Helvetica, sans-serif"> 
+<p>&nbsp;</p>
+</font>
+<hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="4" id="4"></a>3) Server 
+  program </em> </font></h4>
+<font face="Arial, Helvetica, sans-serif"> 
+<p>All servers, no matter which platform, are designed to be run in a console 
+  window. However, the UNIX'ish based versions can be started in daemon mode and 
+  the Windows NT based versions can be started via a separate Ventrilo Service 
+  program. </p>
+<p>Starting with version 1.03 there are two different ways to start a server. 
+  The original way requires you to change the current working directory before 
+  starting the server. A new optional mechanism uses the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  command line option to specify the location of the required files without changing 
+  the working directory.</p>
+<p><strong>General information about starting a server.</strong></p>
+</font>
+<p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">When the program starts it will read 
+        the contents of the INI file and validate the information for completeness. 
+        If any of the configuration information is incorrect the server will automatically 
+        terminate. If the server refuses to start after reading the config info you 
+        can check the &quot;<font face="Courier New, Courier, mono">ventrilo_srv.log</font>&quot; 
+      for details.</font></font></p>
+<p><font face="Arial, Helvetica, sans-serif">After starting the server it will 
+        record its Process ID, or PID, to a file named &quot;<font face="Courier New, Courier, mono">ventrilo_srv.pid</font>&quot; 
+      in the current or filename-prefixed directory. This is useful should you need 
+      to manually kill a server that is misbehaving, not as if that will ever happen.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">To start a server in daemon mode 
+        append a &quot;<font face="Courier New, Courier, mono">-d</font>&quot; to the 
+        command line.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">To get command line help and a list 
+        of voice codec/format options append the &quot;<font face="Courier New, Courier, mono">-?</font>&quot; 
+      to the command line.</font></p>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Method 1: Original and default way.</strong></p>
+</font>
+<p><font face="Arial, Helvetica, sans-serif">To start a server you must first change your current working directory to that 
+        of the &quot;<font face="Courier New, Courier, mono">ventrilo_srv.ini</font>&quot; file that you plan on using. </font></p>
+<p><font face="Arial, Helvetica, sans-serif">To start a standalone server, not a service or a daemon, simply execute the 
+        appropriate server program for the given platform, assuming the working directory 
+        has been set first.</font></p>
+<font face="Arial, Helvetica, sans-serif">
+<p><strong>Method 2: Path and filename prefix.</strong></p>
+</font>
+<p><font face="Arial, Helvetica, sans-serif">Starting with version 1.03 you can use the &quot;-f&quot; 
+  command line option to specify the path and prefix name to be used for all files. 
+  This requires that all files use a unique name for each server that is started 
+  on the same machine. When used in this mode the server will use the path/prefix 
+  immediately following the &quot;-f&quot; 
+  parameter and tack on extensions for each of the files to be read or written 
+  by the server. At the time of this writing there are 12 different files used 
+  by a server.</font></p>
+<font face="Arial, Helvetica, sans-serif"></font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">1) ventrilo_srv.ini</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read before 
+                starting up and required</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">    2) ventrilo_srv.ban</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and 
+        written but not required</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"> 3) ventrilo_srv.pid</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Written 
+        once as soon as the server starts. Deleted when server stops.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">    4) ventrilo_srv.log</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Appended 
+        to by the server when ever a log message is generated</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">    5) ventrilo_srv.usr</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read once when the program starts. Updated periodically as changes are made to the User Access Rights. Do not modify this file while the program is running as your changes will be overwritten.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"> 6) ventrilo_srv.chn</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read before 
+        program starts, updated when channels are added/deleted. Do not modify this file while the program is running as your changes will be overwritten.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"> 7) ventrilo_srv.prop</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read before program starts, updated when server admin uses Server Properties window in the client</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">8) ventrilo_srv.motd</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and written to during run time.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">9) ventrilo_srv.qmotd</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and written to during run time.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">10) ventrilo_srv.trgvoice</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and written to during run time. Not supported on Public servers. Do not modify this file while the program is running as your changes will be overwritten.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">11) ventrilo_srv.trgcmd</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and written to during run time. Not supported on Public servers. Do not modify this file while the program is running as your changes will be overwritten.</font></p>
+  </blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">12) ventrilo_srv.rank</font></p>
+  <blockquote>
+    <p><font face="Arial, Helvetica, sans-serif">Read and written to during run time. Do not modify this file while the program is running as your changes will be overwritten.</font></p>
+    <p>&nbsp;</p>
+  </blockquote>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif"><p>When using the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  you don't need to change the working directory but you must provide a path/prefix 
+  to be used for reading and writing these files. For example, lets assume you 
+  are running the Linux version and have the server installed in the directory 
+  &quot;<font face="Courier New, Courier, mono">/</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font>&quot; 
+  along with all of the necessary files. To start the server with the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  option you would simply issue the following command.</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">/home/ventrilo/ventrilo_srv -f/</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font><font face="Courier New, Courier, mono">/ventrilo_srv</font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>Notice there is no space following the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  option. The above line assumes you are using the default file names. Now, lets 
+  assume you are running two servers on the same machine. Each server would need 
+  to have its own port number assigned to it. Thus, we recommend naming the files 
+  by the port numbers. To start both servers using the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  option you issue the following commands.</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">/</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font><font face="Courier New, Courier, mono">/ventrilo_srv 
+      -f/</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font><font face="Courier New, Courier, mono">/3784 
+      -d<br>
+      /</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font><font face="Courier New, Courier, mono">/ventrilo_srv 
+      -f/</font><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono">home/ventrilo</font></font><font face="Courier New, Courier, mono">/4000 
+      -d</font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>The first server would read/write files using the names: 3784.ini, 3784.ban, 
+  3784.pid, 3784.log, 3784.usr and 3784.chn</p>
+<p>While the second server would read/write files using the names: 4000.ini, 4000.ban, 
+  4000.pid, 4000.log, 4000.usr and 4000.chn</p>
+<p>The &quot;<font face="Courier New, Courier, mono">-d</font>&quot; on those 
+  examples will start the servers in daemon mode on UNIX'ish systems.</p>
+<p><strong>Linux notes:</strong></p>
+<p>If you have an automated system for restarting a Linux based Ventrilo server 
+  then you will need to wait about 1 to 2 minutes after the server is stopped 
+  and before you restart it. There&#8217;s a problem with creating the initial 
+  network stream shortly after a server is killed and when a new one is started. 
+  Waiting for about 2 minutes should make it work correctly. This seems to be 
+  less of a problem starting with version 1.03 because of the architectural change, 
+  but it probably wouldn't be a bad idea to continue the delay.</p>
+<p><strong>Example startup scripts:</strong></p>
+<p>The following script is an example of starting Linux based server(s) from the 
+  &quot;<font face="Courier New, Courier, mono">/etc/rc.d/rc.local</font>&quot; 
+  file when a system is booted. Notice that they are started with the specific 
+  user account called &quot;ventrilo&quot; and the process priority is bumped 
+  to higher then normal.</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Courier New, Courier, mono"># Startup ventrilo servers.</font></font></p>
+  <p><font face="Courier New, Courier, mono">VENPATH=/home/ventrilo<br>
+    VENBIN=$VENPATH/ventrilo_srv</font></p>
+  <p><font face="Courier New, Courier, mono">su ventrilo -c &quot;$VENBIN -f$VENPATH/3784 
+      -d&quot;<br>
+    su ventrilo -c &quot;$VENBIN -f$VENPATH/4000 -d&quot;<br>
+    <br>
+    renice -5 `cat $VENPATH/3784.pid`<br>
+    renice -5 `cat $VENPATH/4000.pid`</font><br>
+  </p>
+</blockquote> 
+<p><font face="Arial, Helvetica, sans-serif">Note: Those are GRAVE characters 
+  around the `cat ... pid` strings. A.K.A backwards apostrophe.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">The &quot;<font face="Courier New, Courier, mono">renice</font>&quot; 
+  command is used to bump the priority of the daemon process thus preventing it 
+  from being starved for CPU time if the same machine is used for running other 
+  programs like FTP or WEB servers. The Windows version of the server does this 
+  automatically. However, in a *NIX environment only the &quot;root&quot; user 
+  is allowed to bump process priority.</font></p>
+<p><font face="Arial, Helvetica, sans-serif"><strong>Example kill script:</strong></font></p>
+<p><font face="Arial, Helvetica, sans-serif">This example shows how to stop a server on a UNIX'ish platform that is running in the background as a daemon. Note that  it assumes the current working directory is the same as the location of the PID file.</font></p>
+<blockquote>
+  <p><font face="Courier New, Courier, mono">kill `cat ventrilo_srv.pid`</font></p>
+</blockquote>
+<p>&nbsp; </p>
+<hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="5" id="5"></a>4) NT 
+  Service program </em> </font></h4>
+<font face="Arial, Helvetica, sans-serif"> 
+<p>When running the server on a Windows NT/2000/XP platform you also have the 
+  option of executing it as an NT Service that will run in the background and 
+  can be started up automatically when the computer is started.</p>
+</font>
+<p><font face="Arial, Helvetica, sans-serif">The Ventrilo server doesn't actually run as a service, instead there 
+  is another program called &quot;<strong>ventrilo_svc.exe</strong>&quot; that 
+  is the real service program. This service program is responsible for starting 
+  up the &quot;<strong>ventrilo_srv.exe</strong>&quot; server program after the 
+  service is loaded.</font></p>
+<font face="Arial, Helvetica, sans-serif"><p>One advantage to doing it this way is that the service program will restart 
+  the server if an admin shuts it down or if the program were to crash due to 
+  a bug.</p>
+<p>Another advantage to this technique is that the service program can launch 
+  multiple copies of the server with each one running a different port number 
+  and configuration or even different versions.</p>
+<p>To register the Service program with the Service Control Manager simply open 
+  a command prompt window and change directories to where you installed the files. 
+  Now type the following command:</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><strong><font face="Courier New, Courier, mono">ventrilo_svc -i</font></strong></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>This will install the service and mark it for automatic startup the next time 
+  you reboot your system. <font face="Arial, Helvetica, sans-serif">To start the 
+  service program after it's registered you can type &quot;<strong>net start ventrilo</strong>&quot; 
+  or simply reboot your machine. That's all you have to do to get the service 
+  installed. </font></p>
+<p>If you want to uninstall the service from your system or want to install a 
+  new version, simply perform the following commands in this order.</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><strong><font face="Courier New, Courier, mono">net stop ventrilo<br>
+    ventrilo_svc -u</font></strong></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>The &quot;<font face="Courier New, Courier, mono">-u</font>&quot; option 
+  will tell the service program to uninstall it self from the systems Service 
+  Control Manager.</p>
+</font><p><font face="Arial, Helvetica, sans-serif">The following documentation is for 
+  more advanced customization of the service but is not required for a basic setup.</font></p>
+<font face="Arial, Helvetica, sans-serif">
+<p>In order for the service to function properly you also need to setup a few 
+  registry entries that define each of the servers that you want the service program 
+  to start. When you issued the &quot;<font face="Courier New, Courier, mono">-i</font>&quot; 
+  option it also created an example registry entry for a single server under the 
+  key:</p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><strong><font face="Courier New, Courier, mono">HKEY_LOCAL_MACHINE\Software\Ventrilo</font></strong></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p>There should be at least one value and one sub-key created in here. The value 
+  is called <strong>EXE</strong> and points to the full path and filename of the 
+  Ventrilo server program. This is the global entry and is used if the individual 
+  server sub-key's don't specify one.</p>
+  <p>The sub-key names can be anything you want them to be. At installation time 
+  the &quot;<font face="Courier New, Courier, mono">-i</font>&quot; option 
+  created a single sub-key called Server1. In side this key will be 3 string values.</p>
+  <p>The <strong>WorkDir</strong> value is required (if the <strong>Prefix</strong> 
+  value isn't used) for each sub-key and must be unique for each server if you 
+  want the service to start multiple instances of the server.</p>
+  <p>The <strong>Prefix</strong> value is required (if <strong>WorkDir</strong> 
+  is not specified) and is only used in the unique sub-keys for each server. When 
+  this option is set it activates the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; 
+  command line parameter discussed in section 4 of this document. Do not include 
+  the &quot;<font face="Courier New, Courier, mono">-f</font>&quot; in the Prefix's 
+  value as the service program will automatically tack that on. All you need to 
+  do is create this value and give it a fully qualified path and prefix file name. 
+  If the Prefix value exists and contains anything other then a blank string then 
+  the <strong>WorkDir</strong> option will be ignored.</p>
+  <p>You can also specify an <strong>EXE</strong> value for defining a specific 
+  copy of the server to be started up by the service. This is useful if you are 
+  running different versions of the Ventrilo server. If an <strong>EXE</strong> 
+  value exists in the sub-key then it takes precedence over the global <strong>EXE</strong> 
+  value higher up. If they are both missing then the service will not start anything.</p>
+  <p>It's recommended that you name the sub-key's with the same name that 
+  you would assign each server in its &quot;<font face="Courier New, Courier, mono">ventrilo_srv.ini</font>&quot; 
+  file or possibly by it's port number, however this is not required and you can 
+  name the sub-key's what ever you want.</p>
+  <p>Another feature of the service program is the ability to run in debug mode. 
+  This lets you test your registry entries and INI file configurations before 
+  starting it as a real service where its harder to diagnose problems. To do this 
+  first make sure that the real service is not currently running and then start 
+  the &quot;<strong>ventrilo_svc.exe</strong>&quot; with the following command 
+  line.</p>
+  <p><strong><font face="Courier New, Courier, mono">net stop ventrilo<br>
+  ventrilo_svc -d</font></strong></p>
+  <p>When the service starts in debug mode all of its output will show up in the 
+  console window where you typed in the command. It will then start each instance 
+  of the servers you have defined in their own console windows. If the service 
+  and all servers are happy then they should stay open and running. If not, you 
+  can go look at each servers log file for any possible problems. Don't 
+  forget, you can also start the servers manually as mentioned earlier in the 
+  document.</p>
+</font> 
+<hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="6" id="6"></a>5) RCon commands </em> </font></h4>
+<font face="Arial, Helvetica, sans-serif"> 
+</font>
+<p><font face="Arial, Helvetica, sans-serif">The following commands can be typed into a servers console window if it was 
+  started manually. These same commands can be sent to the server from a remote 
+  clients RCon window. But it does require that the remote client be logged in 
+  with server admin rights. The following is a list of all of the console commands 
+  and brief descriptions on their meaning and use. Some examples show the &lt; 
+  and &gt; around the parameters. Do not include these characters when typing the 
+  command. </font></p>
+<font face="Arial, Helvetica, sans-serif"><p><font face="Arial, Helvetica, sans-serif"><strong>auth &lt; 0 | 1 | 2 &gt;</strong></font></p>
+</font> 
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Allows 
+      the authorization mode to be changed dynamically.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>banadd &lt;ip[/bits]&gt; 
+  &lt;reason&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Adds an IP address, or subnet address, 
+      and a reason for the banning to the ban list and ban file. If you specify a 
+      subnet like 192.168.0.0/16 then any IP address that starts with 192.168 will 
+      be banned, whereas 192.168.67.0/24 would ban anything that starts with 192.168.67.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>bandel &lt;ip[/bits]&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Deletes an IP address from the ban 
+      list. Starting with version 1.03 this command will automatically update the 
+      ban file. Similar to banadd if you want to remove a ban address that is specified 
+      by a subnet then you must also specify the same ip and subnet in the bandel 
+      command.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>banlist</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option will display all of the 
+      banned IP addresses, the user name of the IP address, the admin who banned them 
+      and a reason why.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>clientkick &lt;uid&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Instructs the server to disconnect 
+      a user where &lt;uid&gt; is the users connection ID number.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>clientstatus &lt;uid&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This 
+      option will output more detailed information about a specified client.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>comment &lt;text&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option is no longer supported. Use the client Server Properties window to change the server comment.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>diag &lt; 0 | 1 &gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Allows 
+      the diagnostic mode to be changed dynamically. This feature is only valid to the developer. </font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>filtertts &lt; 0 | 1 &gt;<br>
+</strong></font><font face="Arial, Helvetica, sans-serif"><strong>filterwave &lt; 0 | 1 &gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">These options are no longer available. Use the client Server Properties window to change the filter options.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>help</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">Displays the list of possible console 
+      commands.</font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><font face="Arial, Helvetica, sans-serif"><strong>kickall</strong></font></p>
+</font> 
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Kicks 
+      all clients connected to the server. If issued via the RCon window from an admining client, that client is exempted from the kick.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>loggrep &lt;lines&gt; &lt;search 
+  text&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">A</font><font face="Arial, Helvetica, sans-serif">llows 
+      the servers log file to be searched for a specific piece of text. If lines is 
+      0 then all matching entries will be displayed, otherwise only the last number 
+      of &lt;lines&gt; specified matching the search will be displayed. The search 
+      string does NOT support regular expressions and all comparisons are case sensitive.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">WARNING: Using this command may cause 
+      the server to momentarily interrupt voice communication for all clients depending 
+      on the size of the log file. It's also possible that the results will be too 
+      long and potentially flood the requesters connection with too much information, 
+      thus causing the server to disconnect you. It is probably best that you always 
+      specify a number of &lt;lines&gt; to limit the results.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>maxclients</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option will display the total number of slots that the server is configured to handle.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>monitor &lt; 0 | 1 &gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">This option is only valid when requested 
+      from a remote client using the Rcon window. 
+      It instructs the server to send all status and log messages to the client that 
+      typed this command. The monitor command is turned on by setting the value to 
+      1, and turned off by a value of 0.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>name</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">T</font><font face="Arial, Helvetica, sans-serif">his 
+    option will display the server's name and current comment.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>password &lt;newpassword&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Changes the current login password for the server when Auth=1. The change is only valid while the server is running and it will revert back to the Password specified in the INI file when the server is restarted. </font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>pingrate &lt;1..10&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Allows 
+      for changing the interval (specified in seconds) that the server will ping the 
+      clients.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>pingtrace &lt; -2 | -1 | 
+  0 | 1..n &gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Allows 
+      for tracing the ping results as they are reported back from the clients. This 
+      option is only valid when issued by remote clients and does not work from the 
+      server's console window.</font></p>
+  <p><font face="Arial, Helvetica, sans-serif">-2 = Display the ping results for 
+      those clients that are in the same channel.<br>
+    -1 = Display the ping results for all clients.<br>
+    0 = Ping tracing disabled.<br>
+    1..n = Display the ping results for a specific client (specifies the UID)</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>quit</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Forces the server to shutdown. If 
+      the server was started by an NT Service control program then it will be automatically 
+      restarted in 10 seconds.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>serverstatus</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Output 
+      detailed status information about the server and specified interfaces.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>status</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">Displays the user id, channel id, 
+      login name and IP address for all of the connected users.</font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><font face="Arial, Helvetica, sans-serif"><strong>timestamp &lt; 0 | 1 &gt;</strong></font></p>
+</font> 
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif">Enables 
+      or disables displaying timestamp's on console and remote console server messages.</font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><strong>tts &lt;text&gt;</strong></font></p>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">This option will send out a Text-to-speech 
+      message to all users connected to the server, no matter which channel they are 
+      currently in. The &lt;text&gt; can be anything you want. This command and the 
+      comment command could be very useful if you are hosting a server that is reserved 
+      for a specific amount of time and you want to send TTS messages informing the 
+      connected users about how much time remains before the server is shutdown.</font></font></p>
+</blockquote>
+<font face="Arial, Helvetica, sans-serif">
+<p><font face="Arial, Helvetica, sans-serif"><strong>version</strong></font></p>
+</font>
+<blockquote>
+  <p><font face="Arial, Helvetica, sans-serif"><font face="Arial, Helvetica, sans-serif">Displays the application version 
+      of the server.</font></font></p>
+</blockquote>
+<hr>
+<h4><font face="Arial, Helvetica, sans-serif"><em><a name="7" id="7"></a>6) ventrilo_status 
+  program </em> </font></h4>
+<p><font face="Arial, Helvetica, sans-serif">A copy of this program 
+  is available with each individual server platform.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">This tool is used for submitting 
+  status information requests to servers. The 
+  following example shows how to issue a general status command &quot;<font face="Courier New, Courier, mono">-c1</font>&quot; 
+  to a server running on the same machine.</font></p>
+<blockquote>
+  <p><font face="Courier New, Courier, mono"><strong>ventrilo_status -c1 -t127.0.0.1</strong></font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">The following example is similar 
+  to the one above but will request detailed status &quot;<font face="Courier New, Courier, mono">-c2</font>&quot; 
+  from the same server.</font></p>
+<blockquote>
+  <p><font face="Courier New, Courier, mono"><strong>ventrilo_status -c2 -t127.0.0.1</strong></font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">The <font face="Courier New, Courier, mono">-c</font> 
+  option specifies the type of request (command).</font></p>
+<p><font face="Arial, Helvetica, sans-serif">The <font face="Courier New, Courier, mono">-t</font> 
+  option specifies the target address and can be an IP address or hostname. Unless 
+  otherwise specified the request would be issued to the default port of 3784. 
+  If the server you want to status is running on a different port number then 
+  you must append the port number to the target address and separated by a colon. 
+  The following example shows how:</font></p>
+<blockquote>
+  <p><font face="Courier New, Courier, mono"><strong>ventrilo_status -c2 -t127.0.0.1:3794</strong></font></p>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif">By default the status program will 
+  attempt to request the information 3 times with a 1 second delay between each 
+  request in order to guarantee delivery of the request and response. You can 
+  override the default number of attempts by placing the <font face="Courier New, Courier, mono">-a#</font> 
+  option on the command line and replace the # sign with the number of attempts. 
+  However, 3 attempts should be more then sufficient.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">All of the these options, and any 
+  not documented, and more examples can be obtained from the program it self by 
+  appending a <font face="Courier New, Courier, mono">-?</font> to the command 
+  line.</font></p>
+<p><font face="Arial, Helvetica, sans-serif">The output from the program is pure 
+  ascii text. From the ventrilo.com download page there is a section that deals 
+  with additional utilities. One of these is a collection of PHP scripts that 
+  shows how to call the program and process the results coming back, in addition 
+  to basic examples for calling the other PHP scripts and displaying the results 
+  in a meaningful format.</font></p>
+<p>&nbsp;</p>
+</body>
+</html>

@@ -50,14 +50,6 @@ class User(db.Model):
         return '%s' % (self.cust_username)
 
 
-class Order(db.Model):
-    order_id = db.Column(db.Integer, primary_key=True)
-    cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'), primary_key=True)
-    orderident = db.Column(db.String(30))
-    def __init__(self, cust_id, orderident):
-        self.cust_id = cust_id
-        self.orderident = orderident
-
 class Serverreserve(db.Model):
     server_id = db.Column(db.Integer, primary_key=True)
     server_name = db.Column(db.String(30), unique=True)
@@ -85,6 +77,19 @@ class Port(db.Model):
     def __repr__(self):
         return '[%i, %i]' % (self.port_no, self.server_id)
 
+class VoicePort(db.Model):
+    port_id = db.Column(db.Integer, primary_key=True)
+    server_id = db.Column(db.Integer, ForeignKey('serverreserve.server_id'))
+    port_no = db.Column(db.Integer)
+    port_used = db.Column(db.Integer)
+
+    def __init__(self, server_id, port_no, port_used):
+        self.server_id = server_id
+        self.port_no = port_no
+        self.port_used = port_used
+
+    def __repr__(self):
+        return '[%i, %i]' % (self.port_no, self.server_id)
 
 
 class Subscription(db.Model):
@@ -112,22 +117,24 @@ class Subscription(db.Model):
     def __repr__(self):
         return '%s' % (self.sub_id)
 
-class Orderline(db.Model):
-    orderl_id = db.Column(db.Integer, primary_key=True)
+class Order(db.Model):
+    order_id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, ForeignKey('port.port_id'))
     sub_id = db.Column(db.Integer, ForeignKey('subscription.sub_id'))
-    order_id = db.Column(db.Integer, ForeignKey('order.order_id'))
+    ordernumber = db.Column(db.Integer)
     orderl_create = db.Column(db.Date)
     orderl_expire = db.Column(db.Date)
     order_payed = db.Column(db.String(30))
+    cust_id = db.Column(db.Integer, ForeignKey('user.cust_id'))
 
-    def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire, order_payed):
+    def __init__(self, port_id, sub_id, order_id, orderl_create, orderl_expire, order_payed, userid):
         self.port_id = port_id
         self.sub_id = sub_id
-        self.order_id = order_id
+        self.ordernmber = order_id
         self.orderl_create = orderl_create
         self.orderl_expire = orderl_expire
         self.order_payed = order_payed
+        self.cust_id = useri
 
     def __repr__(self):
         return 'Order ID: %s, Expiration date: %s' % (self.orderl_id, self.orderl_expire)

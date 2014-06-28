@@ -37,12 +37,13 @@ class Server(object):
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server stop "+user)
         print ssh_stdout.readlines()
 
-    @async
+
     def servercreate(self, server, user, port):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server create "+user+" "+port)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("/etc/init.d/minecraft_server create "+user+" "+port)
+        ssh.exec_command('cp ~/eula.txt ~/worlds/'+user+'/eula.txt')
         return ssh_stdout.readlines()
 
     @async
@@ -75,7 +76,7 @@ class Server(object):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(server, username='minecraft', password='minecraft')
-        ssh.exec_command("dtach -n "+user+"cr /etc/init.d/minecraft_server send "+user+" "+command)
+        ssh.exec_command("/etc/init.d/minecraft_server send "+user+" "+command)
 
 
     #Method to get the server.properties file

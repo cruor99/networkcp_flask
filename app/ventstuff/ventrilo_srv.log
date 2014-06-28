@@ -1,0 +1,16 @@
+20140421 18:55:45 ERROR: Registration key info file not specified.
+20140421 18:56:40 ERROR: Registration key info file not specified.
+20140421 19:23:11 ERROR: Failed to open registration key file.
+20140421 19:23:26 ERROR: Failed to open registration key file.
+20140421 19:23:39 ERROR: Failed to open registration key file.
+20140421 19:23:53 ERROR: Failed to open registration key file.
+20140421 19:24:14 ERROR: Failed to open registration key file.
+20140421 19:24:25 ERROR: Failed to open registration key file.
+20140421 19:24:38 ERROR: Failed to open registration key file.
+20140421 19:27:55 ERROR: Registration key info file not specified.
+20140421 19:28:02 ERROR: Failed to open registration key file.
+20140421 19:29:27 ERROR: Failed to open registration key file.
+20140421 19:29:45 ERROR: Failed to open registration key file.
+20140421 19:30:34 ERROR: Failed to open registration key file.
+20140421 19:31:58 ERROR: Must specify a single Intf= in the INI files [Intf] section, or -I command line option.
+20140421 19:31:58 ERROR: Interface intialization failed. Exiting.
